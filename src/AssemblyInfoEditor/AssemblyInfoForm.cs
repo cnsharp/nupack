@@ -21,8 +21,14 @@ namespace CnSharp.VisualStudio.NuPack.AssemblyInfoEditor
             Icon = Resource.logo;
 
             List<Project> projects = allProjects.ToList();
-            _projectInfos = projects.Select(p => p.GetProjectAssemblyInfo()).ToList();
-
+            _projectInfos = new List<ProjectAssemblyInfo>();
+            foreach (var project in projects)
+            {
+                var info = project.GetProjectAssemblyInfo();
+                info.Project = project;
+                _projectInfos.Add(info);
+            }
+          
             toolStripStatusLabel.Text = string.Format("{0} projects", projects.Count);
 
             Project refProject = startProject ?? projects[0];
