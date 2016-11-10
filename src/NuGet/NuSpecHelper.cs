@@ -44,6 +44,16 @@ namespace CnSharp.VisualStudio.NuPack.NuGet
             if (descNode != null)
                 descNode.InnerText = metadata.Description;
 
+             UpdateDependencies(doc,metadata);
+        }
+
+
+        public static void UpdateDependencies(this XmlDocument doc, Package.MetaData metadata)
+        {
+            var metadataNode = doc.SelectSingleNode("package/metadata");
+            if (metadataNode == null)
+                return;
+
             if (metadata.Dependencies != null)
             {
                 var depNode = metadataNode.SelectSingleNode("dependencies");
@@ -207,7 +217,7 @@ namespace CnSharp.VisualStudio.NuPack.NuGet
                             {
                                 Dependencies = pair.Item1.Metadata.Dependencies
                             };
-                            UpdateMetadata(pair.Item2, metadata);
+                            UpdateDependencies(pair.Item2, metadata);
                             Host.Instance?.SourceControl?.CheckOut(
                                 Path.GetDirectoryName(Host.Instance.DTE.Solution.FullName), nuspecFile);
                             pair.Item2.Save(nuspecFile);
