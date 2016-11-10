@@ -1,4 +1,7 @@
-﻿V1.4.3 11/8/2016
+﻿V1.4.4 11/10/2016
+# Fix a bug when sync version to other .nuspec file in the solution.
+
+V1.4.3 11/8/2016
 # Fix a bug of assembly info modification.
 
 V1.4.2 10/27/2016
