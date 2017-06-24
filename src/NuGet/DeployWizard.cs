@@ -284,8 +284,8 @@ namespace CnSharp.VisualStudio.NuPack.NuGet
             var nugetExe = txtNugetPath.Text;
             var script = new StringBuilder();
             script.AppendFormat(
-                @"{0} pack ""{1}"" -Properties Configuration=Release -OutputDirectory ""{2}"" ", nugetExe,
-                _project.FileName, _releaseDir);
+                @"{0} pack ""{1}"" -Properties Configuration=Release -OutputDirectory ""{2}"" {3}", nugetExe,
+                _project.FileName, _releaseDir, chkIncludeReferencedProjects.Checked ? "-IncludeReferencedProjects" : "");
             var url = sourceBox.Text.Trim();
             if (url.Length > 0)
             {
