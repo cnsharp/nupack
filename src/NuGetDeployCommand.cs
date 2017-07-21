@@ -189,7 +189,7 @@ namespace CnSharp.VisualStudio.NuPack
             if (!File.Exists(file))
                 return;
             var reader = new PackagesConfigReader(file);
-            var packages = reader.GetDependencies().ToList();
+            var packages = reader.GetDependencies().Where(m => !m.DevelopmentDependency).ToList();
             _nupack.Metadata.MergeDependency(packages);
         }
 

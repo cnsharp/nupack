@@ -27,7 +27,8 @@ namespace CnSharp.VisualStudio.NuPack.NuGet
                 {
                     Id = node.Attributes["id"].Value,
                     Version = node.Attributes["version"].Value,
-                    TargetFramework = node.Attributes["targetFramework"]?.Value
+                    TargetFramework = node.Attributes["targetFramework"]?.Value,
+                    DevelopmentDependency = node.Attributes["targetFramework"]?.Value.ToLower() == "true"
                 };
             }
             
@@ -35,7 +36,7 @@ namespace CnSharp.VisualStudio.NuPack.NuGet
 
         public Package.DependencySet GetDependencySet()
         {
-            var dependencies = GetDependencies().ToList();
+            var dependencies = GetDependencies().Where(m => !m.DevelopmentDependency).ToList();
             var set = new Package.DependencySet();
             var targets = dependencies.Select(r => r.TargetFramework).Distinct().ToList();
 

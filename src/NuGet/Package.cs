@@ -106,6 +106,9 @@ namespace CnSharp.VisualStudio.NuPack.NuGet
 
             [XmlAttribute("version")]
             public string Version { get; set; }
+
+            [XmlAttribute("developmentDependency")]
+            public bool DevelopmentDependency { get; set; }
         }
 
 
@@ -156,5 +159,7 @@ namespace CnSharp.VisualStudio.NuPack.NuGet
         public string Id { get; set; }
 
         public string Version { get; set; }
+
+        public bool DevelopmentDependency { get; set; }
     }
 }

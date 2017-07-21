@@ -1,4 +1,7 @@
-﻿V1.4.4 11/10/2016
+﻿V1.5 3/9/2017
++ VS 2017 support.
+
+V1.4.4 11/10/2016
 * Fix a bug when sync version to other .nuspec file in the solution.
 
 V1.4.3 11/8/2016
