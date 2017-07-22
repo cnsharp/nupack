@@ -122,7 +122,8 @@ namespace CnSharp.VisualStudio.NuPack.NuGet
                             .Select(m => new Package.Dependency
                             {
                                 Id = m.Id,
-                                Version = m.Version
+                                Version = m.Version,
+                                DevelopmentDependency = m.DevelopmentDependency
                             }));
                 });
 
@@ -150,7 +151,8 @@ namespace CnSharp.VisualStudio.NuPack.NuGet
                         .Select(m => new Package.Dependency
                         {
                             Id = m.Id,
-                            Version = m.Version
+                            Version = m.Version,
+                            DevelopmentDependency = m.DevelopmentDependency
                         }));
             }
             //clear empty groups

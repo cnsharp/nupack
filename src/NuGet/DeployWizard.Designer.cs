@@ -49,13 +49,14 @@
             this.sourceBox = new System.Windows.Forms.ComboBox();
             this.stepWizardControl = new AeroWizard.StepWizardControl();
             this.wizardPage1 = new AeroWizard.WizardPage();
+            this.chkSyncDep = new System.Windows.Forms.CheckBox();
             this.wizardPage2 = new AeroWizard.WizardPage();
             this.wizardPage3 = new AeroWizard.WizardPage();
             this.chkRemember = new System.Windows.Forms.CheckBox();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
-            this.chkSyncDep = new System.Windows.Forms.CheckBox();
+            this.chkIncludeReferencedProjects = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.stepWizardControl)).BeginInit();
             this.wizardPage1.SuspendLayout();
             this.wizardPage2.SuspendLayout();
@@ -118,7 +119,7 @@
             this.chkOpenDir.AutoSize = true;
             this.chkOpenDir.Checked = true;
             this.chkOpenDir.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkOpenDir.Location = new System.Drawing.Point(40, 195);
+            this.chkOpenDir.Location = new System.Drawing.Point(40, 180);
             this.chkOpenDir.Name = "chkOpenDir";
             this.chkOpenDir.Size = new System.Drawing.Size(201, 19);
             this.chkOpenDir.TabIndex = 20;
@@ -250,8 +251,19 @@
             this.wizardPage1.TabIndex = 2;
             this.wizardPage1.Text = "Release Info";
             // 
+            // chkSyncDep
+            // 
+            this.chkSyncDep.AutoSize = true;
+            this.chkSyncDep.Location = new System.Drawing.Point(177, 115);
+            this.chkSyncDep.Name = "chkSyncDep";
+            this.chkSyncDep.Size = new System.Drawing.Size(179, 19);
+            this.chkSyncDep.TabIndex = 27;
+            this.chkSyncDep.Text = "Sync to projects referenced it";
+            this.chkSyncDep.UseVisualStyleBackColor = true;
+            // 
             // wizardPage2
             // 
+            this.wizardPage2.Controls.Add(this.chkIncludeReferencedProjects);
             this.wizardPage2.Controls.Add(this.label9);
             this.wizardPage2.Controls.Add(this.txtNugetPath);
             this.wizardPage2.Controls.Add(this.btnOpenNuGetExe);
@@ -299,15 +311,15 @@
             this.openFileDialog.FileName = "nuget.exe";
             this.openFileDialog.Title = "Open nuget.exe";
             // 
-            // chkSyncDep
+            // chkIncludeReferencedProjects
             // 
-            this.chkSyncDep.AutoSize = true;
-            this.chkSyncDep.Location = new System.Drawing.Point(177, 115);
-            this.chkSyncDep.Name = "chkSyncDep";
-            this.chkSyncDep.Size = new System.Drawing.Size(179, 19);
-            this.chkSyncDep.TabIndex = 27;
-            this.chkSyncDep.Text = "Sync to projects referenced it";
-            this.chkSyncDep.UseVisualStyleBackColor = true;
+            this.chkIncludeReferencedProjects.AutoSize = true;
+            this.chkIncludeReferencedProjects.Location = new System.Drawing.Point(40, 231);
+            this.chkIncludeReferencedProjects.Name = "chkIncludeReferencedProjects";
+            this.chkIncludeReferencedProjects.Size = new System.Drawing.Size(166, 19);
+            this.chkIncludeReferencedProjects.TabIndex = 21;
+            this.chkIncludeReferencedProjects.Text = "IncludeReferencedProjects";
+            this.chkIncludeReferencedProjects.UseVisualStyleBackColor = true;
             // 
             // DeployWizard
             // 
@@ -361,5 +373,6 @@
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog;
         private System.Windows.Forms.CheckBox chkRemember;
         private System.Windows.Forms.CheckBox chkSyncDep;
+        private System.Windows.Forms.CheckBox chkIncludeReferencedProjects;
     }
 }

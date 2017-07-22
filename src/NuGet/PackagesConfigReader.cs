@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Windows.Forms;
 using System.Xml;
 
 namespace CnSharp.VisualStudio.NuPack.NuGet
@@ -15,7 +14,7 @@ namespace CnSharp.VisualStudio.NuPack.NuGet
         public PackagesConfigReader(string configFileName)
         {
             _configFileName = configFileName;
-            _doc = new XmlDataDocument();
+            _doc = new XmlDocument();
             _doc.Load(_configFileName);
         }
 
@@ -28,7 +27,7 @@ namespace CnSharp.VisualStudio.NuPack.NuGet
                     Id = node.Attributes["id"].Value,
                     Version = node.Attributes["version"].Value,
                     TargetFramework = node.Attributes["targetFramework"]?.Value,
-                    DevelopmentDependency = node.Attributes["targetFramework"]?.Value.ToLower() == "true"
+                    DevelopmentDependency = node.Attributes["developmentDependency"]?.Value.ToLower() == "true"
                 };
             }
             
@@ -51,10 +50,10 @@ namespace CnSharp.VisualStudio.NuPack.NuGet
                     };
                     Expression<Func<DependencyViewModel, bool>> exp = null;
                     if (string.IsNullOrWhiteSpace(target))
-                        exp = r => (string.IsNullOrWhiteSpace(r.TargetFramework));
+                        exp = r => string.IsNullOrWhiteSpace(r.TargetFramework);
                     else
                     {
-                        exp = (r => r.TargetFramework == target);
+                        exp = r => r.TargetFramework == target;
                     }
                     group.Dependencies =
                        dependencies
