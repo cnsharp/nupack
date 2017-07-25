@@ -293,7 +293,7 @@ namespace CnSharp.VisualStudio.NuPack.NuGet
                 var dir = _releaseDir;
                 if (!dir.EndsWith("\\"))
                     dir += "\\";
-                script.AppendFormat(@"{0} push ""{1}*.nupkg"" -source {2} {3}", nugetExe, dir, url, txtKey.Text);
+                script.AppendFormat(@"""{0}"" push ""{1}*.nupkg"" -source {2} {3}", nugetExe, dir, url, txtKey.Text);
             }
 
             RunCmd(script.ToString());
@@ -420,7 +420,5 @@ namespace CnSharp.VisualStudio.NuPack.NuGet
             }
             return base.ProcessCmdKey(ref msg, keyData);
         }
-
-      
     }
 }

@@ -283,9 +283,8 @@
     <Reference Include="VSLangProj80, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
-    <Reference Include="VsSharp, Version=1.2.0.0, Culture=neutral, PublicKeyToken=31e1bdd79b8e5ae1, processorArchitecture=MSIL">
-      <HintPath>packages\VsSharp.1.2\lib\net35\VsSharp.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="VsSharp, Version=1.1.1.0, Culture=neutral, PublicKeyToken=31e1bdd79b8e5ae1, processorArchitecture=MSIL">
+      <HintPath>packages\VsSharp.1.1.1\lib\net35\VsSharp.dll</HintPath>
     </Reference>
     <Reference Include="VsWebSite.Interop, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>True</EmbedInteropTypes>
