@@ -415,6 +415,8 @@ namespace CnSharp.VisualStudio.NuPack.NuGet
             var source = _nuGetConfig.Sources.FirstOrDefault(m => m.Url == url);
             txtKey.Text = source?.ApiKey ?? string.Empty;
             chkRemember.Checked = txtKey.Text.Length > 0;
+            textBoxLogin.Text = source?.UserName;
+            checkBoxNugetLogin.Checked = textBoxLogin.Text.Length > 0;
         }
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
