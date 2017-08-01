@@ -66,6 +66,7 @@ namespace CnSharp.VisualStudio.NuPack.NuGet
     {
         public string Url { get; set; }
         public string ApiKey { get; set; }
+        public string UserName { get; set; }
     }
 
     public class NuGetConfig
