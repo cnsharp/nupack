@@ -51,12 +51,16 @@
             this.wizardPage1 = new AeroWizard.WizardPage();
             this.chkSyncDep = new System.Windows.Forms.CheckBox();
             this.wizardPage2 = new AeroWizard.WizardPage();
+            this.chkIncludeReferencedProjects = new System.Windows.Forms.CheckBox();
             this.wizardPage3 = new AeroWizard.WizardPage();
+            this.checkBoxNugetLogin = new System.Windows.Forms.CheckBox();
             this.chkRemember = new System.Windows.Forms.CheckBox();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
-            this.chkIncludeReferencedProjects = new System.Windows.Forms.CheckBox();
+            this.textBoxLogin = new System.Windows.Forms.TextBox();
+            this.labelLogin = new System.Windows.Forms.Label();
+            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             ((System.ComponentModel.ISupportInitialize)(this.stepWizardControl)).BeginInit();
             this.wizardPage1.SuspendLayout();
             this.wizardPage2.SuspendLayout();
@@ -194,7 +198,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(33, 106);
+            this.label2.Location = new System.Drawing.Point(33, 90);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(50, 15);
             this.label2.TabIndex = 6;
@@ -202,7 +206,7 @@
             // 
             // txtKey
             // 
-            this.txtKey.Location = new System.Drawing.Point(36, 158);
+            this.txtKey.Location = new System.Drawing.Point(36, 122);
             this.txtKey.Name = "txtKey";
             this.txtKey.PasswordChar = '*';
             this.txtKey.Size = new System.Drawing.Size(278, 23);
@@ -278,8 +282,21 @@
             this.wizardPage2.TabIndex = 3;
             this.wizardPage2.Text = "Pack Settings";
             // 
+            // chkIncludeReferencedProjects
+            // 
+            this.chkIncludeReferencedProjects.AutoSize = true;
+            this.chkIncludeReferencedProjects.Location = new System.Drawing.Point(40, 231);
+            this.chkIncludeReferencedProjects.Name = "chkIncludeReferencedProjects";
+            this.chkIncludeReferencedProjects.Size = new System.Drawing.Size(166, 19);
+            this.chkIncludeReferencedProjects.TabIndex = 21;
+            this.chkIncludeReferencedProjects.Text = "IncludeReferencedProjects";
+            this.chkIncludeReferencedProjects.UseVisualStyleBackColor = true;
+            // 
             // wizardPage3
             // 
+            this.wizardPage3.Controls.Add(this.labelLogin);
+            this.wizardPage3.Controls.Add(this.textBoxLogin);
+            this.wizardPage3.Controls.Add(this.checkBoxNugetLogin);
             this.wizardPage3.Controls.Add(this.chkRemember);
             this.wizardPage3.Controls.Add(this.label1);
             this.wizardPage3.Controls.Add(this.sourceBox);
@@ -292,10 +309,21 @@
             this.wizardPage3.TabIndex = 4;
             this.wizardPage3.Text = "Deploy";
             // 
+            // checkBoxNugetLogin
+            // 
+            this.checkBoxNugetLogin.AutoSize = true;
+            this.checkBoxNugetLogin.Location = new System.Drawing.Point(36, 177);
+            this.checkBoxNugetLogin.Name = "checkBoxNugetLogin";
+            this.checkBoxNugetLogin.Size = new System.Drawing.Size(128, 19);
+            this.checkBoxNugetLogin.TabIndex = 8;
+            this.checkBoxNugetLogin.Text = "Use NuGet V2 login";
+            this.checkBoxNugetLogin.UseVisualStyleBackColor = true;
+            this.checkBoxNugetLogin.CheckedChanged += new System.EventHandler(this.checkBoxNugetLogin_CheckedChanged);
+            // 
             // chkRemember
             // 
             this.chkRemember.AutoSize = true;
-            this.chkRemember.Location = new System.Drawing.Point(36, 224);
+            this.chkRemember.Location = new System.Drawing.Point(337, 126);
             this.chkRemember.Name = "chkRemember";
             this.chkRemember.Size = new System.Drawing.Size(94, 19);
             this.chkRemember.TabIndex = 7;
@@ -311,15 +339,23 @@
             this.openFileDialog.FileName = "nuget.exe";
             this.openFileDialog.Title = "Open nuget.exe";
             // 
-            // chkIncludeReferencedProjects
+            // textBoxLogin
             // 
-            this.chkIncludeReferencedProjects.AutoSize = true;
-            this.chkIncludeReferencedProjects.Location = new System.Drawing.Point(40, 231);
-            this.chkIncludeReferencedProjects.Name = "chkIncludeReferencedProjects";
-            this.chkIncludeReferencedProjects.Size = new System.Drawing.Size(166, 19);
-            this.chkIncludeReferencedProjects.TabIndex = 21;
-            this.chkIncludeReferencedProjects.Text = "IncludeReferencedProjects";
-            this.chkIncludeReferencedProjects.UseVisualStyleBackColor = true;
+            this.textBoxLogin.Location = new System.Drawing.Point(36, 256);
+            this.textBoxLogin.Name = "textBoxLogin";
+            this.textBoxLogin.Size = new System.Drawing.Size(278, 23);
+            this.textBoxLogin.TabIndex = 9;
+            this.textBoxLogin.Visible = false;
+            // 
+            // labelLogin
+            // 
+            this.labelLogin.AutoSize = true;
+            this.labelLogin.Location = new System.Drawing.Point(33, 227);
+            this.labelLogin.Name = "labelLogin";
+            this.labelLogin.Size = new System.Drawing.Size(40, 15);
+            this.labelLogin.TabIndex = 28;
+            this.labelLogin.Text = "Login:";
+            this.labelLogin.Visible = false;
             // 
             // DeployWizard
             // 
@@ -374,5 +410,9 @@
         private System.Windows.Forms.CheckBox chkRemember;
         private System.Windows.Forms.CheckBox chkSyncDep;
         private System.Windows.Forms.CheckBox chkIncludeReferencedProjects;
+        private System.Windows.Forms.CheckBox checkBoxNugetLogin;
+        private System.Windows.Forms.TextBox textBoxLogin;
+        private System.Windows.Forms.Label labelLogin;
+        private System.ComponentModel.BackgroundWorker backgroundWorker1;
     }
 }

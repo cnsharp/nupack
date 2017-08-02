@@ -293,7 +293,13 @@ namespace CnSharp.VisualStudio.NuPack.NuGet
                 var dir = _releaseDir;
                 if (!dir.EndsWith("\\"))
                     dir += "\\";
-                script.AppendFormat(@"{0} push ""{1}*.nupkg"" -source {2} {3}", nugetExe, dir, url, txtKey.Text);
+                if (checkBoxNugetLogin.Checked)
+                {
+                    script.AppendFormat(@"""{0}"" sources Add -Name ""{1}"" -Source ""{2}"" -Username ""{3}"" -Password ""{4}""", nugetExe, url, url, textBoxLogin.Text, txtKey.Text);
+                    script.AppendFormat(@" || ""{0}"" sources Update -Name ""{1}"" -Source ""{2}"" -Username ""{3}"" -Password ""{4}""", nugetExe, url, url, textBoxLogin.Text, txtKey.Text);
+                    script.AppendLine();
+                }
+                script.AppendFormat(@"""{0}"" push ""{1}*.nupkg"" -source {2} {3}", nugetExe, dir, url, txtKey.Text);
             }
 
             RunCmd(script.ToString());
@@ -387,7 +393,10 @@ namespace CnSharp.VisualStudio.NuPack.NuGet
             var nugetExePath = txtNugetPath.Text.Trim();
             _nuGetConfig.NugetPath = nugetExePath;
             if (url.Length > 0)
-                _nuGetConfig.AddOrUpdateSource(new NuGetSource {Url = url, ApiKey = chkRemember.Checked ?  txtKey.Text : null});
+            {
+                _nuGetConfig.AddOrUpdateSource(new NuGetSource {Url = url, ApiKey = chkRemember.Checked ?  txtKey.Text : null,
+                    UserName = checkBoxNugetLogin.Checked ? textBoxLogin.Text : null});
+            }
             _nuGetConfig.Save();
         }
 
@@ -406,6 +415,8 @@ namespace CnSharp.VisualStudio.NuPack.NuGet
             var source = _nuGetConfig.Sources.FirstOrDefault(m => m.Url == url);
             txtKey.Text = source?.ApiKey ?? string.Empty;
             chkRemember.Checked = txtKey.Text.Length > 0;
+            textBoxLogin.Text = source?.UserName;
+            checkBoxNugetLogin.Checked = textBoxLogin.Text.Length > 0;
         }
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
@@ -421,6 +432,12 @@ namespace CnSharp.VisualStudio.NuPack.NuGet
             return base.ProcessCmdKey(ref msg, keyData);
         }
 
-      
+        private void checkBoxNugetLogin_CheckedChanged(object sender, EventArgs e)
+        {
+            var check = sender as CheckBox;
+
+            textBoxLogin.Visible = check.Checked;
+            labelLogin.Visible = check.Checked;
+        }
     }
 }
