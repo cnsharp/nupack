@@ -1,4 +1,7 @@
-﻿### V1.6 7/22/2017
+﻿### V1.6.1 8/2/2017
+* NuGet V2 login support. https://github.com/cnsharp/nupack/issues/5
+
+### V1.6 7/22/2017
 [#1]https://github.com/cnsharp/nupack/issues/1
 update CnSharp.VisualStudio.TFS package to 1.1.2 to include 'Microsoft.TeamFoundation.Common' dll.
 [#2]https://github.com/cnsharp/nupack/issues/2 

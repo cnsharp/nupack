@@ -53,13 +53,13 @@
             this.wizardPage2 = new AeroWizard.WizardPage();
             this.chkIncludeReferencedProjects = new System.Windows.Forms.CheckBox();
             this.wizardPage3 = new AeroWizard.WizardPage();
+            this.labelLogin = new System.Windows.Forms.Label();
+            this.textBoxLogin = new System.Windows.Forms.TextBox();
             this.checkBoxNugetLogin = new System.Windows.Forms.CheckBox();
             this.chkRemember = new System.Windows.Forms.CheckBox();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
-            this.textBoxLogin = new System.Windows.Forms.TextBox();
-            this.labelLogin = new System.Windows.Forms.Label();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             ((System.ComponentModel.ISupportInitialize)(this.stepWizardControl)).BeginInit();
             this.wizardPage1.SuspendLayout();
@@ -309,6 +309,24 @@
             this.wizardPage3.TabIndex = 4;
             this.wizardPage3.Text = "Deploy";
             // 
+            // labelLogin
+            // 
+            this.labelLogin.AutoSize = true;
+            this.labelLogin.Location = new System.Drawing.Point(33, 227);
+            this.labelLogin.Name = "labelLogin";
+            this.labelLogin.Size = new System.Drawing.Size(40, 15);
+            this.labelLogin.TabIndex = 28;
+            this.labelLogin.Text = "Login:";
+            this.labelLogin.Visible = false;
+            // 
+            // textBoxLogin
+            // 
+            this.textBoxLogin.Location = new System.Drawing.Point(36, 256);
+            this.textBoxLogin.Name = "textBoxLogin";
+            this.textBoxLogin.Size = new System.Drawing.Size(278, 23);
+            this.textBoxLogin.TabIndex = 9;
+            this.textBoxLogin.Visible = false;
+            // 
             // checkBoxNugetLogin
             // 
             this.checkBoxNugetLogin.AutoSize = true;
@@ -338,24 +356,6 @@
             // 
             this.openFileDialog.FileName = "nuget.exe";
             this.openFileDialog.Title = "Open nuget.exe";
-            // 
-            // textBoxLogin
-            // 
-            this.textBoxLogin.Location = new System.Drawing.Point(36, 256);
-            this.textBoxLogin.Name = "textBoxLogin";
-            this.textBoxLogin.Size = new System.Drawing.Size(278, 23);
-            this.textBoxLogin.TabIndex = 9;
-            this.textBoxLogin.Visible = false;
-            // 
-            // labelLogin
-            // 
-            this.labelLogin.AutoSize = true;
-            this.labelLogin.Location = new System.Drawing.Point(33, 227);
-            this.labelLogin.Name = "labelLogin";
-            this.labelLogin.Size = new System.Drawing.Size(40, 15);
-            this.labelLogin.TabIndex = 28;
-            this.labelLogin.Text = "Login:";
-            this.labelLogin.Visible = false;
             // 
             // DeployWizard
             // 
