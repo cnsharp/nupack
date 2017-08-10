@@ -118,12 +118,11 @@ namespace CnSharp.VisualStudio.NuPack.NuGet
                 dep.Groups.ForEach(g =>
                 {
                     g.Dependencies.AddRange(
-                        dependencies.Where(d => d.TargetFramework == g.TargetFramework)
+                        dependencies.Where(d => d.TargetFramework == g.TargetFramework && !d.DevelopmentDependency)
                             .Select(m => new Package.Dependency
                             {
                                 Id = m.Id,
-                                Version = m.Version,
-                                DevelopmentDependency = m.DevelopmentDependency
+                                Version = m.Version
                             }));
                 });
 
@@ -147,12 +146,11 @@ namespace CnSharp.VisualStudio.NuPack.NuGet
                 if (dep.Dependencies == null)
                     dep.Dependencies = new List<Package.Dependency>();
                 dep.Dependencies.AddRange(
-                    dependencies.Where(p => string.IsNullOrWhiteSpace(p.TargetFramework))
+                    dependencies.Where(p => string.IsNullOrWhiteSpace(p.TargetFramework) && !p.DevelopmentDependency)
                         .Select(m => new Package.Dependency
                         {
                             Id = m.Id,
-                            Version = m.Version,
-                            DevelopmentDependency = m.DevelopmentDependency
+                            Version = m.Version
                         }));
             }
             //clear empty groups
