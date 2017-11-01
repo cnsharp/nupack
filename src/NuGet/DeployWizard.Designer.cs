@@ -61,6 +61,7 @@
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            this.chkForceEnglishOutput = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.stepWizardControl)).BeginInit();
             this.wizardPage1.SuspendLayout();
             this.wizardPage2.SuspendLayout();
@@ -267,6 +268,7 @@
             // 
             // wizardPage2
             // 
+            this.wizardPage2.Controls.Add(this.chkForceEnglishOutput);
             this.wizardPage2.Controls.Add(this.chkIncludeReferencedProjects);
             this.wizardPage2.Controls.Add(this.label9);
             this.wizardPage2.Controls.Add(this.txtNugetPath);
@@ -357,6 +359,18 @@
             this.openFileDialog.FileName = "nuget.exe";
             this.openFileDialog.Title = "Open nuget.exe";
             // 
+            // chkForceEnglishOutput
+            // 
+            this.chkForceEnglishOutput.AutoSize = true;
+            this.chkForceEnglishOutput.Checked = true;
+            this.chkForceEnglishOutput.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkForceEnglishOutput.Location = new System.Drawing.Point(40, 273);
+            this.chkForceEnglishOutput.Name = "chkForceEnglishOutput";
+            this.chkForceEnglishOutput.Size = new System.Drawing.Size(131, 19);
+            this.chkForceEnglishOutput.TabIndex = 22;
+            this.chkForceEnglishOutput.Text = "ForceEnglishOutput";
+            this.chkForceEnglishOutput.UseVisualStyleBackColor = true;
+            // 
             // DeployWizard
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -414,5 +428,6 @@
         private System.Windows.Forms.TextBox textBoxLogin;
         private System.Windows.Forms.Label labelLogin;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
+        private System.Windows.Forms.CheckBox chkForceEnglishOutput;
     }
 }

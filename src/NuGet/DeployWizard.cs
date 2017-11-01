@@ -286,19 +286,24 @@ namespace CnSharp.VisualStudio.NuPack.NuGet
             script.AppendFormat(
                 @"""{0}"" pack ""{1}"" -Properties Configuration=Release -OutputDirectory ""{2}"" ", nugetExe,
                 _project.FileName, _releaseDir);
+
+            if (chkForceEnglishOutput.Checked)
+                script.Append(" -ForceEnglishOutput ");
+
             var url = sourceBox.Text.Trim();
             if (url.Length > 0)
             {
                 script.AppendLine();
-                var dir = _releaseDir;
-                if (!dir.EndsWith("\\"))
-                    dir += "\\";
                 if (checkBoxNugetLogin.Checked)
                 {
                     script.AppendFormat(@"""{0}"" sources Add -Name ""{1}"" -Source ""{2}"" -Username ""{3}"" -Password ""{4}""", nugetExe, url, url, textBoxLogin.Text, txtKey.Text);
                     script.AppendFormat(@" || ""{0}"" sources Update -Name ""{1}"" -Source ""{2}"" -Username ""{3}"" -Password ""{4}""", nugetExe, url, url, textBoxLogin.Text, txtKey.Text);
                     script.AppendLine();
                 }
+
+                var dir = _releaseDir;
+                if (!dir.EndsWith("\\"))
+                    dir += "\\";
                 script.AppendFormat(@"""{0}"" push ""{1}*.nupkg"" -source {2} {3}", nugetExe, dir, url, txtKey.Text);
             }
 
