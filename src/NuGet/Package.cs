@@ -110,10 +110,10 @@ namespace CnSharp.VisualStudio.NuPack.NuGet
         public class DependencySet
         {
             [XmlElement("group")]
-            public List<DependencyGroup> Groups { get; set; }
+            public List<DependencyGroup> Groups { get; set; } = new List<DependencyGroup>();
 
             [XmlElement("dependency")]
-            public List<Dependency> Dependencies { get; set; }
+            public List<Dependency> Dependencies { get; set; } = new List<Dependency>();
 
             public bool Any()
             {

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using CnSharp.VisualStudio.Extensions.Commands;
+using CnSharp.VisualStudio.NuPack.Commands;
 
 namespace CnSharp.VisualStudio.NuPack
 {

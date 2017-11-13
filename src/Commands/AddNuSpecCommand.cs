@@ -7,20 +7,16 @@
 using System;
 using System.ComponentModel.Design;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Xml;
 using CnSharp.VisualStudio.Extensions;
 using CnSharp.VisualStudio.Extensions.Commands;
 using CnSharp.VisualStudio.NuPack.NuGet;
 using CnSharp.VisualStudio.NuPack.Util;
-using EnvDTE;
-using EnvDTE80;
 using Microsoft.VisualStudio.Shell;
 using Package = Microsoft.VisualStudio.Shell.Package;
 
-namespace CnSharp.VisualStudio.NuPack
+namespace CnSharp.VisualStudio.NuPack.Commands
 {
     /// <summary>
     /// Command handler

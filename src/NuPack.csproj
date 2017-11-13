@@ -79,8 +79,6 @@
     <DeployExtension>False</DeployExtension>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="AddNuSpecCommand.cs" />
-    <Compile Include="AssemblyInfoEditCommand.cs" />
     <Compile Include="AssemblyInfoEditor\AssemblyInfoForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -93,6 +91,10 @@
     <Compile Include="AssemblyInfoEditor\EachAssemblyInfoForm.designer.cs">
       <DependentUpon>EachAssemblyInfoForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Commands\AddNuSpecCommand.cs" />
+    <Compile Include="Commands\AssemblyInfoEditCommand.cs" />
+    <Compile Include="Commands\NuGetDeployCommand.cs" />
+    <Compile Include="Commands\UnifiedAssemblyInfoEditCommand.cs" />
     <Compile Include="CustomMenus.cs" />
     <Compile Include="NuGet\ConfigHelper.cs" />
     <Compile Include="NuGet\DeployWizard.cs">
@@ -105,7 +107,6 @@
     <Compile Include="NuGet\PackagesConfigReader.cs" />
     <Compile Include="NuPackPackage.cs" />
     <Compile Include="Common.cs" />
-    <Compile Include="NuGetDeployCommand.cs" />
     <Compile Include="NuGet\Package.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resource.Designer.cs">
@@ -113,7 +114,6 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="UnifiedAssemblyInfoEditCommand.cs" />
     <Compile Include="Util\XmlSerializationHelper.cs" />
     <Compile Include="Util\XmlTextFormatter.cs" />
     <Compile Include="VSPackage.Designer.cs">

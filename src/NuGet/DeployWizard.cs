@@ -56,7 +56,7 @@ namespace CnSharp.VisualStudio.NuPack.NuGet
             wizardPage2.Commit += WizardPageCommit;
         }
 
-        private void WizardPageCommit(object sender, AeroWizard.WizardPageConfirmEventArgs e)
+        private void WizardPageCommit(object sender, WizardPageConfirmEventArgs e)
         {
             var wp = sender as WizardPage;
             if (Validation.HasValidationErrors(wp.Controls))
@@ -183,7 +183,7 @@ namespace CnSharp.VisualStudio.NuPack.NuGet
             if (_assemblyInfo != null)
             {
                 txtAssemblyVersion.Text = _assemblyInfo.Version;
-                txtAssemblyVersion.Enabled = !_assemblyInfo.Version.Contains("*");
+                //txtAssemblyVersion.Enabled = !_assemblyInfo.Version.Contains("*");
             }
 
             txtPackageVersion.Text = _package.Metadata.Version.IsEmptyOrPlaceHolder() ? _assemblyInfo?.Version.Replace(".*", "") : _package.Metadata.Version;
@@ -220,8 +220,9 @@ namespace CnSharp.VisualStudio.NuPack.NuGet
             SaveNuSpec();
             if (!Build())
                 return;
+            EnsureOutputDir();
             Pack();
-            MovePackage();
+            //MovePackage();
             if (chkSyncDep.Checked)
                 SyncVersionToDependency();
             SaveNuGetConfig();
@@ -232,7 +233,7 @@ namespace CnSharp.VisualStudio.NuPack.NuGet
         private void SaveAssemblyInfo()
         {
             var newVersion = txtAssemblyVersion.Text.Trim();
-            if (_assemblyInfo != null && txtAssemblyVersion.Enabled && newVersion != _assemblyInfo.Version)
+            if (_assemblyInfo != null && newVersion != _assemblyInfo.Version)
             {
                 _assemblyInfo.Version = _assemblyInfo.FileVersion = newVersion;
                 _project.ModifyAssemblyInfo(_assemblyInfo);
@@ -284,8 +285,8 @@ namespace CnSharp.VisualStudio.NuPack.NuGet
             var nugetExe = txtNugetPath.Text;
             var script = new StringBuilder();
             script.AppendFormat(
-                @"""{0}"" pack ""{1}"" -Properties Configuration=Release -OutputDirectory ""{2}"" ", nugetExe,
-                _project.FileName, _releaseDir);
+                @"""{0}"" pack ""{1}"" -Build -Version ""{2}"" -Properties  Configuration=Release -OutputDirectory ""{3}"" ", nugetExe,
+                _project.FileName,_package.Metadata.Version, _outputDir);
 
             if (chkForceEnglishOutput.Checked)
                 script.Append(" -ForceEnglishOutput ");
@@ -311,6 +312,28 @@ namespace CnSharp.VisualStudio.NuPack.NuGet
         }
 
         private void MovePackage()
+        {
+            var releaseDir = new DirectoryInfo(_releaseDir);
+            if (!releaseDir.Exists)
+                return;
+            var files = releaseDir.GetFiles("*.nupkg");
+            var fileCount = 0;
+            foreach (var file in files)
+            {
+                var dest = Path.Combine(_outputDir, file.Name);
+                if (File.Exists(dest))
+                {
+                    File.Delete(dest);
+                }
+                file.MoveTo(dest);
+                fileCount++;
+            }
+
+            if (chkOpenDir.Checked && fileCount > 0)
+                Process.Start(_outputDir);
+        }
+
+        private void EnsureOutputDir()
         {
             _outputDir = txtOutputDir.Text.Trim().Replace("/", "\\");
             var relativePath = false;
@@ -341,24 +364,6 @@ namespace CnSharp.VisualStudio.NuPack.NuGet
                 if (!Directory.Exists(_outputDir))
                     Directory.CreateDirectory(_outputDir);
             }
-            var releaseDir = new DirectoryInfo(_releaseDir);
-            if (!releaseDir.Exists)
-                return;
-            var files = releaseDir.GetFiles("*.nupkg");
-            var fileCount = 0;
-            foreach (var file in files)
-            {
-                var dest = Path.Combine(_outputDir, file.Name);
-                if (File.Exists(dest))
-                {
-                    File.Delete(dest);
-                }
-                file.MoveTo(dest);
-                fileCount++;
-            }
-
-            if (chkOpenDir.Checked && fileCount > 0)
-                Process.Start(_outputDir);
         }
 
         private static void RunCmd(string script)

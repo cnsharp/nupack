@@ -16,13 +16,11 @@ using CnSharp.VisualStudio.Extensions.Projects;
 using CnSharp.VisualStudio.NuPack.NuGet;
 using CnSharp.VisualStudio.NuPack.Util;
 using EnvDTE;
-using EnvDTE80;
-using Microsoft.VisualStudio.CommandBars;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Package = Microsoft.VisualStudio.Shell.Package;
 
-namespace CnSharp.VisualStudio.NuPack
+namespace CnSharp.VisualStudio.NuPack.Commands
 {
     /// <summary>
     /// Command handler
@@ -176,7 +174,7 @@ namespace CnSharp.VisualStudio.NuPack
                 return;
             }
 
-            MergePackagesConfig();
+            //MergePackagesConfig();
 
             var form = new DeployWizard(_assemblyInfo,_nupack,_xmlDoc);
             if(form.ShowDialog() == DialogResult.OK)

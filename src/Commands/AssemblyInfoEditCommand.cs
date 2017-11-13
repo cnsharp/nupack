@@ -1,12 +1,11 @@
 ﻿//------------------------------------------------------------------------------
-// <copyright file="UnifiedAssemblyInfoEditCommand.cs" company="Microsoft">
+// <copyright file="AssemblyInfoEditCommand.cs" company="Microsoft">
 //     Copyright (c) Microsoft.  All rights reserved.
 // </copyright>
 //------------------------------------------------------------------------------
 
 using System;
 using System.ComponentModel.Design;
-using System.Globalization;
 using System.Linq;
 using CnSharp.VisualStudio.Extensions;
 using CnSharp.VisualStudio.Extensions.Commands;
@@ -14,17 +13,17 @@ using CnSharp.VisualStudio.NuPack.AssemblyInfoEditor;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 
-namespace CnSharp.VisualStudio.NuPack
+namespace CnSharp.VisualStudio.NuPack.Commands
 {
     /// <summary>
     /// Command handler
     /// </summary>
-    internal sealed class UnifiedAssemblyInfoEditCommand :  ICommand
+    internal sealed class AssemblyInfoEditCommand : ICommand
     {
         /// <summary>
         /// Command ID.
         /// </summary>
-        public const int CommandId = 4129;
+        public const int CommandId = 256;
 
         /// <summary>
         /// Command menu group (command set GUID).
@@ -37,11 +36,11 @@ namespace CnSharp.VisualStudio.NuPack
         private readonly Package package;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="UnifiedAssemblyInfoEditCommand"/> class.
+        /// Initializes a new instance of the <see cref="AssemblyInfoEditCommand"/> class.
         /// Adds our command handlers for menu (commands must exist in the command table file)
         /// </summary>
         /// <param name="package">Owner package, not null.</param>
-        private UnifiedAssemblyInfoEditCommand(Package package)
+        private AssemblyInfoEditCommand(Package package)
         {
             if (package == null)
             {
@@ -59,7 +58,7 @@ namespace CnSharp.VisualStudio.NuPack
             }
         }
 
-        public UnifiedAssemblyInfoEditCommand()
+        public AssemblyInfoEditCommand()
         {
             
         }
@@ -67,7 +66,7 @@ namespace CnSharp.VisualStudio.NuPack
         /// <summary>
         /// Gets the instance of the command.
         /// </summary>
-        public static UnifiedAssemblyInfoEditCommand Instance
+        public static AssemblyInfoEditCommand Instance
         {
             get;
             private set;
@@ -90,7 +89,7 @@ namespace CnSharp.VisualStudio.NuPack
         /// <param name="package">Owner package, not null.</param>
         public static void Initialize(Package package)
         {
-            Instance = new UnifiedAssemblyInfoEditCommand(package);
+            Instance = new AssemblyInfoEditCommand(package);
         }
 
         /// <summary>
@@ -105,16 +104,36 @@ namespace CnSharp.VisualStudio.NuPack
            Execute();
         }
 
+
+        private void ShowError()
+        {
+            VsShellUtilities.ShowMessageBox(
+         this.ServiceProvider,
+         "No project is opened.",
+         Common.ProductName,
+         OLEMSGICON.OLEMSGICON_INFO,
+         OLEMSGBUTTON.OLEMSGBUTTON_OK,
+         OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
+        }
+
         public void Execute(object arg = null)
         {
             var dte = Host.Instance.Dte2;
-            var startProject = dte.GetStartupProject();
-            var allProjects = dte.GetSolutionProjects().ToList();
-            if (!allProjects.Any())
+            try
             {
-                return;
+                var allProjects = dte.GetSolutionProjects().ToList();
+                if (!allProjects.Any())
+                {
+
+                    ShowError();
+                    return;
+                }
+                new EachAssemblyInfoForm(allProjects).ShowDialog();
             }
-            new AssemblyInfoForm(allProjects, startProject).ShowDialog();
+            catch (Exception exception)
+            {
+                ShowError();
+            }
         }
     }
 }

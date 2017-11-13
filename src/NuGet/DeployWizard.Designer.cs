@@ -51,6 +51,7 @@
             this.wizardPage1 = new AeroWizard.WizardPage();
             this.chkSyncDep = new System.Windows.Forms.CheckBox();
             this.wizardPage2 = new AeroWizard.WizardPage();
+            this.chkForceEnglishOutput = new System.Windows.Forms.CheckBox();
             this.chkIncludeReferencedProjects = new System.Windows.Forms.CheckBox();
             this.wizardPage3 = new AeroWizard.WizardPage();
             this.labelLogin = new System.Windows.Forms.Label();
@@ -61,7 +62,6 @@
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
-            this.chkForceEnglishOutput = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.stepWizardControl)).BeginInit();
             this.wizardPage1.SuspendLayout();
             this.wizardPage2.SuspendLayout();
@@ -265,6 +265,7 @@
             this.chkSyncDep.TabIndex = 27;
             this.chkSyncDep.Text = "Sync to projects referenced it";
             this.chkSyncDep.UseVisualStyleBackColor = true;
+            this.chkSyncDep.Visible = false;
             // 
             // wizardPage2
             // 
@@ -283,6 +284,18 @@
             this.stepWizardControl.SetStepText(this.wizardPage2, "Pack Settings");
             this.wizardPage2.TabIndex = 3;
             this.wizardPage2.Text = "Pack Settings";
+            // 
+            // chkForceEnglishOutput
+            // 
+            this.chkForceEnglishOutput.AutoSize = true;
+            this.chkForceEnglishOutput.Checked = true;
+            this.chkForceEnglishOutput.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkForceEnglishOutput.Location = new System.Drawing.Point(40, 273);
+            this.chkForceEnglishOutput.Name = "chkForceEnglishOutput";
+            this.chkForceEnglishOutput.Size = new System.Drawing.Size(131, 19);
+            this.chkForceEnglishOutput.TabIndex = 22;
+            this.chkForceEnglishOutput.Text = "ForceEnglishOutput";
+            this.chkForceEnglishOutput.UseVisualStyleBackColor = true;
             // 
             // chkIncludeReferencedProjects
             // 
@@ -358,18 +371,6 @@
             // 
             this.openFileDialog.FileName = "nuget.exe";
             this.openFileDialog.Title = "Open nuget.exe";
-            // 
-            // chkForceEnglishOutput
-            // 
-            this.chkForceEnglishOutput.AutoSize = true;
-            this.chkForceEnglishOutput.Checked = true;
-            this.chkForceEnglishOutput.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkForceEnglishOutput.Location = new System.Drawing.Point(40, 273);
-            this.chkForceEnglishOutput.Name = "chkForceEnglishOutput";
-            this.chkForceEnglishOutput.Size = new System.Drawing.Size(131, 19);
-            this.chkForceEnglishOutput.TabIndex = 22;
-            this.chkForceEnglishOutput.Text = "ForceEnglishOutput";
-            this.chkForceEnglishOutput.UseVisualStyleBackColor = true;
             // 
             // DeployWizard
             // 

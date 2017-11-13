@@ -78,8 +78,8 @@ namespace CnSharp.VisualStudio.NuPack.NuGet
             if (!dependencies.Any())
                 return;
 
-            if (metadata.Dependencies == null)
-                metadata.Dependencies = new Package.DependencySet();
+            //reset
+            metadata.Dependencies = new Package.DependencySet();
 
             var dep = metadata.Dependencies;
 
@@ -165,6 +165,11 @@ namespace CnSharp.VisualStudio.NuPack.NuGet
 
         public static string ShortenVersionNumber(this string version)
         {
+            while (version.EndsWith(".*"))
+            {
+                var num = version.TrimEnd('*').TrimEnd('.');
+                version = num;
+            }
             while (version.EndsWith(".0"))
             {
                 var num = version.TrimEnd('0').TrimEnd('.');

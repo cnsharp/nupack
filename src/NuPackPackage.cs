@@ -15,6 +15,7 @@ using System.Resources;
 using System.Runtime.InteropServices;
 using CnSharp.VisualStudio.Extensions;
 using CnSharp.VisualStudio.Extensions.Commands;
+using CnSharp.VisualStudio.NuPack.Commands;
 using EnvDTE;
 using EnvDTE80;
 using Microsoft.VisualStudio.Shell;
