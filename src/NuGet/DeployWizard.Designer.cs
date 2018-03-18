@@ -51,9 +51,11 @@
             this.wizardPage1 = new AeroWizard.WizardPage();
             this.chkSyncDep = new System.Windows.Forms.CheckBox();
             this.wizardPage2 = new AeroWizard.WizardPage();
+            this.chkSymbol = new System.Windows.Forms.CheckBox();
             this.chkForceEnglishOutput = new System.Windows.Forms.CheckBox();
             this.chkIncludeReferencedProjects = new System.Windows.Forms.CheckBox();
             this.wizardPage3 = new AeroWizard.WizardPage();
+            this.chkPubSymbols = new System.Windows.Forms.CheckBox();
             this.labelLogin = new System.Windows.Forms.Label();
             this.textBoxLogin = new System.Windows.Forms.TextBox();
             this.checkBoxNugetLogin = new System.Windows.Forms.CheckBox();
@@ -232,7 +234,7 @@
             this.stepWizardControl.Pages.Add(this.wizardPage1);
             this.stepWizardControl.Pages.Add(this.wizardPage2);
             this.stepWizardControl.Pages.Add(this.wizardPage3);
-            this.stepWizardControl.Size = new System.Drawing.Size(645, 464);
+            this.stepWizardControl.Size = new System.Drawing.Size(645, 490);
             this.stepWizardControl.StepListFont = new System.Drawing.Font("Microsoft YaHei", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.World);
             this.stepWizardControl.TabIndex = 27;
             this.stepWizardControl.Text = "Pack / Deploy";
@@ -251,7 +253,7 @@
             this.wizardPage1.Controls.Add(this.label3);
             this.wizardPage1.Name = "wizardPage1";
             this.wizardPage1.NextPage = this.wizardPage2;
-            this.wizardPage1.Size = new System.Drawing.Size(447, 310);
+            this.wizardPage1.Size = new System.Drawing.Size(447, 336);
             this.stepWizardControl.SetStepText(this.wizardPage1, "Release Info");
             this.wizardPage1.TabIndex = 2;
             this.wizardPage1.Text = "Release Info";
@@ -269,6 +271,7 @@
             // 
             // wizardPage2
             // 
+            this.wizardPage2.Controls.Add(this.chkSymbol);
             this.wizardPage2.Controls.Add(this.chkForceEnglishOutput);
             this.wizardPage2.Controls.Add(this.chkIncludeReferencedProjects);
             this.wizardPage2.Controls.Add(this.label9);
@@ -280,17 +283,27 @@
             this.wizardPage2.Controls.Add(this.btnOpenOutputDir);
             this.wizardPage2.Name = "wizardPage2";
             this.wizardPage2.NextPage = this.wizardPage3;
-            this.wizardPage2.Size = new System.Drawing.Size(447, 310);
+            this.wizardPage2.Size = new System.Drawing.Size(447, 336);
             this.stepWizardControl.SetStepText(this.wizardPage2, "Pack Settings");
             this.wizardPage2.TabIndex = 3;
             this.wizardPage2.Text = "Pack Settings";
+            // 
+            // chkSymbol
+            // 
+            this.chkSymbol.AutoSize = true;
+            this.chkSymbol.Location = new System.Drawing.Point(40, 252);
+            this.chkSymbol.Name = "chkSymbol";
+            this.chkSymbol.Size = new System.Drawing.Size(169, 19);
+            this.chkSymbol.TabIndex = 23;
+            this.chkSymbol.Text = "Creating a symbol package";
+            this.chkSymbol.UseVisualStyleBackColor = true;
             // 
             // chkForceEnglishOutput
             // 
             this.chkForceEnglishOutput.AutoSize = true;
             this.chkForceEnglishOutput.Checked = true;
             this.chkForceEnglishOutput.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkForceEnglishOutput.Location = new System.Drawing.Point(40, 273);
+            this.chkForceEnglishOutput.Location = new System.Drawing.Point(40, 284);
             this.chkForceEnglishOutput.Name = "chkForceEnglishOutput";
             this.chkForceEnglishOutput.Size = new System.Drawing.Size(131, 19);
             this.chkForceEnglishOutput.TabIndex = 22;
@@ -300,7 +313,7 @@
             // chkIncludeReferencedProjects
             // 
             this.chkIncludeReferencedProjects.AutoSize = true;
-            this.chkIncludeReferencedProjects.Location = new System.Drawing.Point(40, 231);
+            this.chkIncludeReferencedProjects.Location = new System.Drawing.Point(40, 219);
             this.chkIncludeReferencedProjects.Name = "chkIncludeReferencedProjects";
             this.chkIncludeReferencedProjects.Size = new System.Drawing.Size(166, 19);
             this.chkIncludeReferencedProjects.TabIndex = 21;
@@ -309,6 +322,7 @@
             // 
             // wizardPage3
             // 
+            this.wizardPage3.Controls.Add(this.chkPubSymbols);
             this.wizardPage3.Controls.Add(this.labelLogin);
             this.wizardPage3.Controls.Add(this.textBoxLogin);
             this.wizardPage3.Controls.Add(this.checkBoxNugetLogin);
@@ -319,15 +333,25 @@
             this.wizardPage3.Controls.Add(this.txtKey);
             this.wizardPage3.IsFinishPage = true;
             this.wizardPage3.Name = "wizardPage3";
-            this.wizardPage3.Size = new System.Drawing.Size(447, 310);
+            this.wizardPage3.Size = new System.Drawing.Size(447, 336);
             this.stepWizardControl.SetStepText(this.wizardPage3, "Deploy");
             this.wizardPage3.TabIndex = 4;
             this.wizardPage3.Text = "Deploy";
             // 
+            // chkPubSymbols
+            // 
+            this.chkPubSymbols.AutoSize = true;
+            this.chkPubSymbols.Location = new System.Drawing.Point(36, 172);
+            this.chkPubSymbols.Name = "chkPubSymbols";
+            this.chkPubSymbols.Size = new System.Drawing.Size(276, 19);
+            this.chkPubSymbols.TabIndex = 29;
+            this.chkPubSymbols.Text = "Publish symbols packages to symbolsource.org";
+            this.chkPubSymbols.UseVisualStyleBackColor = true;
+            // 
             // labelLogin
             // 
             this.labelLogin.AutoSize = true;
-            this.labelLogin.Location = new System.Drawing.Point(33, 227);
+            this.labelLogin.Location = new System.Drawing.Point(33, 255);
             this.labelLogin.Name = "labelLogin";
             this.labelLogin.Size = new System.Drawing.Size(40, 15);
             this.labelLogin.TabIndex = 28;
@@ -336,7 +360,7 @@
             // 
             // textBoxLogin
             // 
-            this.textBoxLogin.Location = new System.Drawing.Point(36, 256);
+            this.textBoxLogin.Location = new System.Drawing.Point(36, 284);
             this.textBoxLogin.Name = "textBoxLogin";
             this.textBoxLogin.Size = new System.Drawing.Size(278, 23);
             this.textBoxLogin.TabIndex = 9;
@@ -345,7 +369,7 @@
             // checkBoxNugetLogin
             // 
             this.checkBoxNugetLogin.AutoSize = true;
-            this.checkBoxNugetLogin.Location = new System.Drawing.Point(36, 177);
+            this.checkBoxNugetLogin.Location = new System.Drawing.Point(36, 216);
             this.checkBoxNugetLogin.Name = "checkBoxNugetLogin";
             this.checkBoxNugetLogin.Size = new System.Drawing.Size(128, 19);
             this.checkBoxNugetLogin.TabIndex = 8;
@@ -377,7 +401,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoValidate = System.Windows.Forms.AutoValidate.EnableAllowFocusChange;
-            this.ClientSize = new System.Drawing.Size(645, 464);
+            this.ClientSize = new System.Drawing.Size(645, 490);
             this.Controls.Add(this.stepWizardControl);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
@@ -430,5 +454,7 @@
         private System.Windows.Forms.Label labelLogin;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private System.Windows.Forms.CheckBox chkForceEnglishOutput;
+        private System.Windows.Forms.CheckBox chkSymbol;
+        private System.Windows.Forms.CheckBox chkPubSymbols;
     }
 }

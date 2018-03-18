@@ -5,6 +5,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 using System.Xml;
 using AeroWizard;
@@ -290,6 +291,10 @@ namespace CnSharp.VisualStudio.NuPack.NuGet
 
             if (chkForceEnglishOutput.Checked)
                 script.Append(" -ForceEnglishOutput ");
+            if(chkIncludeReferencedProjects.Checked)
+                script.Append(" -IncludeReferencedProjects ");
+            if(chkSymbol.Checked)
+                script.Append(" -Symbols ");
 
             var url = sourceBox.Text.Trim();
             if (url.Length > 0)
@@ -302,13 +307,34 @@ namespace CnSharp.VisualStudio.NuPack.NuGet
                     script.AppendLine();
                 }
 
-                var dir = _releaseDir;
+                var dir = _outputDir;
                 if (!dir.EndsWith("\\"))
                     dir += "\\";
                 script.AppendFormat(@"""{0}"" push ""{1}*.nupkg"" -source {2} {3}", nugetExe, dir, url, txtKey.Text);
             }
 
-            RunCmd(script.ToString());
+            RunCmdEx(script.ToString());
+
+            ShowPackages();
+        }
+
+        void Publish()
+        {
+            var dir = _outputDir;
+            if (!dir.EndsWith("\\"))
+                dir += "\\";
+            var files = Directory.GetFiles(dir, "*.nupkg");
+
+        }
+
+        private void ShowPackages()
+        {
+            var outputDir = new DirectoryInfo(_outputDir);
+            if (!outputDir.Exists)
+                return;
+            var files = outputDir.GetFiles("*.nupkg");
+            if (chkOpenDir.Checked && files.Length > 0)
+                Process.Start(_outputDir);
         }
 
         private void MovePackage()
@@ -366,12 +392,12 @@ namespace CnSharp.VisualStudio.NuPack.NuGet
             }
         }
 
-        private static void RunCmd(string script)
+        private static void RunCmd(string script) //cmd issues goes here:https://stackoverflow.com/questions/139593/processstartinfo-hanging-on-waitforexit-why
         {
             var process = new Process();
             var info = new ProcessStartInfo
             {
-                FileName = "cmd.exe",
+                FileName = @"C:\Windows\System32\cmd.exe",
                 CreateNoWindow = true,
                 RedirectStandardInput = true,
                 RedirectStandardError = true,
@@ -387,13 +413,70 @@ namespace CnSharp.VisualStudio.NuPack.NuGet
                     writer.WriteLine(script);
                 }
             }
-            process.WaitForExit();
+          
             var sr = process.StandardOutput;
             var msg = sr.ReadToEnd();
 
             var srError = process.StandardError;
             msg += srError.ReadToEnd();
+
+            process.WaitForExit();
+
             Host.Instance.Dte2.OutputMessage(Common.ProductName, msg);
+        }
+
+        private void RunCmdEx(string script)
+        {
+            using (var process = new Process())
+            {
+                process.StartInfo.FileName = @"C:\Windows\System32\cmd.exe";
+                //process.StartInfo.Arguments = arguments;
+                process.StartInfo.UseShellExecute = false;
+                process.StartInfo.RedirectStandardInput = true;
+                process.StartInfo.RedirectStandardOutput = true;
+                process.StartInfo.RedirectStandardError = true;
+                process.StartInfo.CreateNoWindow = true;
+
+                using (var outputWaitHandle = new AutoResetEvent(false))
+                using (var errorWaitHandle = new AutoResetEvent(false))
+                {
+                    process.OutputDataReceived += (sender, e) => {
+                        if (e.Data == null)
+                        {
+                            outputWaitHandle.Set();
+                        }
+                        else
+                        {
+                            Host.Instance.Dte2.OutputMessage(Common.ProductName, e.Data);
+                        }
+                    };
+                    process.ErrorDataReceived += (sender, e) =>
+                    {
+                        if (e.Data == null)
+                        {
+                            errorWaitHandle.Set();
+                        }
+                        else
+                        {
+                            Host.Instance.Dte2.OutputMessage(Common.ProductName, e.Data);
+                        }
+                    };
+
+                    process.Start();
+                    using (var writer = process.StandardInput)
+                    {
+                        if (writer.BaseStream.CanWrite)
+                        {
+                            writer.WriteLine(script);
+                        }
+                    }
+
+                    process.BeginOutputReadLine();
+                    process.BeginErrorReadLine();
+
+                    process.WaitForExit();
+                }
+            }
         }
 
 
