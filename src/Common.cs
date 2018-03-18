@@ -18,6 +18,8 @@ namespace CnSharp.VisualStudio.NuPack
             var file = project.FileName + ".vspscc";
             Host.Instance.SourceControl = File.Exists(file) ? new TfsSourceControl() : null;
         }
+
+        public const string SymbolServer = "https://nuget.smbsrc.net/";
     }
 
     public class Paths

@@ -161,8 +161,8 @@
     <Content Include="stylesheet.css" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="AeroWizard, Version=2.1.10.0, Culture=neutral, PublicKeyToken=915e74f5d64b8f37, processorArchitecture=MSIL">
-      <HintPath>packages\AeroWizard.2.1.10\lib\net40\AeroWizard.dll</HintPath>
+    <Reference Include="AeroWizard, Version=2.1.11.0, Culture=neutral, PublicKeyToken=915e74f5d64b8f37, processorArchitecture=MSIL">
+      <HintPath>packages\AeroWizard.2.1.11\lib\net40\AeroWizard.dll</HintPath>
     </Reference>
     <Reference Include="CnSharp.VisualStudio.SourceControl.Tfs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33a6564c1a397e8f, processorArchitecture=MSIL">
       <HintPath>packages\CnSharp.VisualStudio.TFS.1.1.2\lib\net35\CnSharp.VisualStudio.SourceControl.Tfs.dll</HintPath>
@@ -282,8 +282,7 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="VsSharp, Version=1.2.0.0, Culture=neutral, PublicKeyToken=31e1bdd79b8e5ae1, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>packages\VsSharp.1.1.1\lib\net35\VsSharp.dll</HintPath>
+      <HintPath>packages\VsSharp.1.2\lib\net35\VsSharp.dll</HintPath>
     </Reference>
     <Reference Include="VsWebSite.Interop, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>True</EmbedInteropTypes>

@@ -115,7 +115,7 @@ namespace CnSharp.VisualStudio.NuPack.Commands
 
             _dir = _project.GetDirectory();
             _nuspecFile = Path.Combine(_dir, NuGetDomain.NuSpecFileName);
-            if (!File.Exists(_nuspecFile))
+            if (!File.Exists(_nuspecFile))//todo:maybe a .net core prj.
             {
                 var dr = VsShellUtilities.ShowMessageBox(this.ServiceProvider, $"Miss {NuGetDomain.NuSpecFileName} file,would you add it now?","Warning", 
                     OLEMSGICON.OLEMSGICON_WARNING, OLEMSGBUTTON.OLEMSGBUTTON_YESNO, OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
@@ -124,55 +124,43 @@ namespace CnSharp.VisualStudio.NuPack.Commands
                 new AddNuSpecCommand().Execute();
             }
 
-            _assemblyInfo = _project.GetProjectAssemblyInfo();
             _xmlDoc = new XmlDocument();
             _xmlDoc.Load(_nuspecFile);
             var xml = _xmlDoc.InnerXml;
             _nupack = XmlSerializerHelper.LoadObjectFromXmlString<NuGet.Package>(xml);
 
-            var packageFields = new List<string>();
-            var assemblyFields = new List<string>();
-            if (_nupack.Metadata.Id.IsEmptyOrPlaceHolder() && string.IsNullOrWhiteSpace(_assemblyInfo.Title))
-            {
-                packageFields.Add("id");
-                assemblyFields.Add("AssemblyTitle");
-            }
-            if (_nupack.Metadata.Authors.IsEmptyOrPlaceHolder() && string.IsNullOrWhiteSpace(_assemblyInfo.Company))
-            {
-                packageFields.Add("authors");
-                assemblyFields.Add("AssemblyCompany");
-            }
-            if (_nupack.Metadata.Description.IsEmptyOrPlaceHolder() && string.IsNullOrWhiteSpace(_assemblyInfo.Description))
-            {
-                packageFields.Add("description");
-                assemblyFields.Add("AssemblyDescription");
-            }
 
-
-            if (assemblyFields.Count > 0)
+            try
             {
-                var assemblyInfoFile = _project.GetAssemblyInfoFileName();
+                _assemblyInfo = _project.GetProjectAssemblyInfo();
 
-                if (File.Exists(assemblyInfoFile))
+                if (_nupack.Metadata.Id.IsEmptyOrPlaceHolder() && !string.IsNullOrWhiteSpace(_assemblyInfo.Title))
                 {
-                    VsShellUtilities.ShowMessageBox(this.ServiceProvider,
-                        $"{string.Join("/", assemblyFields)} required,please edit {Path.GetFileName(assemblyInfoFile)} at first.", "Warning",
-                        OLEMSGICON.OLEMSGICON_WARNING, OLEMSGBUTTON.OLEMSGBUTTON_OK,
-                        OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
-
-                    dte.ItemOperations.OpenFile(assemblyInfoFile);
+                    _nupack.Metadata.Id = _assemblyInfo.Title;
                 }
-                else
+                if (_nupack.Metadata.Title.IsEmptyOrPlaceHolder() && !string.IsNullOrWhiteSpace(_assemblyInfo.Title))
                 {
-                    VsShellUtilities.ShowMessageBox(this.ServiceProvider,
-                       $"{string.Join("/", packageFields)} required,please edit package.nuspec at first.", "Warning",
-                       OLEMSGICON.OLEMSGICON_WARNING, OLEMSGBUTTON.OLEMSGBUTTON_OK,
-                       OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
-
-                    dte.ItemOperations.OpenFile(_nuspecFile);
+                    _nupack.Metadata.Title = _assemblyInfo.Title;
                 }
-                return;
+                if (_nupack.Metadata.Authors.IsEmptyOrPlaceHolder() && !string.IsNullOrWhiteSpace(_assemblyInfo.Company))
+                {
+                    _nupack.Metadata.Authors = _assemblyInfo.Company;
+                }
+                if (_nupack.Metadata.Owners.IsEmptyOrPlaceHolder() && !string.IsNullOrWhiteSpace(_assemblyInfo.Company))
+                {
+                    _nupack.Metadata.Owners = _assemblyInfo.Company;
+                }
+                if (_nupack.Metadata.Description.IsEmptyOrPlaceHolder() && !string.IsNullOrWhiteSpace(_assemblyInfo.Description))
+                {
+                    _nupack.Metadata.Description = _assemblyInfo.Description;
+                }
+
             }
+            catch (FileNotFoundException ex)
+            {
+                _assemblyInfo = null;
+            }
+          
 
             //MergePackagesConfig();
 

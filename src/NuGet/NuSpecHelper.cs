@@ -28,23 +28,21 @@ namespace CnSharp.VisualStudio.NuPack.NuGet
             var metadataNode = doc.SelectSingleNode("package/metadata");
             if (metadataNode == null)
                 return;
-            var idNode = metadataNode.SelectSingleNode("id");
+            metadataNode.SetXmlNode("id", metadata.Id);
+            metadataNode.SetXmlNode("title", metadata.Title);
+            metadataNode.SetXmlNode("description", metadata.Description);
+            metadataNode.SetXmlNode("owners", metadata.Owners);
+            metadataNode.SetXmlNode("authors", metadata.Authors);
+            metadataNode.SetXmlNode("version", metadata.Version);
+            metadataNode.SetXmlNode("releaseNotes", metadata.ReleaseNotes);
+            UpdateDependencies(doc,metadata);
+        }
+
+        private static void SetXmlNode(this XmlNode metadataNode,string key,string value)
+        {
+            var idNode = metadataNode.SelectSingleNode(key);
             if (idNode != null)
-                idNode.InnerText = metadata.Id;
-
-            var versionNode = metadataNode.SelectSingleNode("version");
-            if (versionNode != null)
-                versionNode.InnerText = metadata.Version;
-
-            var releaseNotesNode = metadataNode.SelectSingleNode("releaseNotes");
-            if (releaseNotesNode != null)
-                releaseNotesNode.InnerText = metadata.ReleaseNotes;
-
-            var descNode = metadataNode.SelectSingleNode("description");
-            if (descNode != null)
-                descNode.InnerText = metadata.Description;
-
-             UpdateDependencies(doc,metadata);
+                idNode.InnerText = value;
         }
 
 

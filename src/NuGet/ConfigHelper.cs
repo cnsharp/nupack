@@ -106,7 +106,5 @@ namespace CnSharp.VisualStudio.NuPack.NuGet
         public string FileName => Project.UniqueName + Ext;
 
         public string PackageOutputDirectory { get; set; } = "bin\\NuGet\\";
-
-        public bool SyncPackageVersionToProjectsDependedOn { get; set; } = true;
     }
 }

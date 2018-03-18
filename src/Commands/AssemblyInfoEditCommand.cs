@@ -111,7 +111,7 @@ namespace CnSharp.VisualStudio.NuPack.Commands
          this.ServiceProvider,
          "No project is opened.",
          Common.ProductName,
-         OLEMSGICON.OLEMSGICON_INFO,
+         OLEMSGICON.OLEMSGICON_WARNING,
          OLEMSGBUTTON.OLEMSGBUTTON_OK,
          OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
         }

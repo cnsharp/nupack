@@ -86,6 +86,8 @@ namespace CnSharp.VisualStudio.NuPack.NuGet
             else if (stepWizardControl.SelectedPage == wizardPage3)
             {
                 sourceBox.Focus();
+                textBoxSymbolServer.Enabled = chkSymbol.Checked;
+                textBoxSymbolServer.Text = Common.SymbolServer;
             }
         }
 
@@ -100,20 +102,25 @@ namespace CnSharp.VisualStudio.NuPack.NuGet
         {
             txtAssemblyVersion.TextChanged += TextBoxTextChanged;
             txtAssemblyVersion.TextChanged +=
-                (sender, args) => { txtPackageVersion.Text = txtAssemblyVersion.Text.Trim().ShortenVersionNumber(); };
+                (sender, args) => { txtPackageVersion.Text = txtAssemblyVersion.Text.Trim().Trim('.').ShortenVersionNumber(); };
             txtPackageVersion.TextChanged += TextBoxTextChanged;
             txtNote.TextChanged += TextBoxTextChanged;
 
-            txtAssemblyVersion.Validating += TextBoxValidating;
-            txtAssemblyVersion.Validated += TextBoxValidated;
-            txtPackageVersion.Validating += TextBoxValidating;
-            txtPackageVersion.Validated += TextBoxValidated;
-            txtNote.Validating += TextBoxValidating;
-            txtNote.Validated += TextBoxValidated;
-            txtNugetPath.Validating += TxtNugetPath_Validating;
-            txtNugetPath.Validated += TextBoxValidated;
-            txtOutputDir.Validating += TxtOutputDir_Validating;
-            txtOutputDir.Validated += TextBoxValidated;
+            MakeTextBoxRequired(textBoxId);
+            MakeTextBoxRequired(textBoxTitle);
+            MakeTextBoxRequired(textBoxAuthors);
+            MakeTextBoxRequired(textBoxOwners);
+            MakeTextBoxRequired(txtAssemblyVersion);
+            MakeTextBoxRequired(txtPackageVersion);
+            MakeTextBoxRequired(txtNote);
+            MakeTextBoxRequired(txtNugetPath);
+            MakeTextBoxRequired(txtOutputDir);
+        }
+
+        private void MakeTextBoxRequired(TextBox box)
+        {
+            box.Validating += TextBoxValidating;
+            box.Validated += TextBoxValidated;
         }
 
         private void TxtOutputDir_Validating(object sender, CancelEventArgs e)
@@ -189,6 +196,11 @@ namespace CnSharp.VisualStudio.NuPack.NuGet
 
             txtPackageVersion.Text = _package.Metadata.Version.IsEmptyOrPlaceHolder() ? _assemblyInfo?.Version.Replace(".*", "") : _package.Metadata.Version;
             txtNote.Text = XmlTextFormatter.Decode(_package.Metadata.ReleaseNotes);
+            textBoxId.Text = _package.Metadata.Id;
+            textBoxTitle.Text = _package.Metadata.Title;
+            textBoxAuthors.Text = _package.Metadata.Authors;
+            textBoxOwners.Text = _package.Metadata.Owners;
+            textBoxDescription.Text = _package.Metadata.Description;
 
             foreach (var source in _nuGetConfig.Sources)
             {
@@ -198,14 +210,13 @@ namespace CnSharp.VisualStudio.NuPack.NuGet
             txtNugetPath.Text = _nuGetConfig.NugetPath;
             txtOutputDir.Text = _projectConfig.PackageOutputDirectory;
 
-            chkSyncDep.Checked = _projectConfig.SyncPackageVersionToProjectsDependedOn;
         }
 
         private void btnOpenNuGetExe_Click(object sender, EventArgs e)
         {
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            if (openNugetExeDialog.ShowDialog() == DialogResult.OK)
             {
-                txtNugetPath.Text = openFileDialog.FileName;
+                txtNugetPath.Text = openNugetExeDialog.FileName;
             }
         }
 
@@ -224,8 +235,7 @@ namespace CnSharp.VisualStudio.NuPack.NuGet
             EnsureOutputDir();
             Pack();
             //MovePackage();
-            if (chkSyncDep.Checked)
-                SyncVersionToDependency();
+           SyncVersionToDependency();
             SaveNuGetConfig();
            SaveProjectConfig();
         }
@@ -256,8 +266,13 @@ namespace CnSharp.VisualStudio.NuPack.NuGet
                 _packageOldVersion = _package.Metadata.Version;
                 _package.Metadata.Version = txtPackageVersion.Text.Trim();
             }
-            if (_package.Metadata.ReleaseNotes != note)
-                _package.Metadata.ReleaseNotes = note;
+
+            _package.Metadata.Id = textBoxId.Text.Trim();
+            _package.Metadata.Title = textBoxTitle.Text.Trim();
+            _package.Metadata.Authors = textBoxAuthors.Text.Trim();
+            _package.Metadata.Owners = textBoxOwners.Text.Trim();
+            _package.Metadata.Description = XmlTextFormatter.Encode(textBoxDescription.Text.Trim());
+            _package.Metadata.ReleaseNotes = note;
 
             var sc = Host.Instance.SourceControl;
             sc?.CheckOut(Path.GetDirectoryName(Host.Instance.DTE.Solution.FullName), _nuspecFile);
@@ -307,25 +322,30 @@ namespace CnSharp.VisualStudio.NuPack.NuGet
                     script.AppendLine();
                 }
 
-                var dir = _outputDir;
-                if (!dir.EndsWith("\\"))
-                    dir += "\\";
-                script.AppendFormat(@"""{0}"" push ""{1}*.nupkg"" -source {2} {3}", nugetExe, dir, url, txtKey.Text);
+                script.AppendFormat(@"""{0}"" push ""{1}"" -source {2} {3}", nugetExe, GetLastPackage(), url, txtKey.Text);
             }
 
-            RunCmdEx(script.ToString());
+            RunCmd(script.ToString());
 
             ShowPackages();
+
+            if (chkSymbol.Checked && !string.IsNullOrWhiteSpace(textBoxSymbolServer.Text))
+                PublishSymbolPackage();
         }
 
-        void Publish()
+
+        string GetLastPackage()
         {
-            var dir = _outputDir;
-            if (!dir.EndsWith("\\"))
-                dir += "\\";
-            var files = Directory.GetFiles(dir, "*.nupkg");
-
+            var files = Directory.GetFiles(_outputDir, "*.nupkg");
+            return files.Where(f => !f.EndsWith(".symbols.nupkg")).Select(m => new FileInfo(m)).OrderByDescending(f => f.CreationTime).FirstOrDefault().FullName;
         }
+
+        string GetLastSymbolPackage()
+        {
+            var files = Directory.GetFiles(_outputDir, "*.symbols.nupkg");
+            return files.Select(m => new FileInfo(m)).OrderByDescending(f => f.CreationTime).FirstOrDefault().FullName;
+        }
+
 
         private void ShowPackages()
         {
@@ -335,6 +355,16 @@ namespace CnSharp.VisualStudio.NuPack.NuGet
             var files = outputDir.GetFiles("*.nupkg");
             if (chkOpenDir.Checked && files.Length > 0)
                 Process.Start(_outputDir);
+        }
+
+        void PublishSymbolPackage()
+        {
+            var script = new StringBuilder();
+            script.AppendLine();
+            script.AppendFormat("nuget SetApiKey {0}", txtKey.Text);
+            script.AppendLine();
+            script.AppendFormat("nuget push {0} -source {1}",GetLastSymbolPackage(), textBoxSymbolServer.Text.Trim());
+            RunCmd(script.ToString());
         }
 
         private void MovePackage()
@@ -392,40 +422,8 @@ namespace CnSharp.VisualStudio.NuPack.NuGet
             }
         }
 
-        private static void RunCmd(string script) //cmd issues goes here:https://stackoverflow.com/questions/139593/processstartinfo-hanging-on-waitforexit-why
-        {
-            var process = new Process();
-            var info = new ProcessStartInfo
-            {
-                FileName = @"C:\Windows\System32\cmd.exe",
-                CreateNoWindow = true,
-                RedirectStandardInput = true,
-                RedirectStandardError = true,
-                RedirectStandardOutput = true,
-                UseShellExecute = false
-            };
-            process.StartInfo = info;
-            process.Start();
-            using (var writer = process.StandardInput)
-            {
-                if (writer.BaseStream.CanWrite)
-                {
-                    writer.WriteLine(script);
-                }
-            }
-          
-            var sr = process.StandardOutput;
-            var msg = sr.ReadToEnd();
-
-            var srError = process.StandardError;
-            msg += srError.ReadToEnd();
-
-            process.WaitForExit();
-
-            Host.Instance.Dte2.OutputMessage(Common.ProductName, msg);
-        }
-
-        private void RunCmdEx(string script)
+        //cmd issues goes here:https://stackoverflow.com/questions/139593/processstartinfo-hanging-on-waitforexit-why
+        private void RunCmd(string script)
         {
             using (var process = new Process())
             {
@@ -498,7 +496,6 @@ namespace CnSharp.VisualStudio.NuPack.NuGet
             if (txtOutputDir.Text == _projectConfig.PackageOutputDirectory)
                 return;
             _projectConfig.PackageOutputDirectory = txtOutputDir.Text;
-            _projectConfig.SyncPackageVersionToProjectsDependedOn = chkSyncDep.Checked;
             _projectConfig.Save();
         }
 
@@ -531,6 +528,25 @@ namespace CnSharp.VisualStudio.NuPack.NuGet
 
             textBoxLogin.Visible = check.Checked;
             labelLogin.Visible = check.Checked;
+        }
+
+        private void btnOpenCommonAssemblyInfo_Click(object sender, EventArgs e)
+        {
+            var dr = openAssemblyInfoFileDialog.ShowDialog();
+            if (dr != DialogResult.OK) return;
+            var assemblyInfoFile = openAssemblyInfoFileDialog.FileName;
+            try
+            {
+                var manager = AssemblyInfoFileManagerFactory.Get(assemblyInfoFile);
+                var info = manager.Read(assemblyInfoFile);
+                if (string.IsNullOrWhiteSpace(textBoxAuthors.Text)) textBoxAuthors.Text = info.Company;
+                if (string.IsNullOrWhiteSpace(textBoxOwners.Text)) textBoxOwners.Text = info.Company;
+                if (string.IsNullOrWhiteSpace(textBoxDescription.Text)) textBoxDescription.Text = info.Description;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, Common.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }
