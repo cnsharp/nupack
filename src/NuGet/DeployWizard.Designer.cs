@@ -74,7 +74,6 @@
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.openNugetExeDialog = new System.Windows.Forms.OpenFileDialog();
             this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
-            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.openAssemblyInfoFileDialog = new System.Windows.Forms.OpenFileDialog();
             ((System.ComponentModel.ISupportInitialize)(this.stepWizardControl)).BeginInit();
             this.wizardPage1.SuspendLayout();
@@ -327,7 +326,7 @@
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(28, 162);
+            this.label11.Location = new System.Drawing.Point(28, 168);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(70, 15);
             this.label11.TabIndex = 33;
@@ -568,7 +567,6 @@
         private System.Windows.Forms.CheckBox checkBoxNugetLogin;
         private System.Windows.Forms.TextBox textBoxLogin;
         private System.Windows.Forms.Label labelLogin;
-        private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private System.Windows.Forms.CheckBox chkForceEnglishOutput;
         private System.Windows.Forms.CheckBox chkSymbol;
         private System.Windows.Forms.TextBox textBoxSymbolServer;
