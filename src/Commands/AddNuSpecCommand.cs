@@ -1,10 +1,4 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="AddNuSpecCommand.cs" company="Microsoft">
-//     Copyright (c) Microsoft.  All rights reserved.
-// </copyright>
-//------------------------------------------------------------------------------
-
-using System;
+﻿using System;
 using System.ComponentModel.Design;
 using System.IO;
 using System.Text;
@@ -124,7 +118,7 @@ namespace CnSharp.VisualStudio.NuPack.Commands
             var dte = Host.Instance.Dte2;
             var project = dte.GetActiveProejct();
             Common.CheckTfs(project);
-            var file = Path.Combine(project.GetDirectory(), NuGet.NuGetDomain.NuSpecFileName);
+            var file = Path.Combine(project.GetDirectory(),NuGetDomain.NuSpecFileName);
             if (File.Exists(file))
                 return;
 

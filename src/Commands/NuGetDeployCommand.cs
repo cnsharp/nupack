@@ -111,62 +111,54 @@ namespace CnSharp.VisualStudio.NuPack.Commands
         {
             var dte = Host.Instance.Dte2;
             _project = dte.GetActiveProejct();
-            Common.CheckTfs(_project);
 
+            //Common.CheckTfs(_project);
             _dir = _project.GetDirectory();
-            _nuspecFile = Path.Combine(_dir, NuGetDomain.NuSpecFileName);
-            if (!File.Exists(_nuspecFile))//todo:maybe a .net core prj.
+            _assemblyInfo = _project.GetProjectAssemblyInfo();
+            if (_project.IsNetFrameworkProject())
             {
-                var dr = VsShellUtilities.ShowMessageBox(this.ServiceProvider, $"Miss {NuGetDomain.NuSpecFileName} file,would you add it now?","Warning", 
-                    OLEMSGICON.OLEMSGICON_WARNING, OLEMSGBUTTON.OLEMSGBUTTON_YESNO, OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
-                if(dr != 6)
-                    return;
-                new AddNuSpecCommand().Execute();
+                _nuspecFile = Path.Combine(_dir, NuGetDomain.NuSpecFileName);
+                if (!File.Exists(_nuspecFile))
+                {
+                    var dr = VsShellUtilities.ShowMessageBox(this.ServiceProvider,
+                        $"Miss {NuGetDomain.NuSpecFileName} file,would you add it now?", "Warning",
+                        OLEMSGICON.OLEMSGICON_WARNING, OLEMSGBUTTON.OLEMSGBUTTON_YESNO, OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
+                    if (dr != 6)
+                        return;
+                    new AddNuSpecCommand().Execute();
+                }
+
             }
+            else
+            {
+                //_nupack = new NuGet.Package
+                //{
+                //    Metadata = new NuGet.Package.MetaData
+                //    {
+                        
+                //    }
+                //}
+            }
+            _nupack.Metadata.AssignByAssemblyInfo(_assemblyInfo);
+
+
+            //MergePackagesConfig();
+
+            var form = new DeployWizard(_assemblyInfo,_nupack,null,_xmlDoc);//todo
+            if(form.ShowDialog() == DialogResult.OK)
+                form.SaveAndBuild();
+        }
+
+        private bool LoadNetFrameworkProjectInfo()
+        {
+           
 
             _xmlDoc = new XmlDocument();
             _xmlDoc.Load(_nuspecFile);
             var xml = _xmlDoc.InnerXml;
             _nupack = XmlSerializerHelper.LoadObjectFromXmlString<NuGet.Package>(xml);
 
-
-            try
-            {
-                _assemblyInfo = _project.GetProjectAssemblyInfo();
-
-                if (_nupack.Metadata.Id.IsEmptyOrPlaceHolder() && !string.IsNullOrWhiteSpace(_assemblyInfo.Title))
-                {
-                    _nupack.Metadata.Id = _assemblyInfo.Title;
-                }
-                if (_nupack.Metadata.Title.IsEmptyOrPlaceHolder() && !string.IsNullOrWhiteSpace(_assemblyInfo.Title))
-                {
-                    _nupack.Metadata.Title = _assemblyInfo.Title;
-                }
-                if (_nupack.Metadata.Authors.IsEmptyOrPlaceHolder() && !string.IsNullOrWhiteSpace(_assemblyInfo.Company))
-                {
-                    _nupack.Metadata.Authors = _assemblyInfo.Company;
-                }
-                if (_nupack.Metadata.Owners.IsEmptyOrPlaceHolder() && !string.IsNullOrWhiteSpace(_assemblyInfo.Company))
-                {
-                    _nupack.Metadata.Owners = _assemblyInfo.Company;
-                }
-                if (_nupack.Metadata.Description.IsEmptyOrPlaceHolder() && !string.IsNullOrWhiteSpace(_assemblyInfo.Description))
-                {
-                    _nupack.Metadata.Description = _assemblyInfo.Description;
-                }
-
-            }
-            catch (FileNotFoundException ex)
-            {
-                _assemblyInfo = null;
-            }
-          
-
-            //MergePackagesConfig();
-
-            var form = new DeployWizard(_assemblyInfo,_nupack,_xmlDoc);
-            if(form.ShowDialog() == DialogResult.OK)
-                form.SaveAndBuild();
+            return true;
         }
 
         private void MergePackagesConfig()

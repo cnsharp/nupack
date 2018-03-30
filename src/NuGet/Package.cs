@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Serialization;
+using CnSharp.VisualStudio.Extensions.Projects;
 
 namespace CnSharp.VisualStudio.NuPack.NuGet
 {
@@ -69,6 +70,30 @@ namespace CnSharp.VisualStudio.NuPack.NuGet
 
             [XmlElement("references")]
             public ReferenceSet References { get; set; }
+
+            public void AssignByAssemblyInfo(ProjectAssemblyInfo assemblyInfo)
+            {
+                if (Id.IsEmptyOrPlaceHolder() && !string.IsNullOrWhiteSpace(assemblyInfo.Title))
+                {
+                    Id = assemblyInfo.Title;
+                }
+                if (Title.IsEmptyOrPlaceHolder() && !string.IsNullOrWhiteSpace(assemblyInfo.Title))
+                {
+                    Title = assemblyInfo.Title;
+                }
+                if (Authors.IsEmptyOrPlaceHolder() && !string.IsNullOrWhiteSpace(assemblyInfo.Company))
+                {
+                    Authors = assemblyInfo.Company;
+                }
+                if (Owners.IsEmptyOrPlaceHolder() && !string.IsNullOrWhiteSpace(assemblyInfo.Company))
+                {
+                    Owners = assemblyInfo.Company;
+                }
+                if (Description.IsEmptyOrPlaceHolder() && !string.IsNullOrWhiteSpace(assemblyInfo.Description))
+                {
+                    Description = assemblyInfo.Description;
+                }
+            }
 
         }
 
@@ -145,6 +170,8 @@ namespace CnSharp.VisualStudio.NuPack.NuGet
                 public string File { get; set; }
             }
         }
+
+      
     }
 
     public class DependencyViewModel

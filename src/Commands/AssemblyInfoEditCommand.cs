@@ -1,17 +1,12 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="AssemblyInfoEditCommand.cs" company="Microsoft">
-//     Copyright (c) Microsoft.  All rights reserved.
-// </copyright>
-//------------------------------------------------------------------------------
-
-using System;
+﻿using System;
 using System.ComponentModel.Design;
+using System.IO;
 using System.Linq;
 using CnSharp.VisualStudio.Extensions;
 using CnSharp.VisualStudio.Extensions.Commands;
 using CnSharp.VisualStudio.NuPack.AssemblyInfoEditor;
+using CnSharp.VisualStudio.NuPack.Extensions;
 using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.Interop;
 
 namespace CnSharp.VisualStudio.NuPack.Commands
 {
@@ -105,17 +100,6 @@ namespace CnSharp.VisualStudio.NuPack.Commands
         }
 
 
-        private void ShowError()
-        {
-            VsShellUtilities.ShowMessageBox(
-         this.ServiceProvider,
-         "No project is opened.",
-         Common.ProductName,
-         OLEMSGICON.OLEMSGICON_WARNING,
-         OLEMSGBUTTON.OLEMSGBUTTON_OK,
-         OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
-        }
-
         public void Execute(object arg = null)
         {
             var dte = Host.Instance.Dte2;
@@ -125,14 +109,17 @@ namespace CnSharp.VisualStudio.NuPack.Commands
                 if (!allProjects.Any())
                 {
 
-                    ShowError();
+                    ServiceProvider.ShowError("No project is opened.",Common.ProductName);
                     return;
                 }
-                new EachAssemblyInfoForm(allProjects).ShowDialog();
+                var prj = dte.GetActiveProejct();
+               prj.LinkCommonAssemblyInfoFile(Path.Combine(Path.GetDirectoryName(dte.Solution.FileName),"CommonAssemblyInfo.cs"));
+                prj.RemoveCommonAssemblyInfoAnnotations();
+                //new EachAssemblyInfoForm(allProjects).ShowDialog();
             }
             catch (Exception exception)
             {
-                ShowError();
+                ServiceProvider.ShowError(exception.Message, Common.ProductName);
             }
         }
     }

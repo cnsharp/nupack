@@ -14,6 +14,7 @@ using CnSharp.VisualStudio.Extensions.Projects;
 using CnSharp.VisualStudio.NuPack.Util;
 using EnvDTE;
 using EnvDTE80;
+using NuGet;
 using Process = System.Diagnostics.Process;
 
 namespace CnSharp.VisualStudio.NuPack.NuGet
@@ -24,7 +25,8 @@ namespace CnSharp.VisualStudio.NuPack.NuGet
         private readonly string _dir;
         private readonly NuGetConfig _nuGetConfig;
         private readonly string _nuspecFile;
-        private readonly Package _package;
+        //private readonly Package _package;
+        private readonly ManifestMetadata _metadata;
         private string _packageOldVersion;
         private readonly Project _project;
         private readonly ProjectNuPackConfig _projectConfig;
@@ -66,10 +68,10 @@ namespace CnSharp.VisualStudio.NuPack.NuGet
             }
         }
 
-        public DeployWizard(ProjectAssemblyInfo assemblyInfo, Package package,XmlDocument doc) : this()
+        public DeployWizard(ProjectAssemblyInfo assemblyInfo, Package package, ManifestMetadata metadata,XmlDocument doc) : this()
         {
             _assemblyInfo = assemblyInfo;
-            _package = package;
+            _metadata = metadata;
             _xmlDoc = doc;
         }
 
@@ -194,13 +196,13 @@ namespace CnSharp.VisualStudio.NuPack.NuGet
                 //txtAssemblyVersion.Enabled = !_assemblyInfo.Version.Contains("*");
             }
 
-            txtPackageVersion.Text = _package.Metadata.Version.IsEmptyOrPlaceHolder() ? _assemblyInfo?.Version.Replace(".*", "") : _package.Metadata.Version;
-            txtNote.Text = XmlTextFormatter.Decode(_package.Metadata.ReleaseNotes);
-            textBoxId.Text = _package.Metadata.Id;
-            textBoxTitle.Text = _package.Metadata.Title;
-            textBoxAuthors.Text = _package.Metadata.Authors;
-            textBoxOwners.Text = _package.Metadata.Owners;
-            textBoxDescription.Text = _package.Metadata.Description;
+            txtPackageVersion.Text = _metadata.Version.IsEmptyOrPlaceHolder() ? _assemblyInfo?.Version.Replace(".*", "") : _metadata.Version;
+            txtNote.Text = XmlTextFormatter.Decode(_metadata.ReleaseNotes);
+            textBoxId.Text = _metadata.Id;
+            textBoxTitle.Text = _metadata.Title;
+            textBoxAuthors.Text = _metadata.Authors;
+            textBoxOwners.Text = _metadata.Owners;
+            textBoxDescription.Text = _metadata.Description;
 
             foreach (var source in _nuGetConfig.Sources)
             {
@@ -247,39 +249,39 @@ namespace CnSharp.VisualStudio.NuPack.NuGet
             if (_assemblyInfo != null && newVersion != _assemblyInfo.Version)
             {
                 _assemblyInfo.Version = _assemblyInfo.FileVersion = newVersion;
-                _project.ModifyAssemblyInfo(_assemblyInfo);
+                AssemblyInfoUtil.Save(_assemblyInfo);
             }
         }
 
         private void SyncVersionToDependency()
         {
-            if (_packageOldVersion == _package.Metadata.Version)
+            if (_packageOldVersion == _metadata.Version)
                 return;
-            NuSpecHelper.UpdateDependencyInSolution(_package.Metadata.Id.IsEmptyOrPlaceHolder() ? _assemblyInfo.Title : _package.Metadata.Id, _package.Metadata.Version);
+            NuSpecHelper.UpdateDependencyInSolution(_metadata.Id.IsEmptyOrPlaceHolder() ? _assemblyInfo.Title : _metadata.Id, _metadata.Version);
         }
 
         private void SaveNuSpec()
         {
             var note = XmlTextFormatter.Encode(txtNote.Text);
-            if (_package.Metadata.Version != txtPackageVersion.Text.Trim())
+            if (_metadata.Version != txtPackageVersion.Text.Trim())
             {
-                _packageOldVersion = _package.Metadata.Version;
-                _package.Metadata.Version = txtPackageVersion.Text.Trim();
+                _packageOldVersion = _metadata.Version;
+                _metadata.Version = txtPackageVersion.Text.Trim();
             }
 
-            _package.Metadata.Id = textBoxId.Text.Trim();
-            _package.Metadata.Title = textBoxTitle.Text.Trim();
-            _package.Metadata.Authors = textBoxAuthors.Text.Trim();
-            _package.Metadata.Owners = textBoxOwners.Text.Trim();
-            _package.Metadata.Description = XmlTextFormatter.Encode(textBoxDescription.Text.Trim());
-            _package.Metadata.ReleaseNotes = note;
+            _metadata.Id = textBoxId.Text.Trim();
+            _metadata.Title = textBoxTitle.Text.Trim();
+            _metadata.Authors = textBoxAuthors.Text.Trim();
+            _metadata.Owners = textBoxOwners.Text.Trim();
+            _metadata.Description = XmlTextFormatter.Encode(textBoxDescription.Text.Trim());
+            _metadata.ReleaseNotes = note;
 
             var sc = Host.Instance.SourceControl;
             sc?.CheckOut(Path.GetDirectoryName(Host.Instance.DTE.Solution.FullName), _nuspecFile);
 
-            //partly update
-            _xmlDoc.UpdateMetadata(_package.Metadata);
-            _xmlDoc.Save(_nuspecFile);
+            //partly update //todo
+            //_xmlDoc.UpdateMetadata(_metadata);
+            //_xmlDoc.Save(_nuspecFile);
         }
 
         private bool Build()
@@ -302,7 +304,7 @@ namespace CnSharp.VisualStudio.NuPack.NuGet
             var script = new StringBuilder();
             script.AppendFormat(
                 @"""{0}"" pack ""{1}"" -Build -Version ""{2}"" -Properties  Configuration=Release -OutputDirectory ""{3}"" ", nugetExe,
-                _project.FileName,_package.Metadata.Version, _outputDir);
+                _project.FileName,_metadata.Version, _outputDir);
 
             if (chkForceEnglishOutput.Checked)
                 script.Append(" -ForceEnglishOutput ");
@@ -537,7 +539,7 @@ namespace CnSharp.VisualStudio.NuPack.NuGet
             var assemblyInfoFile = openAssemblyInfoFileDialog.FileName;
             try
             {
-                var manager = AssemblyInfoFileManagerFactory.Get(assemblyInfoFile);
+                var manager = AssemblyInfoFileManagerFactory.Get(_project);
                 var info = manager.Read(assemblyInfoFile);
                 if (string.IsNullOrWhiteSpace(textBoxAuthors.Text)) textBoxAuthors.Text = info.Company;
                 if (string.IsNullOrWhiteSpace(textBoxOwners.Text)) textBoxOwners.Text = info.Company;

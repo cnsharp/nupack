@@ -509,7 +509,7 @@
             // 
             // openAssemblyInfoFileDialog
             // 
-            this.openAssemblyInfoFileDialog.FileName = "nuget.exe";
+            this.openAssemblyInfoFileDialog.DefaultExt = "*.cs|*.vb";
             this.openAssemblyInfoFileDialog.Title = "Open Common Assembly Info File";
             // 
             // DeployWizard

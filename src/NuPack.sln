@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.6
+VisualStudioVersion = 15.0.27130.2036
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1CAC44E8-033D-416A-AD8B-C2A129774D9D}"
 	ProjectSection(SolutionItems) = preProject
@@ -14,6 +14,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTest", "..\UnitTest\UnitTest.csproj", "{2256B27A-40F1-40B7-A101-E2413AA04B5B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FormTests", "..\tests\FormTests\FormTests.csproj", "{D474AEE8-023F-478A-96C5-288D924A128A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CnSharp.VisualStudio.Extensions", "..\..\VS-Sharp\CnSharp.VS.Extensions.Common\CnSharp.VisualStudio.Extensions.csproj", "{1822955C-BE64-4D5A-B7E0-E8B0DFF69842}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,8 +35,15 @@ Global
 		{D474AEE8-023F-478A-96C5-288D924A128A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D474AEE8-023F-478A-96C5-288D924A128A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D474AEE8-023F-478A-96C5-288D924A128A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1822955C-BE64-4D5A-B7E0-E8B0DFF69842}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1822955C-BE64-4D5A-B7E0-E8B0DFF69842}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1822955C-BE64-4D5A-B7E0-E8B0DFF69842}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1822955C-BE64-4D5A-B7E0-E8B0DFF69842}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AE6DA125-E695-43A8-9D42-B62669948E64}
 	EndGlobalSection
 EndGlobal

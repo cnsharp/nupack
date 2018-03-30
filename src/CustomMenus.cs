@@ -5,14 +5,14 @@ using CnSharp.VisualStudio.NuPack.Commands;
 namespace CnSharp.VisualStudio.NuPack
 {
 
-    public class UnifiedAssemblyInfoEditMenu : CommandMenu
+    public class CommonAssemblyInfoEditMenu : CommandMenu
     {
-        public UnifiedAssemblyInfoEditMenu()
+        public CommonAssemblyInfoEditMenu()
         {
             Id = this.GetType().Name;
-            Command = new UnifiedAssemblyInfoEditCommand();
+            Command = new CommonAssemblyInfoEditCommand();
             //AttachTo = "Solution";
-            Text = "Unified Common Info...";
+            Text = "Common Info...";
             Action = () => Command.Execute();
             //Position = -7;
             BeginGroup = true;
@@ -43,7 +43,7 @@ namespace CnSharp.VisualStudio.NuPack
             Position = -7;
             SubMenus = new List<CommandMenu>
             {
-                new UnifiedAssemblyInfoEditMenu(),
+                new CommonAssemblyInfoEditMenu(),
                 new AssemblyInfoEditMenu()
             };
         }

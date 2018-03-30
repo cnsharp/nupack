@@ -8,10 +8,6 @@ using CnSharp.VisualStudio.NuPack.Util;
 
 namespace CnSharp.VisualStudio.NuPack.NuGet
 {
-    public class NuGetDomain
-    {
-        public const string NuSpecFileName = "package.nuspec";
-    }
 
     public static class NuSpecHelper
     {

@@ -17,7 +17,7 @@ namespace CnSharp.VisualStudio.NuPack.Commands
     /// <summary>
     /// Command handler
     /// </summary>
-    internal sealed class UnifiedAssemblyInfoEditCommand :  ICommand
+    internal sealed class CommonAssemblyInfoEditCommand :  ICommand
     {
         /// <summary>
         /// Command ID.
@@ -35,11 +35,11 @@ namespace CnSharp.VisualStudio.NuPack.Commands
         private readonly Package package;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="UnifiedAssemblyInfoEditCommand"/> class.
+        /// Initializes a new instance of the <see cref="CommonAssemblyInfoEditCommand"/> class.
         /// Adds our command handlers for menu (commands must exist in the command table file)
         /// </summary>
         /// <param name="package">Owner package, not null.</param>
-        private UnifiedAssemblyInfoEditCommand(Package package)
+        private CommonAssemblyInfoEditCommand(Package package)
         {
             if (package == null)
             {
@@ -57,7 +57,7 @@ namespace CnSharp.VisualStudio.NuPack.Commands
             }
         }
 
-        public UnifiedAssemblyInfoEditCommand()
+        public CommonAssemblyInfoEditCommand()
         {
             
         }
@@ -65,7 +65,7 @@ namespace CnSharp.VisualStudio.NuPack.Commands
         /// <summary>
         /// Gets the instance of the command.
         /// </summary>
-        public static UnifiedAssemblyInfoEditCommand Instance
+        public static CommonAssemblyInfoEditCommand Instance
         {
             get;
             private set;
@@ -88,7 +88,7 @@ namespace CnSharp.VisualStudio.NuPack.Commands
         /// <param name="package">Owner package, not null.</param>
         public static void Initialize(Package package)
         {
-            Instance = new UnifiedAssemblyInfoEditCommand(package);
+            Instance = new CommonAssemblyInfoEditCommand(package);
         }
 
         /// <summary>
@@ -112,7 +112,7 @@ namespace CnSharp.VisualStudio.NuPack.Commands
             {
                 return;
             }
-            new AssemblyInfoForm(allProjects, startProject).ShowDialog();
+            new CommonAssemblyInfoForm(allProjects, startProject).ShowDialog();
         }
     }
 }

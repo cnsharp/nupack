@@ -1,10 +1,4 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="NuPackPackage.cs" company="Microsoft">
-//     Copyright (c) Microsoft.  All rights reserved.
-// </copyright>
-//------------------------------------------------------------------------------
-
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
@@ -42,7 +36,7 @@ namespace CnSharp.VisualStudio.NuPack
     [PackageRegistration(UseManagedResourcesOnly = true)]
     [InstalledProductRegistration("#1110", "#1112", "1.0", IconResourceID = 1400)] // Info on this package for Help/About
     [ProvideMenuResource("Menus.ctmenu", 1)]
-    [Guid(NuPackPackage.PackageGuidString)]
+    [Guid(PackageGuidString)]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
     [ProvideAutoLoad(Microsoft.VisualStudio.Shell.Interop.UIContextGuids80.SolutionExists)]
     public sealed class NuPackPackage : Package
@@ -53,7 +47,7 @@ namespace CnSharp.VisualStudio.NuPack
         public const string PackageGuidString = "cfa941e7-1101-459a-9777-496681f602d0";
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AddNuSpecCommand"/> class.
+        /// Initializes a new instance of the <see cref="NuPackPackage"/> class.
         /// </summary>
         public NuPackPackage()
         {
@@ -84,7 +78,7 @@ namespace CnSharp.VisualStudio.NuPack
             AddNuSpecCommand.Initialize(this);
             NuGetDeployCommand.Initialize(this);
             AssemblyInfoEditCommand.Initialize(this);
-            UnifiedAssemblyInfoEditCommand.Initialize(this);
+            CommonAssemblyInfoEditCommand.Initialize(this);
 
             LoadCustomCommands();
         }

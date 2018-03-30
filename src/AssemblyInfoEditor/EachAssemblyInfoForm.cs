@@ -185,7 +185,7 @@ namespace CnSharp.VisualStudio.NuPack.AssemblyInfoEditor
                 }
                 string assemblyInfoFile = assemblyInfo.Project.GetAssemblyInfoFileName();
                 CheckOut(assemblyInfo, assemblyInfoFile);
-                assemblyInfo.Project.ModifyAssemblyInfo(assemblyInfo);
+                AssemblyInfoUtil.Save(assemblyInfo);
                 i++;
             }
 
