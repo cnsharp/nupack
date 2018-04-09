@@ -108,14 +108,19 @@ namespace CnSharp.VisualStudio.NuPack.Commands
                 var allProjects = dte.GetSolutionProjects().ToList();
                 if (!allProjects.Any())
                 {
-
                     ServiceProvider.ShowError("No project is opened.",Common.ProductName);
                     return;
                 }
-                var prj = dte.GetActiveProejct();
-               prj.LinkCommonAssemblyInfoFile(Path.Combine(Path.GetDirectoryName(dte.Solution.FileName),"CommonAssemblyInfo.cs"));
-                prj.RemoveCommonAssemblyInfoAnnotations();
-                //new EachAssemblyInfoForm(allProjects).ShowDialog();
+                var projects = allProjects.Where(p => p.IsNetFrameworkProject()).ToList();
+                if (!projects.Any())
+                {
+                    ServiceProvider.ShowError("No project is based on .net framework.", Common.ProductName);
+                    return;
+                }
+                // var prj = dte.GetActiveProejct();
+                //prj.LinkCommonAssemblyInfoFile(Path.Combine(Path.GetDirectoryName(dte.Solution.FileName),"CommonAssemblyInfo.cs"));
+                // prj.RemoveCommonAssemblyInfoAnnotations();
+                new AssemblyInfoForm(projects).ShowDialog();
             }
             catch (Exception exception)
             {

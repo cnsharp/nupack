@@ -51,6 +51,8 @@
             this.panel2 = new System.Windows.Forms.Panel();
             this.openAssemblyInfoFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.saveAssemblyInfoFileDialog = new System.Windows.Forms.SaveFileDialog();
+            this.txtTrademark = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
             this.colChecked = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.ColProjectName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColFileVersion = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -58,6 +60,7 @@
             this.ColProduct = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColCompany = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColCopyright = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColTrademark = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.groupBoxProjects.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.projectGrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.projectBindingSource)).BeginInit();
@@ -83,7 +86,7 @@
             this.groupBoxProjects.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBoxProjects.Location = new System.Drawing.Point(0, 97);
             this.groupBoxProjects.Name = "groupBoxProjects";
-            this.groupBoxProjects.Size = new System.Drawing.Size(1051, 367);
+            this.groupBoxProjects.Size = new System.Drawing.Size(1170, 367);
             this.groupBoxProjects.TabIndex = 5;
             this.groupBoxProjects.TabStop = false;
             this.groupBoxProjects.Text = "Projects";
@@ -101,18 +104,20 @@
             this.ColVersion,
             this.ColProduct,
             this.ColCompany,
-            this.ColCopyright});
+            this.ColCopyright,
+            this.ColTrademark});
             this.projectGrid.Dock = System.Windows.Forms.DockStyle.Fill;
             this.projectGrid.Location = new System.Drawing.Point(3, 16);
             this.projectGrid.Name = "projectGrid";
             this.projectGrid.RowHeadersVisible = false;
             this.projectGrid.RowTemplate.Height = 23;
-            this.projectGrid.Size = new System.Drawing.Size(1045, 348);
+            this.projectGrid.Size = new System.Drawing.Size(1164, 348);
             this.projectGrid.TabIndex = 0;
             this.projectGrid.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.projectGrid_CellBeginEdit);
             this.projectGrid.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.projectGrid_CellEndEdit);
             this.projectGrid.CellValidated += new System.Windows.Forms.DataGridViewCellEventHandler(this.projectGrid_CellValidated);
             this.projectGrid.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.projectGrid_CellValidating);
+            this.projectGrid.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.projectGrid_DataBindingComplete);
             // 
             // btnOK
             // 
@@ -131,7 +136,7 @@
             this.toolStripStatusLabel});
             this.statusStrip1.Location = new System.Drawing.Point(0, 507);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(1051, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(1170, 22);
             this.statusStrip1.TabIndex = 14;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -143,6 +148,8 @@
             // 
             // groupBoxCommonInfo
             // 
+            this.groupBoxCommonInfo.Controls.Add(this.txtTrademark);
+            this.groupBoxCommonInfo.Controls.Add(this.label5);
             this.groupBoxCommonInfo.Controls.Add(this.txtVersion);
             this.groupBoxCommonInfo.Controls.Add(this.label1);
             this.groupBoxCommonInfo.Controls.Add(this.btnLink);
@@ -156,22 +163,22 @@
             this.groupBoxCommonInfo.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBoxCommonInfo.Location = new System.Drawing.Point(0, 0);
             this.groupBoxCommonInfo.Name = "groupBoxCommonInfo";
-            this.groupBoxCommonInfo.Size = new System.Drawing.Size(1051, 97);
+            this.groupBoxCommonInfo.Size = new System.Drawing.Size(1170, 97);
             this.groupBoxCommonInfo.TabIndex = 16;
             this.groupBoxCommonInfo.TabStop = false;
             this.groupBoxCommonInfo.Text = "Common Info";
             // 
             // txtVersion
             // 
-            this.txtVersion.Location = new System.Drawing.Point(511, 62);
+            this.txtVersion.Location = new System.Drawing.Point(874, 25);
             this.txtVersion.Name = "txtVersion";
-            this.txtVersion.Size = new System.Drawing.Size(271, 20);
-            this.txtVersion.TabIndex = 13;
+            this.txtVersion.Size = new System.Drawing.Size(184, 20);
+            this.txtVersion.TabIndex = 4;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(440, 66);
+            this.label1.Location = new System.Drawing.Point(820, 28);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(42, 13);
             this.label1.TabIndex = 12;
@@ -179,20 +186,20 @@
             // 
             // btnLink
             // 
-            this.btnLink.Location = new System.Drawing.Point(949, 64);
+            this.btnLink.Location = new System.Drawing.Point(968, 64);
             this.btnLink.Name = "btnLink";
             this.btnLink.Size = new System.Drawing.Size(90, 23);
-            this.btnLink.TabIndex = 11;
+            this.btnLink.TabIndex = 6;
             this.btnLink.Text = "Link Exists ...";
             this.btnLink.UseVisualStyleBackColor = true;
             this.btnLink.Click += new System.EventHandler(this.btnLink_Click);
             // 
             // btnNewOrChange
             // 
-            this.btnNewOrChange.Location = new System.Drawing.Point(850, 64);
+            this.btnNewOrChange.Location = new System.Drawing.Point(874, 63);
             this.btnNewOrChange.Name = "btnNewOrChange";
             this.btnNewOrChange.Size = new System.Drawing.Size(88, 23);
-            this.btnNewOrChange.TabIndex = 10;
+            this.btnNewOrChange.TabIndex = 5;
             this.btnNewOrChange.Text = "New...";
             this.btnNewOrChange.UseVisualStyleBackColor = true;
             this.btnNewOrChange.Click += new System.EventHandler(this.btnNewOrChange_Click);
@@ -202,48 +209,48 @@
             this.txtCopyright.Location = new System.Drawing.Point(111, 66);
             this.txtCopyright.Name = "txtCopyright";
             this.txtCopyright.Size = new System.Drawing.Size(270, 20);
-            this.txtCopyright.TabIndex = 9;
+            this.txtCopyright.TabIndex = 2;
             // 
             // label4
             // 
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(32, 69);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(51, 13);
+            this.label4.Size = new System.Drawing.Size(58, 13);
             this.label4.TabIndex = 8;
-            this.label4.Text = "Copyright";
+            this.label4.Text = "Copyright *";
             // 
             // txtProduct
             // 
             this.txtProduct.Location = new System.Drawing.Point(511, 27);
             this.txtProduct.Name = "txtProduct";
             this.txtProduct.Size = new System.Drawing.Size(271, 20);
-            this.txtProduct.TabIndex = 7;
+            this.txtProduct.TabIndex = 1;
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(440, 31);
+            this.label3.Location = new System.Drawing.Point(433, 31);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(44, 13);
+            this.label3.Size = new System.Drawing.Size(51, 13);
             this.label3.TabIndex = 6;
-            this.label3.Text = "Product";
+            this.label3.Text = "Product *";
             // 
             // txtCompany
             // 
             this.txtCompany.Location = new System.Drawing.Point(111, 27);
             this.txtCompany.Name = "txtCompany";
             this.txtCompany.Size = new System.Drawing.Size(270, 20);
-            this.txtCompany.TabIndex = 3;
+            this.txtCompany.TabIndex = 0;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(31, 34);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(51, 13);
+            this.label2.Size = new System.Drawing.Size(58, 13);
             this.label2.TabIndex = 2;
-            this.label2.Text = "Company";
+            this.label2.Text = "Company *";
             // 
             // panel1
             // 
@@ -251,7 +258,7 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.panel1.Location = new System.Drawing.Point(0, 464);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1051, 43);
+            this.panel1.Size = new System.Drawing.Size(1170, 43);
             this.panel1.TabIndex = 17;
             // 
             // panel2
@@ -259,7 +266,7 @@
             this.panel2.Controls.Add(this.btnOK);
             this.panel2.Controls.Add(this.button2);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel2.Location = new System.Drawing.Point(781, 0);
+            this.panel2.Location = new System.Drawing.Point(900, 0);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(270, 43);
             this.panel2.TabIndex = 9;
@@ -268,6 +275,22 @@
             // 
             this.openAssemblyInfoFileDialog.DefaultExt = "*.cs|*.vb";
             this.openAssemblyInfoFileDialog.Title = "Open Common Assembly Info File";
+            // 
+            // txtTrademark
+            // 
+            this.txtTrademark.Location = new System.Drawing.Point(512, 66);
+            this.txtTrademark.Name = "txtTrademark";
+            this.txtTrademark.Size = new System.Drawing.Size(270, 20);
+            this.txtTrademark.TabIndex = 3;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(433, 68);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(58, 13);
+            this.label5.TabIndex = 14;
+            this.label5.Text = "Trademark";
             // 
             // colChecked
             // 
@@ -315,11 +338,17 @@
             this.ColCopyright.HeaderText = "Copyright";
             this.ColCopyright.Name = "ColCopyright";
             // 
+            // ColTrademark
+            // 
+            this.ColTrademark.DataPropertyName = "Trademark";
+            this.ColTrademark.HeaderText = "Trademark";
+            this.ColTrademark.Name = "ColTrademark";
+            // 
             // AssemblyInfoForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1051, 529);
+            this.ClientSize = new System.Drawing.Size(1170, 529);
             this.Controls.Add(this.groupBoxProjects);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.groupBoxCommonInfo);
@@ -370,6 +399,8 @@
         private System.Windows.Forms.SaveFileDialog saveAssemblyInfoFileDialog;
         private System.Windows.Forms.TextBox txtVersion;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox txtTrademark;
+        private System.Windows.Forms.Label label5;
         private System.Windows.Forms.DataGridViewCheckBoxColumn colChecked;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColProjectName;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColFileVersion;
@@ -377,5 +408,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn ColProduct;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColCompany;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColCopyright;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ColTrademark;
     }
 }

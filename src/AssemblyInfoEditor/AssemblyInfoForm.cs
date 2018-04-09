@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using CnSharp.VisualStudio.Extensions;
 using CnSharp.VisualStudio.Extensions.Projects;
-using CnSharp.VisualStudio.Extensions.SourceControl;
+using CnSharp.VisualStudio.NuPack.Extensions;
 using EnvDTE;
 
 namespace CnSharp.VisualStudio.NuPack.AssemblyInfoEditor
@@ -40,12 +41,32 @@ namespace CnSharp.VisualStudio.NuPack.AssemblyInfoEditor
 
              _projects = refProjects.ToList();
              _projectInfos = _projects.Select(p => p.GetProjectAssemblyInfo()).ToList();
-            _projectOriginalInfos = _projectInfos.Select(p => p.Copy()).ToArray();
             projectBindingSource.DataSource = _projectInfos;
             projectGrid.DataSource = projectBindingSource;
+            _projectOriginalInfos = _projectInfos.Select(p => p.Copy()).ToArray();
+        }
 
-            //pnlCopy.Visible = projects.Count > 1;
-
+        void ScanCommonInfoFiles()
+        {
+            var i = 0;
+            _projects.ForEach(p =>
+            {
+                var commonInfoFile = p.GetCommonAssemblyInfoFilePath();
+                if (commonInfoFile == null)
+                {
+                    i++;
+                    return;
+                }
+                if (_fileToLink == null)
+                {
+                    _fileToLink = commonInfoFile;
+                    _commonInfo = AssemblyInfoUtil.ReadCommonAssemblyInfo(_fileToLink);
+                    BindCommonInfo();
+                }
+                if (_fileToLink == commonInfoFile)
+                    projectGrid.Rows[i].Cells[0].Value = true;
+                i++;
+            });
         }
 
         private void RegisterEvents()
@@ -54,6 +75,7 @@ namespace CnSharp.VisualStudio.NuPack.AssemblyInfoEditor
             txtCopyright.TextChanged += CommonInfoTextChanged;
             txtProduct.TextChanged += CommonInfoTextChanged;
             txtVersion.TextChanged += CommonInfoTextChanged;
+            txtTrademark.TextChanged += CommonInfoTextChanged;
         }
 
         private void CommonInfoTextChanged(object sender, EventArgs e)
@@ -74,12 +96,7 @@ namespace CnSharp.VisualStudio.NuPack.AssemblyInfoEditor
 
         #endregion
 
-        #region Public Properties
-
-
-        public ISourceControl SourceControl { get; set; }
-
-        #endregion
+        public IServiceProvider ServiceProvider { get; set; }
 
         #region Methods
 
@@ -88,27 +105,6 @@ namespace CnSharp.VisualStudio.NuPack.AssemblyInfoEditor
             ActiveControl = projectGrid;
         }
 
-         void CheckOut(ProjectAssemblyInfo assemblyInfo, string assemblyInfoFile)
-        {
-
-            var attr = File.GetAttributes(assemblyInfoFile);
-            var isNormal = Contains(attr, FileAttributes.Normal);
-            var checkout = false;
-            if (SourceControl != null)
-            {
-              
-                    var files =
-                       SourceControl.CheckOut(
-                            Path.GetDirectoryName(assemblyInfo.Project.DTE.Solution.FullName),
-                            assemblyInfoFile);
-                    checkout = files > 0; 
-            }
-            if (checkout || isNormal)
-                return;
-                   
-            File.SetAttributes(assemblyInfoFile, FileAttributes.Normal);
-            
-        }
 
         public static bool Contains(Enum keys, Enum flag)
         {
@@ -119,25 +115,10 @@ namespace CnSharp.VisualStudio.NuPack.AssemblyInfoEditor
         }
         #endregion
 
-        //private void chkSingle_CheckedChanged(object sender, EventArgs e)
-        //{
-        //    var allVersionControlled = chkAll.Checked;
-        //    var i = 0;
-        //    foreach (DataGridViewRow row in projectGrid.Rows)
-        //    {
-        //        if (i > 0)
-        //        {
-        //            row.DefaultCellStyle.ForeColor = !allVersionControlled ? Color.Gray : SystemColors.WindowText;
-        //            row.ReadOnly = !allVersionControlled;
-        //        }
-        //        i++;
-        //    }
-
-        //    chkSame.Enabled = chkAll.Checked;
-        //    if(!chkSame.Enabled)
-        //        chkSame.Checked = false;
-        //}
-
+        private void projectGrid_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
+        {
+           ScanCommonInfoFiles();
+        }
 
         private void projectGrid_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
         {
@@ -180,31 +161,6 @@ namespace CnSharp.VisualStudio.NuPack.AssemblyInfoEditor
             projectGrid.EndEdit();
         }
 
-        private void btnOK_Click(object sender, EventArgs e)
-        {
-            if (!projectGrid.EndEdit())
-                return;
-
-            projectBindingSource.ResetBindings(false);
-
-            toolStripStatusLabel.Text = "Saving...";
-            var i = 0;
-            foreach (var assemblyInfo in _projectInfos)
-            {
-                if (assemblyInfo.CompareTo(_projectOriginalInfos[i]) == 0)
-                {
-                    i++;
-                    continue;
-                }
-                string assemblyInfoFile = assemblyInfo.Project.GetAssemblyInfoFileName();
-                CheckOut(assemblyInfo, assemblyInfoFile);
-                AssemblyInfoUtil.Save(assemblyInfo);
-                i++;
-            }
-
-            toolStripStatusLabel.Text = "Saved successfully.";
-            DialogResult = DialogResult.OK;
-        }
 
         private void projectGrid_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
         {
@@ -222,7 +178,7 @@ namespace CnSharp.VisualStudio.NuPack.AssemblyInfoEditor
         {
             if (e.ColumnIndex == 0)
             {
-                var selected = (bool) projectGrid.CurrentCell.Value;
+                var selected = (bool?) projectGrid.CurrentCell.Value ?? false;
                 if(selected) CopyCellValues(e.RowIndex);
                 else RevertCellValue(e.RowIndex);
             }
@@ -234,7 +190,7 @@ namespace CnSharp.VisualStudio.NuPack.AssemblyInfoEditor
         {
             saveAssemblyInfoFileDialog.DefaultExt = DefaultExt;
             saveAssemblyInfoFileDialog.InitialDirectory = Path.GetDirectoryName(Host.Instance.DTE.Solution.FileName);
-            saveAssemblyInfoFileDialog.FileName = typeof(CommonAssemblyInfo).Name + saveAssemblyInfoFileDialog.DefaultExt;
+            saveAssemblyInfoFileDialog.FileName = _fileToLink ?? typeof(CommonAssemblyInfo).Name + saveAssemblyInfoFileDialog.DefaultExt;
             if(saveAssemblyInfoFileDialog.ShowDialog() != DialogResult.OK) return;
             var info = _projectOriginalInfos[0];
             _commonInfo = new CommonAssemblyInfo
@@ -246,20 +202,101 @@ namespace CnSharp.VisualStudio.NuPack.AssemblyInfoEditor
             };
             _commonInfo.Save(saveAssemblyInfoFileDialog.FileName);
             _fileToLink = saveAssemblyInfoFileDialog.FileName;
+            BindCommonInfo();
         }
 
         private void btnLink_Click(object sender, EventArgs e)
         {
             openAssemblyInfoFileDialog.DefaultExt = DefaultExt;
-            openAssemblyInfoFileDialog.InitialDirectory = Path.GetDirectoryName(Host.Instance.DTE.Solution.FileName);
+            openAssemblyInfoFileDialog.InitialDirectory = _fileToLink != null ? Path.GetDirectoryName(_fileToLink) : Path.GetDirectoryName(Host.Instance.DTE.Solution.FileName);
             if (openAssemblyInfoFileDialog.ShowDialog() != DialogResult.OK) return;
             _commonInfo = AssemblyInfoUtil.ReadCommonAssemblyInfo(openAssemblyInfoFileDialog.FileName);
             _fileToLink = openAssemblyInfoFileDialog.FileName;
+            BindCommonInfo();
         }
 
         void BindCommonInfo()
         {
-            
+            foreach (Control control in groupBoxCommonInfo.Controls)
+            {
+                if (control is TextBox)
+                {
+                    var box = control as TextBox;
+                    box.DataBindings.Clear();
+                    box.DataBindings.Add("Text", _commonInfo, box.Name.Replace("txt", ""),false,DataSourceUpdateMode.OnPropertyChanged);
+                }
+            }
         }
+
+        private string[] GetIgnoreFields()
+        {
+            var fields = new List<string>();
+            if(string.IsNullOrWhiteSpace(txtTrademark.Text))
+                fields.Add("Trademark");
+            if (string.IsNullOrWhiteSpace(txtVersion.Text))
+                fields.Add("Version");
+            return fields.ToArray();
+        }
+
+        private void btnOK_Click(object sender, EventArgs e)
+        {
+            if (!projectGrid.EndEdit())
+                return;
+            if (_commonInfo != null)
+            {
+                if (string.IsNullOrWhiteSpace(_commonInfo.Company))
+                {
+                    ServiceProvider.ShowError("Company required.",Common.ProductName);
+                    txtCompany.Focus();
+                    return;
+                }
+                if (string.IsNullOrWhiteSpace(_commonInfo.Product))
+                {
+                    ServiceProvider.ShowError("Product required.", Common.ProductName);
+                    txtProduct.Focus();
+                    return;
+                }
+                if (string.IsNullOrWhiteSpace(_commonInfo.Copyright))
+                {
+                    ServiceProvider.ShowError("Copyright required.", Common.ProductName);
+                    txtCopyright.Focus();
+                    return;
+                }
+                _commonInfo.Save(_fileToLink);
+            }
+           
+
+            projectBindingSource.ResetBindings(false);
+
+            toolStripStatusLabel.Text = "Saving...";
+            var i = 0;
+            var ignoreFields = GetIgnoreFields();
+            foreach (DataGridViewRow row in projectGrid.Rows)
+            {
+                var assemblyInfo = _projectInfos[i];
+                var changed = false;
+                if (_commonInfo != null && row.Cells[0].Value != null && (bool) row.Cells[0].Value)
+                {
+                    assemblyInfo.Project.LinkCommonAssemblyInfoFile(_fileToLink);
+                    assemblyInfo.Project.RemoveCommonAssemblyInfoAnnotations(ignoreFields);
+                    changed = true;
+                }
+                else if (assemblyInfo.CompareTo(_projectOriginalInfos[i]) != 0)
+                {
+                    changed = true;
+                }
+                if (changed)
+                {
+                    assemblyInfo.Save();
+                    row.Cells[0].Style.ForeColor = SystemColors.HighlightText;
+                }
+                i++;
+            }
+
+            toolStripStatusLabel.Text = "Saved successfully.";
+            DialogResult = DialogResult.OK;
+        }
+
+     
     }
 }
