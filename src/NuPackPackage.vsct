@@ -44,9 +44,9 @@
       <Group guid="guidNuGetDeployCommandPackageCmdSet" id="MyMenuGroup" priority="0x0600">
         <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_PROJNODE"/>
       </Group>
-      <Group guid="guidAssemblyInfoEditPackageCmdSet" id="MyMenuGroup" priority="0x0600">
+      <!--<Group guid="guidAssemblyInfoEditPackageCmdSet" id="MyMenuGroup" priority="0x0600">
         <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_PROJNODE"/>
-      </Group>
+      </Group>-->
     </Groups>
 
     <!--Buttons section. -->
@@ -62,6 +62,8 @@
           If you do not want an image next to your command, remove the Icon node /> -->
       <Button guid="guidAddNuSpecPackageCmdSet" id="AddNuSpecCommandId" priority="0x0100" type="Button">
         <Parent guid="guidAddNuSpecPackageCmdSet" id="MyMenuGroup" />
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>DynamicVisibility</CommandFlag>
         <!--<Icon guid="guidImages" id="bmpPic1" />-->
         <Strings>
           <ButtonText>package.nuspec</ButtonText>

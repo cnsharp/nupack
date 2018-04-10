@@ -41,7 +41,7 @@ namespace CnSharp.VisualStudio.NuPack.Commands
         {
             if (package == null)
             {
-                throw new ArgumentNullException("package");
+                throw new ArgumentNullException(nameof(package));
             }
 
             this.package = package;
@@ -50,9 +50,19 @@ namespace CnSharp.VisualStudio.NuPack.Commands
             if (commandService != null)
             {
                 var menuCommandID = new CommandID(CommandSet, CommandId);
-                var menuItem = new MenuCommand(this.MenuItemCallback, menuCommandID);
+                var menuItem = new OleMenuCommand(this.MenuItemCallback, menuCommandID);
+                menuItem.BeforeQueryStatus += MenuItemOnBeforeQueryStatus;
                 commandService.AddCommand(menuItem);
             }
+        }
+
+        //see:https://stackoverflow.com/questions/24799382/dynamic-display-custom-visual-studio-vspackage-command-on-toolbar
+        private void MenuItemOnBeforeQueryStatus(object sender, EventArgs eventArgs)
+        {
+            var prj = Host.Instance.DTE.GetActiveProejct();
+            if (prj == null) return;
+            var cmd = (OleMenuCommand) sender;
+            cmd.Visible = prj.IsNetFrameworkProject() && !File.Exists(GetNuspecFilePath());
         }
 
         public AddNuSpecCommand()
@@ -113,12 +123,19 @@ namespace CnSharp.VisualStudio.NuPack.Commands
           Execute();
         }
 
+        string GetNuspecFilePath()
+        {
+            var dte = Host.Instance.Dte2;
+            var project = dte.GetActiveProejct();
+            return Path.Combine(project.GetDirectory(), NuGetDomain.NuSpecFileName);
+        }
+
         public void Execute(object arg = null)
         {
             var dte = Host.Instance.Dte2;
             var project = dte.GetActiveProejct();
             Common.CheckTfs(project);
-            var file = Path.Combine(project.GetDirectory(),NuGetDomain.NuSpecFileName);
+            var file = GetNuspecFilePath();
             if (File.Exists(file))
                 return;
 

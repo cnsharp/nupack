@@ -41,11 +41,13 @@ namespace CnSharp.VisualStudio.NuPack
             AttachTo = "Solution";
             Text = "Assembly Info...";
             Position = -7;
-            SubMenus = new List<CommandMenu>
-            {
-                new CommonAssemblyInfoEditMenu(),
-                new AssemblyInfoEditMenu()
-            };
+            Command = new AssemblyInfoEditCommand();
+            Action = () => Command.Execute();
+            //SubMenus = new List<CommandMenu>
+            //{
+            //    new CommonAssemblyInfoEditMenu(),
+            //    new AssemblyInfoEditMenu()
+            //};
         }
     }
 }

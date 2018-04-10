@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
@@ -78,7 +79,7 @@ namespace CnSharp.VisualStudio.NuPack
             AddNuSpecCommand.Initialize(this);
             NuGetDeployCommand.Initialize(this);
             AssemblyInfoEditCommand.Initialize(this);
-            CommonAssemblyInfoEditCommand.Initialize(this);
+            //CommonAssemblyInfoEditCommand.Initialize(this);
 
             LoadCustomCommands();
         }
