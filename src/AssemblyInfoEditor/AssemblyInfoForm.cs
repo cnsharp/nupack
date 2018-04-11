@@ -293,6 +293,8 @@ namespace CnSharp.VisualStudio.NuPack.AssemblyInfoEditor
                 i++;
             }
 
+            if (_fileToLink != null) Host.Instance.Solution2.AddSolutionItem(_fileToLink);
+
             toolStripStatusLabel.Text = "Saved successfully.";
             DialogResult = DialogResult.OK;
         }
