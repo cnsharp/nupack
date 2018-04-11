@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -17,11 +16,12 @@ using EnvDTE80;
 using NuGet;
 using Process = System.Diagnostics.Process;
 
-namespace CnSharp.VisualStudio.NuPack.NuGet
+namespace CnSharp.VisualStudio.NuPack.NuGets
 {
     public partial class DeployWizard : Form
     {
         private readonly ProjectAssemblyInfo _assemblyInfo;
+        private readonly PackageProjectProperties _ppp;
         private readonly string _dir;
         private readonly NuGetConfig _nuGetConfig;
         private readonly string _nuspecFile;
@@ -68,10 +68,11 @@ namespace CnSharp.VisualStudio.NuPack.NuGet
             }
         }
 
-        public DeployWizard(ProjectAssemblyInfo assemblyInfo, Package package, ManifestMetadata metadata,XmlDocument doc) : this()
+        public DeployWizard(ManifestMetadata metadata, ProjectAssemblyInfo assemblyInfo, PackageProjectProperties ppp, XmlDocument doc) : this()
         {
-            _assemblyInfo = assemblyInfo;
             _metadata = metadata;
+            _assemblyInfo = assemblyInfo;
+            _ppp = ppp;
             _xmlDoc = doc;
         }
 

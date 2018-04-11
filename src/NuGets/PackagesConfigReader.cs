@@ -4,7 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Xml;
 
-namespace CnSharp.VisualStudio.NuPack.NuGet
+namespace CnSharp.VisualStudio.NuPack.NuGets
 {
     public class PackagesConfigReader
     {

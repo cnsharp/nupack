@@ -1,4 +1,4 @@
-﻿namespace CnSharp.VisualStudio.NuPack.NuGet
+﻿namespace CnSharp.VisualStudio.NuPack.NuGets
 {
     partial class DeployWizard
     {

@@ -6,7 +6,7 @@ using System.Xml;
 using CnSharp.VisualStudio.Extensions;
 using CnSharp.VisualStudio.NuPack.Util;
 
-namespace CnSharp.VisualStudio.NuPack.NuGet
+namespace CnSharp.VisualStudio.NuPack.NuGets
 {
 
     public static class NuSpecHelper

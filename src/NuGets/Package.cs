@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Xml;
 using System.Xml.Serialization;
 using CnSharp.VisualStudio.Extensions.Projects;
 
-namespace CnSharp.VisualStudio.NuPack.NuGet
+namespace CnSharp.VisualStudio.NuPack.NuGets
 {
     [XmlRoot("package")]
     public class Package
