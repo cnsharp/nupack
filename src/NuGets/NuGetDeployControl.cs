@@ -13,6 +13,11 @@ namespace CnSharp.VisualStudio.NuPack.NuGets
         {
             InitializeComponent();
             textBoxSymbolServer.Enabled = false;
+            textBoxSymbolServer.TextChanged += (sender, args) =>
+            {
+                if (!string.IsNullOrWhiteSpace(textBoxSymbolServer.Text))
+                    textBoxSymbolServer.Enabled = true;
+            };
         }
 
         public NuGetConfig NuGetConfig
@@ -27,8 +32,6 @@ namespace CnSharp.VisualStudio.NuPack.NuGets
                 {
                     sourceBox.Items.Add(source.Url);
                 }
-
-            
             }
         }
 
@@ -36,6 +39,8 @@ namespace CnSharp.VisualStudio.NuPack.NuGets
         {
             get
             {
+                if (_viewModel == null)
+                    _viewModel = new NuGetDeployViewModel();
                 _viewModel.NuGetServer = sourceBox.Text;
                 _viewModel.RememberKey = chkRemember.Checked;
                 _viewModel.ApiKey = textBoxApiKey.Text;

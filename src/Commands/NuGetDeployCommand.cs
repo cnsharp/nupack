@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using CnSharp.VisualStudio.Extensions;
 using CnSharp.VisualStudio.Extensions.Projects;
 using CnSharp.VisualStudio.NuPack.NuGets;
+using CnSharp.VisualStudio.NuPack.Util;
 using EnvDTE;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
@@ -37,6 +38,7 @@ namespace CnSharp.VisualStudio.NuPack.Commands
         private ManifestMetadata _metadata;
         private string _nuspecFile;
         private  ProjectAssemblyInfo _assemblyInfo;
+        private DirectoryBuildProps _directoryBuildProps;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NuGetDeployCommand"/> class.
@@ -128,8 +130,8 @@ namespace CnSharp.VisualStudio.NuPack.Commands
             {
                 _ppp = _project.GetPackageProjectProperties();
                 _metadata = _ppp.ToManifestMetadata();
-
-                var form = new MsbuildDeployWizard(_metadata, _ppp);
+                _directoryBuildProps = Host.Instance.DTE.Solution.GetDirectoryBuildProps();
+                var form = new MsbuildDeployWizard(_metadata, _ppp,_directoryBuildProps);
                 if (form.ShowDialog() == DialogResult.OK)
                     form.SaveAndBuild();
             }
@@ -137,8 +139,6 @@ namespace CnSharp.VisualStudio.NuPack.Commands
 
         //private bool LoadNetFrameworkProjectInfo()
         //{
-           
-
         //    _xmlDoc = new XmlDocument();
         //    _xmlDoc.Load(_nuspecFile);
         //    var xml = _xmlDoc.InnerXml;

@@ -35,6 +35,13 @@ namespace CnSharp.VisualStudio.NuPack.NuGets
                     textBoxFileVersion.Text = textBoxAssemblyVersion.Text.Trim();
                     textBoxVersion.Text = textBoxAssemblyVersion.Text.Trim().Trim('.');
                 };
+
+            textBoxLicenseUrl.TextChanged += (sender, e) =>
+            {
+                checkBoxRLA.Enabled = !string.IsNullOrWhiteSpace(textBoxLicenseUrl.Text);
+                if (!checkBoxRLA.Enabled && checkBoxRLA.Checked)
+                    checkBoxRLA.Checked = false;
+            };
         }
 
         public ProjectAssemblyInfo AssemblyInfo

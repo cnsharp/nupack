@@ -47,8 +47,6 @@ namespace CnSharp.VisualStudio.NuPack.NuGets
             _deployControl.Dock = DockStyle.Fill;
             wizardPageDeploy.Controls.Add(_deployControl);
 
-            BindTextBoxEvents();
-
             _project = Host.Instance.Dte2.GetActiveProejct();
             _dir = _project.GetDirectory();
             _releaseDir = Path.Combine(_dir, "bin", "Release");
@@ -56,11 +54,18 @@ namespace CnSharp.VisualStudio.NuPack.NuGets
 
             _nuGetConfig = ConfigHelper.ReadNuGetConfig();
             _projectConfig = _project.ReadNuPackConfig();
+            
+            BindTextBoxEvents();
 
             stepWizardControl.SelectedPageChanged += StepWizardControl_SelectedPageChanged;
             stepWizardControl.Finished += StepWizardControl_Finished;
             wizardPageMetadata.Commit += WizardPageCommit;
             wizardPageOptions.Commit += WizardPageCommit;
+            chkSymbol.CheckedChanged += (sender, e) =>
+            {
+                if (_deployControl.ViewModel != null && string.IsNullOrWhiteSpace(_deployControl.ViewModel.SymbolServer))
+                    _deployControl.ViewModel.SymbolServer = Common.SymbolServer;
+            };
         }
 
         public DeployWizard(ManifestMetadata metadata, ProjectAssemblyInfo assemblyInfo, PackageProjectProperties ppp) : this()
@@ -114,19 +119,6 @@ namespace CnSharp.VisualStudio.NuPack.NuGets
 
         private void BindTextBoxEvents()
         {
-            //txtAssemblyVersion.TextChanged += TextBoxTextChanged;
-            //txtAssemblyVersion.TextChanged +=
-            //    (sender, args) => { txtPackageVersion.Text = txtAssemblyVersion.Text.Trim().Trim('.'); };
-            //txtPackageVersion.TextChanged += TextBoxTextChanged;
-            //txtNote.TextChanged += TextBoxTextChanged;
-
-            //MakeTextBoxRequired(textBoxId);
-            //MakeTextBoxRequired(textBoxTitle);
-            //MakeTextBoxRequired(textBoxAuthors);
-            //MakeTextBoxRequired(textBoxOwners);
-            //MakeTextBoxRequired(txtAssemblyVersion);
-            //MakeTextBoxRequired(txtPackageVersion);
-            //MakeTextBoxRequired(txtNote);
             MakeTextBoxRequired(txtNugetPath);
             MakeTextBoxRequired(txtOutputDir);
             txtNugetPath.Validating += TxtNugetPath_Validating;

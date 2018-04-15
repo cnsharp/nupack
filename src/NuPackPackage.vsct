@@ -73,7 +73,7 @@
         <Parent guid="guidNuGetDeployCommandPackageCmdSet" id="MyMenuGroup" />
         <!--<Icon guid="guidImages1" id="bmpPic1" />-->
         <Strings>
-          <ButtonText>Deploy to NuGet...</ButtonText>
+          <ButtonText>Deploy Package...</ButtonText>
         </Strings>
       </Button>
       <Button guid="guidAssemblyInfoEditPackageCmdSet" id="cmdidAssemblyInfoEditCommand" priority="0x0100" type="Button">

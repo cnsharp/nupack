@@ -26,6 +26,7 @@ namespace CnSharp.VisualStudio.NuPack.NuGets
     {
         //private readonly ProjectAssemblyInfo _assemblyInfo;
         private readonly PackageProjectProperties _ppp;
+        private readonly DirectoryBuildProps _directoryBuildProps;
         private readonly string _dir;
         private readonly NuGetConfig _nuGetConfig;
         //private readonly Package _package;
@@ -51,10 +52,7 @@ namespace CnSharp.VisualStudio.NuPack.NuGets
 
             _deployControl = new NuGetDeployControl();
             _deployControl.Dock = DockStyle.Fill;
-            _deployControl.Margin = new Padding(40,0,0,0);
             wizardPageDeploy.Controls.Add(_deployControl);
-
-            BindTextBoxEvents();
 
             _project = Host.Instance.Dte2.GetActiveProejct();
             _dir = _project.GetDirectory();
@@ -64,16 +62,24 @@ namespace CnSharp.VisualStudio.NuPack.NuGets
             _nuGetConfig = ConfigHelper.ReadNuGetConfig();
             _projectConfig = _project.ReadNuPackConfig();
 
+            BindTextBoxEvents();
+
             stepWizardControl.SelectedPageChanged += StepWizardControl_SelectedPageChanged;
             stepWizardControl.Finished += StepWizardControl_Finished;
             wizardPageMetadata.Commit += WizardPageCommit;
             wizardPageOptions.Commit += WizardPageCommit;
+            chkSymbol.CheckedChanged += (sender, e) =>
+            {
+                if (_deployControl.ViewModel != null && string.IsNullOrWhiteSpace(_deployControl.ViewModel.SymbolServer))
+                    _deployControl.ViewModel.SymbolServer = Common.SymbolServer;
+            };
         }
 
-        public MsbuildDeployWizard(ManifestMetadata metadata,  PackageProjectProperties ppp) : this()
+        public MsbuildDeployWizard(ManifestMetadata metadata,  PackageProjectProperties ppp, DirectoryBuildProps directoryBuildProps) : this()
         {
             _metadata = metadata;
             _ppp = ppp;
+            _directoryBuildProps = directoryBuildProps;
             _packageOldVersion = _metadata.Version;
         }
 
@@ -120,19 +126,6 @@ namespace CnSharp.VisualStudio.NuPack.NuGets
 
         private void BindTextBoxEvents()
         {
-            //txtAssemblyVersion.TextChanged += TextBoxTextChanged;
-            //txtAssemblyVersion.TextChanged +=
-            //    (sender, args) => { txtPackageVersion.Text = txtAssemblyVersion.Text.Trim().Trim('.'); };
-            //txtPackageVersion.TextChanged += TextBoxTextChanged;
-            //txtNote.TextChanged += TextBoxTextChanged;
-
-            //MakeTextBoxRequired(textBoxId);
-            //MakeTextBoxRequired(textBoxTitle);
-            //MakeTextBoxRequired(textBoxAuthors);
-            //MakeTextBoxRequired(textBoxOwners);
-            //MakeTextBoxRequired(txtAssemblyVersion);
-            //MakeTextBoxRequired(txtPackageVersion);
-            //MakeTextBoxRequired(txtNote);
             MakeTextBoxRequired(txtNugetPath);
             MakeTextBoxRequired(txtOutputDir);
             txtNugetPath.Validating += TxtNugetPath_Validating;
@@ -244,26 +237,26 @@ namespace CnSharp.VisualStudio.NuPack.NuGets
             SaveNuSpec();
           
             SaveProjectProperties();
-          
-            //if (!Build())
-            //    return;
-            EnsureOutputDir();
-            Pack();
 
+            if (!Build())
+                return;
+            EnsureOutputDir();
+            MovePackages();
+            Pack();
             SyncVersionToDependency();
             SaveNuGetConfig();
             SaveProjectConfig();
-
-            MovePackages();
         }
 
         void SaveProjectProperties()
         {
+            _directoryBuildProps?.Save();
             var assemblyInfo = _metadataControl.AssemblyInfo;
             _ppp.AssemblyVersion = assemblyInfo.Version;
             _ppp.FileVersion = assemblyInfo.FileVersion;
             _metadata.SyncToPackageProjectProperties(_ppp);
-            _project.SavePackageProjectProperties(_ppp);
+            var skipProps = _directoryBuildProps?.GetValuedProperties()?.ToArray();
+            _project.SavePackageProjectProperties(_ppp,skipProps);
         }
 
         private void SyncVersionToDependency()
@@ -278,19 +271,19 @@ namespace CnSharp.VisualStudio.NuPack.NuGets
             _project.UpdateNuspec(_metadata);
         }
 
-        private bool Build()
-        {
-            var solution = (Solution2) Host.Instance.DTE.Solution;
-            var solutionBuild = (SolutionBuild2) solution.SolutionBuild;
-            solutionBuild.SolutionConfigurations.Item("Release").Activate();
+        //private bool Build()
+        //{
+        //    var solution = (Solution2) Host.Instance.DTE.Solution;
+        //    var solutionBuild = (SolutionBuild2) solution.SolutionBuild;
+        //    solutionBuild.SolutionConfigurations.Item("Release").Activate();
 
-            solutionBuild.Build(true);
-            if (solutionBuild.LastBuildInfo != 0)
-            {
-                return false;
-            }
-            return true;
-        }
+        //    solutionBuild.Build(true);
+        //    if (solutionBuild.LastBuildInfo != 0)
+        //    {
+        //        return false;
+        //    }
+        //    return true;
+        //}
 
         string GetMsbuildPath()
         {
@@ -301,11 +294,10 @@ namespace CnSharp.VisualStudio.NuPack.NuGets
             return files.FirstOrDefault()?.FullName;//todo:amd64
         }
 
-        private void Pack()
+        private bool Build()
         {
-           
             var script = new StringBuilder();
-            script.AppendFormat(" \"{0}\" \"{1}\" /t:pack /p:Configuration=Release ",GetMsbuildPath(), _project.FileName);
+            script.AppendFormat(" \"{0}\" \"{1}\" /t:pack /p:Configuration=Release ", GetMsbuildPath(), _project.FileName);
             // /p:OutputPath=\"{1}\" 
             //if (chkForceEnglishOutput.Checked)
             //    script.Append(" -ForceEnglishOutput ");
@@ -314,8 +306,17 @@ namespace CnSharp.VisualStudio.NuPack.NuGets
             if (chkSymbol.Checked)
                 script.Append(" /p:IncludeSymbols=true ");
 
-            if(File.Exists(_nuspecFile))
+            if (File.Exists(_nuspecFile))
                 script.AppendFormat(" /p:NuspecFile={0} ", _nuspecFile);
+            CmdUtil.RunCmd(script.ToString());
+            var file = $"{_releaseDir}\\{_metadata.Id}.{_metadata.Version}.nupkg";
+            return File.Exists(file);
+        }
+
+        private void Pack()
+        {
+            var script = new StringBuilder();
+           
             var deployVM = _deployControl.ViewModel;
             if (deployVM.NuGetServer.Length > 0)
             {
@@ -327,7 +328,6 @@ namespace CnSharp.VisualStudio.NuPack.NuGets
                     script.AppendFormat(@" || ""{0}"" sources Update -Name ""{1}"" -Source ""{2}"" -Username ""{3}"" -Password ""{4}""", nugetExe, deployVM.NuGetServer, deployVM.NuGetServer, deployVM.V2Login, deployVM.ApiKey);
                     script.AppendLine();
                 }
-
                 script.AppendFormat(@"""{0}"" push ""{1}"" -source {2} {3}", nugetExe, GetLastPackage(), deployVM.NuGetServer, deployVM.ApiKey);
             }
 

@@ -190,6 +190,7 @@
             // checkBoxRLA
             // 
             this.checkBoxRLA.AutoSize = true;
+            this.checkBoxRLA.Enabled = false;
             this.checkBoxRLA.Location = new System.Drawing.Point(110, 526);
             this.checkBoxRLA.Name = "checkBoxRLA";
             this.checkBoxRLA.Size = new System.Drawing.Size(167, 17);

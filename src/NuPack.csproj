@@ -102,6 +102,7 @@
     <Compile Include="Commands\NuGetDeployCommand.cs" />
     <Compile Include="Commands\CommonAssemblyInfoEditCommand.cs" />
     <Compile Include="CustomMenus.cs" />
+    <Compile Include="Util\DirectoryBuildUtil.cs" />
     <Compile Include="NuGets\ConfigHelper.cs" />
     <Compile Include="NuGets\MsbuildDeployWizard.cs">
       <SubType>Form</SubType>

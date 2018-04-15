@@ -42,7 +42,7 @@
             // 
             // textBoxSymbolServer
             // 
-            this.textBoxSymbolServer.Location = new System.Drawing.Point(101, 124);
+            this.textBoxSymbolServer.Location = new System.Drawing.Point(139, 123);
             this.textBoxSymbolServer.Name = "textBoxSymbolServer";
             this.textBoxSymbolServer.Size = new System.Drawing.Size(412, 20);
             this.textBoxSymbolServer.TabIndex = 33;
@@ -50,7 +50,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(0, 124);
+            this.label5.Location = new System.Drawing.Point(38, 123);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(78, 13);
             this.label5.TabIndex = 39;
@@ -59,7 +59,7 @@
             // labelLogin
             // 
             this.labelLogin.AutoSize = true;
-            this.labelLogin.Location = new System.Drawing.Point(39, 225);
+            this.labelLogin.Location = new System.Drawing.Point(77, 224);
             this.labelLogin.Name = "labelLogin";
             this.labelLogin.Size = new System.Drawing.Size(36, 13);
             this.labelLogin.TabIndex = 38;
@@ -68,7 +68,7 @@
             // 
             // textBoxLogin
             // 
-            this.textBoxLogin.Location = new System.Drawing.Point(101, 222);
+            this.textBoxLogin.Location = new System.Drawing.Point(139, 221);
             this.textBoxLogin.Name = "textBoxLogin";
             this.textBoxLogin.Size = new System.Drawing.Size(412, 20);
             this.textBoxLogin.TabIndex = 35;
@@ -77,7 +77,7 @@
             // checkBoxNugetLogin
             // 
             this.checkBoxNugetLogin.AutoSize = true;
-            this.checkBoxNugetLogin.Location = new System.Drawing.Point(3, 182);
+            this.checkBoxNugetLogin.Location = new System.Drawing.Point(41, 181);
             this.checkBoxNugetLogin.Name = "checkBoxNugetLogin";
             this.checkBoxNugetLogin.Size = new System.Drawing.Size(120, 17);
             this.checkBoxNugetLogin.TabIndex = 37;
@@ -88,7 +88,7 @@
             // chkRemember
             // 
             this.chkRemember.AutoSize = true;
-            this.chkRemember.Location = new System.Drawing.Point(537, 64);
+            this.chkRemember.Location = new System.Drawing.Point(575, 63);
             this.chkRemember.Name = "chkRemember";
             this.chkRemember.Size = new System.Drawing.Size(85, 17);
             this.chkRemember.TabIndex = 32;
@@ -98,7 +98,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(0, 3);
+            this.label1.Location = new System.Drawing.Point(38, 2);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(75, 13);
             this.label1.TabIndex = 34;
@@ -107,7 +107,7 @@
             // sourceBox
             // 
             this.sourceBox.FormattingEnabled = true;
-            this.sourceBox.Location = new System.Drawing.Point(101, 3);
+            this.sourceBox.Location = new System.Drawing.Point(139, 2);
             this.sourceBox.Name = "sourceBox";
             this.sourceBox.Size = new System.Drawing.Size(412, 21);
             this.sourceBox.TabIndex = 30;
@@ -116,15 +116,15 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(0, 60);
+            this.label2.Location = new System.Drawing.Point(38, 59);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(48, 13);
             this.label2.TabIndex = 36;
             this.label2.Text = "API Key:";
             // 
-            // txtKey
+            // textBoxApiKey
             // 
-            this.textBoxApiKey.Location = new System.Drawing.Point(101, 60);
+            this.textBoxApiKey.Location = new System.Drawing.Point(139, 59);
             this.textBoxApiKey.Name = "textBoxApiKey";
             this.textBoxApiKey.PasswordChar = '*';
             this.textBoxApiKey.Size = new System.Drawing.Size(412, 20);
@@ -145,7 +145,7 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.textBoxApiKey);
             this.Name = "NuGetDeployControl";
-            this.Size = new System.Drawing.Size(620, 247);
+            this.Size = new System.Drawing.Size(661, 247);
             this.ResumeLayout(false);
             this.PerformLayout();
 
