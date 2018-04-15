@@ -1,23 +1,14 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="NuGetDeployCommand.cs" company="Microsoft">
-//     Copyright (c) Microsoft.  All rights reserved.
-// </copyright>
-//------------------------------------------------------------------------------
-
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.ComponentModel.Design;
 using System.IO;
-using System.Linq;
 using System.Windows.Forms;
-using System.Xml;
 using CnSharp.VisualStudio.Extensions;
 using CnSharp.VisualStudio.Extensions.Projects;
-using CnSharp.VisualStudio.NuPack.NuGet;
-using CnSharp.VisualStudio.NuPack.Util;
+using CnSharp.VisualStudio.NuPack.NuGets;
 using EnvDTE;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
+using NuGet;
 using Package = Microsoft.VisualStudio.Shell.Package;
 
 namespace CnSharp.VisualStudio.NuPack.Commands
@@ -42,9 +33,8 @@ namespace CnSharp.VisualStudio.NuPack.Commands
         /// VS Package that provides this command, not null.
         /// </summary>
         private readonly Package package;
-        private  NuGet.Package _nupack;
-        private XmlDocument _xmlDoc;
-        private string _dir;
+        private PackageProjectProperties _ppp;
+        private ManifestMetadata _metadata;
         private string _nuspecFile;
         private  ProjectAssemblyInfo _assemblyInfo;
 
@@ -113,11 +103,11 @@ namespace CnSharp.VisualStudio.NuPack.Commands
             _project = dte.GetActiveProejct();
 
             //Common.CheckTfs(_project);
-            _dir = _project.GetDirectory();
-            _assemblyInfo = _project.GetProjectAssemblyInfo();
+            _assemblyInfo = null;
+            _ppp = null;
             if (_project.IsNetFrameworkProject())
             {
-                _nuspecFile = Path.Combine(_dir, NuGetDomain.NuSpecFileName);
+                _nuspecFile = _project.GetNuSpecFilePath();
                 if (!File.Exists(_nuspecFile))
                 {
                     var dr = VsShellUtilities.ShowMessageBox(this.ServiceProvider,
@@ -127,49 +117,45 @@ namespace CnSharp.VisualStudio.NuPack.Commands
                         return;
                     new AddNuSpecCommand().Execute();
                 }
+                _assemblyInfo = _project.GetProjectAssemblyInfo();
+                _metadata = _project.GetManifestMetadata();
 
+                var form = new DeployWizard(_metadata, _assemblyInfo, _ppp);
+                if (form.ShowDialog() == DialogResult.OK)
+                    form.SaveAndBuild();
             }
             else
             {
-                //_nupack = new NuGet.Package
-                //{
-                //    Metadata = new NuGet.Package.MetaData
-                //    {
-                        
-                //    }
-                //}
+                _ppp = _project.GetPackageProjectProperties();
+                _metadata = _ppp.ToManifestMetadata();
+
+                var form = new MsbuildDeployWizard(_metadata, _ppp);
+                if (form.ShowDialog() == DialogResult.OK)
+                    form.SaveAndBuild();
             }
-            _nupack.Metadata.AssignByAssemblyInfo(_assemblyInfo);
-
-
-            //MergePackagesConfig();
-
-            var form = new DeployWizard(_assemblyInfo,_nupack,null,_xmlDoc);//todo
-            if(form.ShowDialog() == DialogResult.OK)
-                form.SaveAndBuild();
         }
 
-        private bool LoadNetFrameworkProjectInfo()
-        {
+        //private bool LoadNetFrameworkProjectInfo()
+        //{
            
 
-            _xmlDoc = new XmlDocument();
-            _xmlDoc.Load(_nuspecFile);
-            var xml = _xmlDoc.InnerXml;
-            _nupack = XmlSerializerHelper.LoadObjectFromXmlString<NuGet.Package>(xml);
+        //    _xmlDoc = new XmlDocument();
+        //    _xmlDoc.Load(_nuspecFile);
+        //    var xml = _xmlDoc.InnerXml;
+        //    _nupack = XmlSerializerHelper.LoadObjectFromXmlString<NuGets.Package>(xml);
 
-            return true;
-        }
+        //    return true;
+        //}
 
-        private void MergePackagesConfig()
-        {
-            var file = Path.Combine(Path.GetDirectoryName(_project.FileName), "packages.config");
-            if (!File.Exists(file))
-                return;
-            var reader = new PackagesConfigReader(file);
-            var packages = reader.GetDependencies().Where(m => !m.DevelopmentDependency).ToList();
-            _nupack.Metadata.MergeDependency(packages);
-        }
+        //private void MergePackagesConfig()
+        //{
+        //    var file = Path.Combine(Path.GetDirectoryName(_project.FileName), "packages.config");
+        //    if (!File.Exists(file))
+        //        return;
+        //    var reader = new PackagesConfigReader(file);
+        //    var packages = reader.GetDependencies().Where(m => !m.DevelopmentDependency).ToList();
+        //    _nupack.Metadata.MergeDependency(packages);
+        //}
 
     }
 }

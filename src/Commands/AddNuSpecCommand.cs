@@ -2,11 +2,8 @@
 using System.ComponentModel.Design;
 using System.IO;
 using System.Text;
-using System.Text.RegularExpressions;
 using CnSharp.VisualStudio.Extensions;
 using CnSharp.VisualStudio.Extensions.Commands;
-using CnSharp.VisualStudio.NuPack.NuGet;
-using CnSharp.VisualStudio.NuPack.Util;
 using Microsoft.VisualStudio.Shell;
 using Package = Microsoft.VisualStudio.Shell.Package;
 
@@ -62,7 +59,8 @@ namespace CnSharp.VisualStudio.NuPack.Commands
             var prj = Host.Instance.DTE.GetActiveProejct();
             if (prj == null) return;
             var cmd = (OleMenuCommand) sender;
-            cmd.Visible = prj.IsNetFrameworkProject() && !File.Exists(GetNuspecFilePath());
+            cmd.Visible = !File.Exists(prj.GetNuSpecFilePath());
+            //cmd.Visible = prj.IsNetFrameworkProject() && !File.Exists(prj.GetNuSpecFilePath());
         }
 
         public AddNuSpecCommand()
@@ -123,49 +121,44 @@ namespace CnSharp.VisualStudio.NuPack.Commands
           Execute();
         }
 
-        string GetNuspecFilePath()
-        {
-            var dte = Host.Instance.Dte2;
-            var project = dte.GetActiveProejct();
-            return Path.Combine(project.GetDirectory(), NuGetDomain.NuSpecFileName);
-        }
+
 
         public void Execute(object arg = null)
         {
             var dte = Host.Instance.Dte2;
             var project = dte.GetActiveProejct();
             Common.CheckTfs(project);
-            var file = GetNuspecFilePath();
+            var file = project.GetNuSpecFilePath();
             if (File.Exists(file))
                 return;
 
             using (var sw = new StreamWriter(file, false, Encoding.UTF8))
             {
                 var temp = Resource.NuSpecTemplate;
-                var configFile = Path.Combine(Path.GetDirectoryName(project.FileName), "packages.config");
-                if (File.Exists(configFile))
-                {
-                    try
-                    {
-                        var reader = new PackagesConfigReader(configFile);
-                        var ds = reader.GetDependencySet();
-                        if (ds.Any())
-                        {
-                            var package = new NuGet.Package();
-                            package.Metadata.Dependencies = ds;
-                            var packageXml = XmlSerializerHelper.GetXmlStringFromObject(package);
-                            var start = packageXml.IndexOf("<dependencies>");
-                            var end = packageXml.IndexOf("</dependencies>") + "</dependencies>".Length;
-                            packageXml = packageXml.Substring(start, end-start);
-                            temp = Regex.Replace(temp, "<dependencies>.*?</dependencies>",
-                                $"{packageXml}",RegexOptions.Singleline|RegexOptions.Compiled);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
+                //var configFile = Path.Combine(Path.GetDirectoryName(project.FileName), "packages.config");
+                //if (File.Exists(configFile))
+                //{
+                //    try
+                //    {
+                //        var reader = new PackagesConfigReader(configFile);
+                //        var ds = reader.GetDependencySet();
+                //        if (ds.Any())
+                //        {
+                //            var package = new NuGets.Package();
+                //            package.Metadata.Dependencies = ds;
+                //            var packageXml = XmlSerializerHelper.GetXmlStringFromObject(package);
+                //            var start = packageXml.IndexOf("<dependencies>");
+                //            var end = packageXml.IndexOf("</dependencies>") + "</dependencies>".Length;
+                //            packageXml = packageXml.Substring(start, end-start);
+                //            temp = Regex.Replace(temp, "<dependencies>.*?</dependencies>",
+                //                $"{packageXml}",RegexOptions.Singleline|RegexOptions.Compiled);
+                //        }
+                //    }
+                //    catch (Exception ex)
+                //    {
                         
-                    }
-                }
+                //    }
+                //}
                 sw.Write(temp);
                 sw.Flush();
                 sw.Close();

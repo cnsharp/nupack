@@ -1,4 +1,9 @@
-﻿using System;
+﻿/*
+ * references
+ * https://docs.microsoft.com/en-us/nuget/reference/msbuild-targets
+ * https://docs.microsoft.com/en-us/nuget/consume-packages/package-references-in-project-files
+ */
+using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
@@ -17,9 +22,9 @@ using Process = System.Diagnostics.Process;
 
 namespace CnSharp.VisualStudio.NuPack.NuGets
 {
-    public partial class DeployWizard : Form
+    public partial class MsbuildDeployWizard : Form
     {
-        private readonly ProjectAssemblyInfo _assemblyInfo;
+        //private readonly ProjectAssemblyInfo _assemblyInfo;
         private readonly PackageProjectProperties _ppp;
         private readonly string _dir;
         private readonly NuGetConfig _nuGetConfig;
@@ -30,10 +35,11 @@ namespace CnSharp.VisualStudio.NuPack.NuGets
         private readonly ProjectNuPackConfig _projectConfig;
         private readonly string _releaseDir;
         private string _outputDir;
+        private string _nuspecFile;
         private PackageMetadataControl _metadataControl;
         private NuGetDeployControl _deployControl;
 
-        public DeployWizard()
+        public MsbuildDeployWizard()
         {
             InitializeComponent();
 
@@ -45,6 +51,7 @@ namespace CnSharp.VisualStudio.NuPack.NuGets
 
             _deployControl = new NuGetDeployControl();
             _deployControl.Dock = DockStyle.Fill;
+            _deployControl.Margin = new Padding(40,0,0,0);
             wizardPageDeploy.Controls.Add(_deployControl);
 
             BindTextBoxEvents();
@@ -52,7 +59,7 @@ namespace CnSharp.VisualStudio.NuPack.NuGets
             _project = Host.Instance.Dte2.GetActiveProejct();
             _dir = _project.GetDirectory();
             _releaseDir = Path.Combine(_dir, "bin", "Release");
-          
+            _nuspecFile = _project.GetNuSpecFilePath();
 
             _nuGetConfig = ConfigHelper.ReadNuGetConfig();
             _projectConfig = _project.ReadNuPackConfig();
@@ -63,10 +70,9 @@ namespace CnSharp.VisualStudio.NuPack.NuGets
             wizardPageOptions.Commit += WizardPageCommit;
         }
 
-        public DeployWizard(ManifestMetadata metadata, ProjectAssemblyInfo assemblyInfo, PackageProjectProperties ppp) : this()
+        public MsbuildDeployWizard(ManifestMetadata metadata,  PackageProjectProperties ppp) : this()
         {
             _metadata = metadata;
-            _assemblyInfo = assemblyInfo;
             _ppp = ppp;
             _packageOldVersion = _metadata.Version;
         }
@@ -204,13 +210,13 @@ namespace CnSharp.VisualStudio.NuPack.NuGets
 
         private void SetBoxes()
         {
-            var ver = _assemblyInfo?.Version ?? _ppp.AssemblyVersion;
+            var ver = _ppp.AssemblyVersion;
             if (_metadata.Version.IsEmptyOrPlaceHolder())
                 _metadata.Version = ver.Replace(".*", "");
             if (_metadata.Title.IsEmptyOrPlaceHolder())
                 _metadata.Title = _metadata.Id;
             _metadataControl.ManifestMetadata = _metadata;
-            _metadataControl.AssemblyInfo = _assemblyInfo;
+            _metadataControl.AssemblyInfo = new ProjectAssemblyInfo {Version = ver, FileVersion = _ppp.FileVersion};
 
          
             txtNugetPath.Text = _nuGetConfig.NugetPath;
@@ -234,37 +240,28 @@ namespace CnSharp.VisualStudio.NuPack.NuGets
 
         public void SaveAndBuild()
         {
-            if (_assemblyInfo != null)
-            {
-                SaveAssemblyInfo();
-                SaveNuSpec();
-            }
-            else
-            {
-                SavePackageInfo();
-            }
-            if (!Build())
-                return;
+
+            SaveNuSpec();
+          
+            SaveProjectProperties();
+          
+            //if (!Build())
+            //    return;
             EnsureOutputDir();
             Pack();
 
             SyncVersionToDependency();
             SaveNuGetConfig();
             SaveProjectConfig();
+
+            MovePackages();
         }
 
-
-        private void SaveAssemblyInfo()
+        void SaveProjectProperties()
         {
-            //_assemblyInfo.Version = _assemblyInfo.FileVersion = txtAssemblyVersion.Text.Trim();
-            //_assemblyInfo.Title = textBoxTitle.Text.Trim();
-            //_assemblyInfo.Description = textBoxDescription.Text.Trim();
-            _assemblyInfo.Company = _metadata.Owners;
-            _assemblyInfo.Save(true);
-        }
-
-        void SavePackageInfo()
-        {
+            var assemblyInfo = _metadataControl.AssemblyInfo;
+            _ppp.AssemblyVersion = assemblyInfo.Version;
+            _ppp.FileVersion = assemblyInfo.FileVersion;
             _metadata.SyncToPackageProjectProperties(_ppp);
             _project.SavePackageProjectProperties(_ppp);
         }
@@ -278,21 +275,7 @@ namespace CnSharp.VisualStudio.NuPack.NuGets
 
         private void SaveNuSpec()
         {
-            //if (_metadata.Version != txtPackageVersion.Text.Trim())
-            //{
-            //    _packageOldVersion = _metadata.Version;
-            //    _metadata.Version = txtPackageVersion.Text.Trim();
-            //}
-
-            //_metadata.Id = textBoxId.Text.Trim();
-            //_metadata.Title = textBoxTitle.Text.Trim();
-            //_metadata.Authors = textBoxAuthors.Text.Trim();
-            //_metadata.Owners = textBoxOwners.Text.Trim();
-            //_metadata.Description = XmlTextFormatter.Encode(textBoxDescription.Text.Trim());
-            //_metadata.ReleaseNotes = XmlTextFormatter.Encode(txtNote.Text);
-
-          
-          _project.UpdateNuspec(_metadata);
+            _project.UpdateNuspec(_metadata);
         }
 
         private bool Build()
@@ -309,24 +292,34 @@ namespace CnSharp.VisualStudio.NuPack.NuGets
             return true;
         }
 
+        string GetMsbuildPath()
+        {
+            var dir = new DirectoryInfo(Application.StartupPath); //mostly like "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\"
+            dir = dir.Parent.Parent;
+            dir = new DirectoryInfo(Path.Combine(dir.FullName, "MSBuild")); //mostly like %ProgramFiles(x86)%\\Microsoft Visual Studio\\2017\\Community\\MSBuild\\15.0\\Bin\\MSbuild.exe
+            var files = dir.GetFiles("MSbuild.exe", SearchOption.AllDirectories);
+            return files.FirstOrDefault()?.FullName;//todo:amd64
+        }
+
         private void Pack()
         {
-            var nugetExe = txtNugetPath.Text;
+           
             var script = new StringBuilder();
-            script.AppendFormat(
-                @"""{0}"" pack ""{1}"" -Build -Version ""{2}"" -Properties  Configuration=Release -OutputDirectory ""{3}"" ", nugetExe,
-                _project.FileName,_metadata.Version, _outputDir);
+            script.AppendFormat(" \"{0}\" \"{1}\" /t:pack /p:Configuration=Release ",GetMsbuildPath(), _project.FileName);
+            // /p:OutputPath=\"{1}\" 
+            //if (chkForceEnglishOutput.Checked)
+            //    script.Append(" -ForceEnglishOutput ");
+            //if(chkIncludeReferencedProjects.Checked)
+            //    script.Append(" -IncludeReferencedProjects ");
+            if (chkSymbol.Checked)
+                script.Append(" /p:IncludeSymbols=true ");
 
-            if (chkForceEnglishOutput.Checked)
-                script.Append(" -ForceEnglishOutput ");
-            if(chkIncludeReferencedProjects.Checked)
-                script.Append(" -IncludeReferencedProjects ");
-            if(chkSymbol.Checked)
-                script.Append(" -Symbols ");
-
+            if(File.Exists(_nuspecFile))
+                script.AppendFormat(" /p:NuspecFile={0} ", _nuspecFile);
             var deployVM = _deployControl.ViewModel;
             if (deployVM.NuGetServer.Length > 0)
             {
+                var nugetExe = txtNugetPath.Text;
                 script.AppendLine();
                 if (!string.IsNullOrWhiteSpace(deployVM.V2Login))
                 {
@@ -381,7 +374,7 @@ namespace CnSharp.VisualStudio.NuPack.NuGets
             CmdUtil.RunCmd(script.ToString());
         }
 
-        private void MovePackage()
+        private void MovePackages()
         {
             var releaseDir = new DirectoryInfo(_releaseDir);
             if (!releaseDir.Exists)

@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using CnSharp.VisualStudio.NuPack.NuGet;
+using CnSharp.VisualStudio.NuPack.NuGets;
 
 namespace FormTests
 {
