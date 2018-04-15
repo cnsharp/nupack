@@ -61,6 +61,23 @@ namespace CnSharp.VisualStudio.NuPack {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &lt;Project&gt;
+        ///  &lt;PropertyGroup&gt;
+        ///   &lt;Copyright&gt;copyright © $company$&lt;/Copyright&gt;
+        ///   &lt;Product&gt;$product$&lt;/Product&gt;
+        ///   &lt;Company&gt;$company$&lt;/Company&gt;
+        ///   &lt;Authors&gt;$company$&lt;/Authors&gt;
+        ///   &lt;Owners&gt;$company$&lt;/Owners&gt;
+        ///&lt;/PropertyGroup&gt;
+        ///&lt;/Project&gt;.
+        /// </summary>
+        internal static string DirectoryBuildPropsTemplate {
+            get {
+                return ResourceManager.GetString("DirectoryBuildPropsTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap folder {

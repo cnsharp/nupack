@@ -32,22 +32,4 @@ namespace CnSharp.VisualStudio.NuPack
             //Position = -7;
         }
     }
-
-    public class AssemblyInfoMenu : CommandMenu
-    {
-        public AssemblyInfoMenu()
-        {
-            Id = this.GetType().Name;
-            AttachTo = "Solution";
-            Text = "Assembly Info...";
-            Position = -7;
-            Command = new AssemblyInfoEditCommand();
-            Action = () => Command.Execute();
-            //SubMenus = new List<CommandMenu>
-            //{
-            //    new CommonAssemblyInfoEditMenu(),
-            //    new AssemblyInfoEditMenu()
-            //};
-        }
-    }
 }

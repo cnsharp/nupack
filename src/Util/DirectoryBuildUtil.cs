@@ -11,8 +11,13 @@ namespace CnSharp.VisualStudio.NuPack.Util
     {
         public static DirectoryBuildProps GetDirectoryBuildProps(this Solution solution)
         {
-            var file = Path.Combine(Path.GetDirectoryName(solution.FullName), DirectoryBuildProps.FileName);
+            var file = solution.GetDirectoryBuildPropsPath();
             return !File.Exists(file) ? null : new DirectoryBuildProps(file);
+        }
+
+        public static string GetDirectoryBuildPropsPath(this Solution solution)
+        {
+            return Path.Combine(Path.GetDirectoryName(solution.FullName), DirectoryBuildProps.FileName);
         }
     }
 

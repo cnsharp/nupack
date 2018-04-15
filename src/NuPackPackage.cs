@@ -11,6 +11,7 @@ using System.Runtime.InteropServices;
 using CnSharp.VisualStudio.Extensions;
 using CnSharp.VisualStudio.Extensions.Commands;
 using CnSharp.VisualStudio.NuPack.Commands;
+using CnSharp.VisualStudio.NuPack.Menus;
 using EnvDTE;
 using EnvDTE80;
 using Microsoft.VisualStudio.Shell;
@@ -120,7 +121,8 @@ namespace CnSharp.VisualStudio.NuPack
             {
                 Menus =
                 {
-                   new AssemblyInfoMenu()
+                   new AssemblyInfoMenu(),
+                   new AddDirectoryBuildPropsMenu()
                 }
             };
             var plugin = new Plugin

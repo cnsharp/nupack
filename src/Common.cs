@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.IO;
+using System.Management;
 using System.Reflection;
 using System.Windows.Forms;
 using CnSharp.VisualStudio.Extensions;
@@ -20,14 +21,19 @@ namespace CnSharp.VisualStudio.NuPack
         }
 
         public const string SymbolServer = "https://nuget.smbsrc.net/";
-    }
 
-    public class Paths
-    {
-        public static string AddinRoot =
-            Path.GetDirectoryName(Assembly.GetExecutingAssembly().GetName().CodeBase).Replace("file:\\", "");
-
-        public static string SsmsRoot = Application.StartupPath;
+        public static string GetOrganization()
+        {
+            var c = new ManagementClass("Win32_OperatingSystem");
+            foreach (var o in c.GetInstances())
+            {
+                //Console.WriteLine("Registered User: {0}, Organization: {1}", o["RegisteredUser"], o["Organization"]);
+                if (!string.IsNullOrWhiteSpace(o["Organization"]?.ToString()))
+                    return o["Organization"].ToString();
+            }
+            return null;
+            //return (string)Microsoft.Win32.Registry.GetValue(@"HKEY_LOCAL_MACHINE\Software\Microsoft\Windows NT\CurrentVersion", "RegisteredOrganization", "");
+        }
     }
 
     class Validation
