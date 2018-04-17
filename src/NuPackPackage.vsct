@@ -44,9 +44,12 @@
       <Group guid="guidNuGetDeployCommandPackageCmdSet" id="MyMenuGroup" priority="0x0600">
         <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_PROJNODE"/>
       </Group>
-      <!--<Group guid="guidAssemblyInfoEditPackageCmdSet" id="MyMenuGroup" priority="0x0600">
-        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_PROJNODE"/>
-      </Group>-->
+      <Group guid="guidAddDirectoryBuildPropsPackageCmdSet" id="MyMenuGroup" priority="0x0600">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_CSCD_SOLUTION_ADD"/>
+      </Group>
+       <Group guid="guidAssemblyInfoEditPackageCmdSet" id="MyMenuGroup" priority="0x0600">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_SOLNNODE"/> 
+      </Group>
     </Groups>
 
     <!--Buttons section. -->
@@ -69,7 +72,16 @@
           <ButtonText>package.nuspec</ButtonText>
         </Strings>
       </Button>
-      <Button guid="guidNuGetDeployCommandPackageCmdSet" id="cmdidNuGetDeployCommand" priority="0x0100" type="Button">
+      <Button guid="guidAddDirectoryBuildPropsPackageCmdSet" id="AddDirectoryBuildPropsCommandId" priority="0x0100" type="Button">
+        <Parent guid="guidAddDirectoryBuildPropsPackageCmdSet" id="MyMenuGroup" />
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <!--<Icon guid="guidImages" id="bmpPic1" />-->
+        <Strings>
+          <ButtonText>Directory.Build.props</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidNuGetDeployCommandPackageCmdSet" id="cmdidNuGetDeployCommand" priority="6" type="Button">
         <Parent guid="guidNuGetDeployCommandPackageCmdSet" id="MyMenuGroup" />
         <!--<Icon guid="guidImages1" id="bmpPic1" />-->
         <Strings>
@@ -107,17 +119,17 @@
     </Bitmaps>
   </Commands>
 
-  <CommandPlacements>
-  <!--<CommandPlacement guid="guidAddNuSpecPackageCmdSet" id="MyMenuGroup" priority="0x100">
+  <!--<CommandPlacements>
+  --><!--<CommandPlacement guid="guidAddNuSpecPackageCmdSet" id="MyMenuGroup" priority="0x100">
     <Parent guid="guidSHLMainMenu" id="IDG_VS_CTXT_PROJECT_ADD_ITEMS" />
   </CommandPlacement>
     <CommandPlacement guid="guidNuGetDeployCommandPackageCmdSet" id="MyMenuGroup" priority="0x101">
       <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_PROJNODE" />
-    </CommandPlacement>-->
+    </CommandPlacement>--><!--
    <CommandPlacement guid="guidAssemblyInfoEditPackageCmdSet" id="MyMenuGroup" priority="0x102">
       <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_XPROJ_SLNPROJ" />
     </CommandPlacement>
-</CommandPlacements>
+</CommandPlacements>-->
 
   <Symbols>
     <!-- This is the package guid. -->
@@ -127,6 +139,11 @@
     <GuidSymbol name="guidAddNuSpecPackageCmdSet" value="{1eefc81f-e74a-427a-a9e5-671d321226a0}">
       <IDSymbol name="MyMenuGroup" value="0x1020" />
       <IDSymbol name="AddNuSpecCommandId" value="0x0100" />
+    </GuidSymbol>
+
+    <GuidSymbol name="guidAddDirectoryBuildPropsPackageCmdSet" value="{0A4174DB-9A22-4CE5-A1CB-B7F63855308F}">
+      <IDSymbol name="MyMenuGroup" value="0x1020" />
+      <IDSymbol name="AddDirectoryBuildPropsCommandId" value="0x0100" />
     </GuidSymbol>
 
     <GuidSymbol name="guidImages" value="{4c9ff502-074b-4df1-95df-15e28f12db94}">

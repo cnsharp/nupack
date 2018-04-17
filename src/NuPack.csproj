@@ -80,12 +80,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Menus\AddDirectoryBuildPropsMenu.cs" />
-    <Compile Include="AssemblyInfoEditor\CommonAssemblyInfoForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="AssemblyInfoEditor\CommonAssemblyInfoForm.Designer.cs">
-      <DependentUpon>CommonAssemblyInfoForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="AssemblyInfoEditor\AssemblyInfoForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -103,7 +97,6 @@
     <Compile Include="Commands\AddDirectoryBuildPropsCommand.cs" />
     <Compile Include="Commands\AssemblyInfoEditCommand.cs" />
     <Compile Include="Commands\NuGetDeployCommand.cs" />
-    <Compile Include="Commands\CommonAssemblyInfoEditCommand.cs" />
     <Compile Include="Util\DirectoryBuildUtil.cs" />
     <Compile Include="NuGets\ConfigHelper.cs" />
     <Compile Include="NuGets\MsbuildDeployWizard.cs">
@@ -320,9 +313,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="AssemblyInfoEditor\CommonAssemblyInfoForm.resx">
-      <DependentUpon>CommonAssemblyInfoForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="AssemblyInfoEditor\AssemblyInfoForm.resx">
       <DependentUpon>AssemblyInfoForm.cs</DependentUpon>
     </EmbeddedResource>

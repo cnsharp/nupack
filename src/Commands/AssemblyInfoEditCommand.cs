@@ -15,6 +15,12 @@ namespace CnSharp.VisualStudio.NuPack.Commands
     /// </summary>
     internal sealed class AssemblyInfoEditCommand : ICommand
     {
+        public AssemblyInfoEditCommand()
+        {
+
+        }
+
+
         /// <summary>
         /// Command ID.
         /// </summary>
@@ -48,15 +54,21 @@ namespace CnSharp.VisualStudio.NuPack.Commands
             if (commandService != null)
             {
                 var menuCommandID = new CommandID(CommandSet, CommandId);
-                var menuItem = new MenuCommand(this.MenuItemCallback, menuCommandID);
+                var menuItem = new OleMenuCommand(this.MenuItemCallback, menuCommandID);
+                menuItem.BeforeQueryStatus += MenuItemOnBeforeQueryStatus;
                 commandService.AddCommand(menuItem);
             }
         }
 
-        public AssemblyInfoEditCommand()
+        private void MenuItemOnBeforeQueryStatus(object sender, EventArgs e)
         {
-            
+            var dte = Host.Instance.Dte2;
+            if (dte == null) return;
+            var cmd = (OleMenuCommand) sender;
+            cmd.Visible = dte.GetSolutionProjects().Any(p => p.IsNetFrameworkProject());
         }
+
+
 
         /// <summary>
         /// Gets the instance of the command.

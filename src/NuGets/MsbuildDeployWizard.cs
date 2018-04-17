@@ -233,11 +233,8 @@ namespace CnSharp.VisualStudio.NuPack.NuGets
 
         public void SaveAndBuild()
         {
-
             SaveNuSpec();
-          
             SaveProjectProperties();
-
             if (!Build())
                 return;
             EnsureOutputDir();
@@ -307,7 +304,7 @@ namespace CnSharp.VisualStudio.NuPack.NuGets
                 script.Append(" /p:IncludeSymbols=true ");
 
             if (File.Exists(_nuspecFile))
-                script.AppendFormat(" /p:NuspecFile={0} ", _nuspecFile);
+                script.AppendFormat(" /p:NuspecFile=\"{0}\" ", _nuspecFile);
             CmdUtil.RunCmd(script.ToString());
             var file = $"{_releaseDir}\\{_metadata.Id}.{_metadata.Version}.nupkg";
             return File.Exists(file);

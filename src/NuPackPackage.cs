@@ -80,9 +80,9 @@ namespace CnSharp.VisualStudio.NuPack
             AddNuSpecCommand.Initialize(this);
             NuGetDeployCommand.Initialize(this);
             AssemblyInfoEditCommand.Initialize(this);
-            //CommonAssemblyInfoEditCommand.Initialize(this);
+            AddDirectoryBuildPropsCommand.Initialize(this);
 
-            LoadCustomCommands();
+            //LoadCustomCommands();
         }
 
      
@@ -128,7 +128,7 @@ namespace CnSharp.VisualStudio.NuPack
             var plugin = new Plugin
             {
                 Id = Id,
-            CommandConfig = _config,
+                CommandConfig = _config,
                 Assembly = Assembly.GetExecutingAssembly(),
                 Location =
                     Path.GetDirectoryName(Assembly.GetExecutingAssembly().GetName().CodeBase).Replace("file:\\", ""),

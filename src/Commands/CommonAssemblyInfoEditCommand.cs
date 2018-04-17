@@ -27,7 +27,7 @@ namespace CnSharp.VisualStudio.NuPack.Commands
         /// <summary>
         /// Command menu group (command set GUID).
         /// </summary>
-        public static readonly Guid CommandSet = new Guid("5a521c8d-d715-4a6c-a4f7-5f4899d810a5");
+        public static readonly Guid CommandSet = new Guid("E1E48B05-DCEC-4759-AB5A-B4C642E84660");
 
         /// <summary>
         /// VS Package that provides this command, not null.

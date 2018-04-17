@@ -1,10 +1,12 @@
 ﻿using System;
 using System.ComponentModel.Design;
 using System.IO;
+using System.Linq;
 using System.Text;
 using CnSharp.VisualStudio.Extensions;
 using CnSharp.VisualStudio.Extensions.Commands;
 using CnSharp.VisualStudio.NuPack.Util;
+using EnvDTE;
 using EnvDTE80;
 using Microsoft.VisualStudio.Shell;
 
@@ -18,7 +20,7 @@ namespace CnSharp.VisualStudio.NuPack.Commands
         /// <summary>
         /// Command ID.
         /// </summary>
-        public const int CommandId = 255;
+        public const int CommandId = 256;
 
         /// <summary>
         /// Command menu group (command set GUID).
@@ -29,6 +31,8 @@ namespace CnSharp.VisualStudio.NuPack.Commands
         /// VS Package that provides this command, not null.
         /// </summary>
         private readonly Package package;
+
+        private OleMenuCommand _cmd;
 
 
         public AddDirectoryBuildPropsCommand()
@@ -65,7 +69,7 @@ namespace CnSharp.VisualStudio.NuPack.Commands
             var sln = Host.Instance.DTE.Solution;
             if (sln == null) return;
             var cmd = (OleMenuCommand)sender;
-            cmd.Visible = !File.Exists(sln.GetDirectoryBuildPropsPath());
+            cmd.Visible = sln.Projects.Cast<Project>().Any(p => !string.IsNullOrWhiteSpace(p.FileName) && p.IsSdkBased()) && !File.Exists(sln.GetDirectoryBuildPropsPath());
         }
 
 
@@ -107,7 +111,7 @@ namespace CnSharp.VisualStudio.NuPack.Commands
         /// <param name="e">Event args.</param>
         private void MenuItemCallback(object sender, EventArgs e)
         {
-           Execute();
+            Execute(sender);
         }
 
 
@@ -117,8 +121,19 @@ namespace CnSharp.VisualStudio.NuPack.Commands
             var sln = dte.Solution;
             if (sln == null) return;
             var file = sln.GetDirectoryBuildPropsPath();
+            var sln2 = sln as Solution2;
             if (File.Exists(file))
+            {
+                try
+                {
+                    sln2.AddSolutionItem(file);
+                }
+                finally
+                {
+                    dte.ItemOperations.OpenFile(file);
+                }
                 return;
+            }
 
             using (var sw = new StreamWriter(file, false, Encoding.UTF8))
             {
@@ -130,9 +145,7 @@ namespace CnSharp.VisualStudio.NuPack.Commands
                 sw.Close();
             }
 
-            var sln2 = sln as Solution2;
             sln2.AddSolutionItem(file);
-             
             dte.ItemOperations.OpenFile(file);
         }
     }

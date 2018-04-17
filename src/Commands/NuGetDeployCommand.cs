@@ -123,6 +123,7 @@ namespace CnSharp.VisualStudio.NuPack.Commands
                 _metadata = _project.GetManifestMetadata();
 
                 var form = new DeployWizard(_metadata, _assemblyInfo, _ppp);
+                form.StartPosition = FormStartPosition.CenterScreen;
                 if (form.ShowDialog() == DialogResult.OK)
                     form.SaveAndBuild();
             }
@@ -132,6 +133,7 @@ namespace CnSharp.VisualStudio.NuPack.Commands
                 _metadata = _ppp.ToManifestMetadata();
                 _directoryBuildProps = Host.Instance.DTE.Solution.GetDirectoryBuildProps();
                 var form = new MsbuildDeployWizard(_metadata, _ppp,_directoryBuildProps);
+                form.StartPosition = FormStartPosition.CenterScreen;
                 if (form.ShowDialog() == DialogResult.OK)
                     form.SaveAndBuild();
             }
