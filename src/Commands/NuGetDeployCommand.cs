@@ -138,26 +138,5 @@ namespace CnSharp.VisualStudio.NuPack.Commands
                     form.SaveAndBuild();
             }
         }
-
-        //private bool LoadNetFrameworkProjectInfo()
-        //{
-        //    _xmlDoc = new XmlDocument();
-        //    _xmlDoc.Load(_nuspecFile);
-        //    var xml = _xmlDoc.InnerXml;
-        //    _nupack = XmlSerializerHelper.LoadObjectFromXmlString<NuGets.Package>(xml);
-
-        //    return true;
-        //}
-
-        //private void MergePackagesConfig()
-        //{
-        //    var file = Path.Combine(Path.GetDirectoryName(_project.FileName), "packages.config");
-        //    if (!File.Exists(file))
-        //        return;
-        //    var reader = new PackagesConfigReader(file);
-        //    var packages = reader.GetDependencies().Where(m => !m.DevelopmentDependency).ToList();
-        //    _nupack.Metadata.MergeDependency(packages);
-        //}
-
     }
 }

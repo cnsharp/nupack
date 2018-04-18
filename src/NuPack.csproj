@@ -79,7 +79,6 @@
     <DeployExtension>False</DeployExtension>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Menus\AddDirectoryBuildPropsMenu.cs" />
     <Compile Include="AssemblyInfoEditor\AssemblyInfoForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -92,7 +91,6 @@
     <Compile Include="AssemblyInfoEditor\EachAssemblyInfoForm.designer.cs">
       <DependentUpon>EachAssemblyInfoForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Menus\AssemblyInfoMenu.cs" />
     <Compile Include="Commands\AddNuSpecCommand.cs" />
     <Compile Include="Commands\AddDirectoryBuildPropsCommand.cs" />
     <Compile Include="Commands\AssemblyInfoEditCommand.cs" />

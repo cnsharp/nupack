@@ -11,7 +11,6 @@ using System.Runtime.InteropServices;
 using CnSharp.VisualStudio.Extensions;
 using CnSharp.VisualStudio.Extensions.Commands;
 using CnSharp.VisualStudio.NuPack.Commands;
-using CnSharp.VisualStudio.NuPack.Menus;
 using EnvDTE;
 using EnvDTE80;
 using Microsoft.VisualStudio.Shell;
@@ -110,36 +109,37 @@ namespace CnSharp.VisualStudio.NuPack
             AppDomain.CurrentDomain.AssemblyResolve += handler;
         }
 
-        private CommandConfig _config;
-        private static Guid Id = new Guid("{738D452D-862C-4BB5-A035-CA8E07403138}");
+        #region obsolete
+        //private CommandConfig _config;
+        //private static Guid Id = new Guid("{738D452D-862C-4BB5-A035-CA8E07403138}");
 
-        private  void LoadCustomCommands()
-        {
-            if (_config != null || Host.Plugins.Any(m => m.Id == Id))
-                return;
-            _config = new CommandConfig
-            {
-                Menus =
-                {
-                   new AssemblyInfoMenu(),
-                   new AddDirectoryBuildPropsMenu()
-                }
-            };
-            var plugin = new Plugin
-            {
-                Id = Id,
-                CommandConfig = _config,
-                Assembly = Assembly.GetExecutingAssembly(),
-                Location =
-                    Path.GetDirectoryName(Assembly.GetExecutingAssembly().GetName().CodeBase).Replace("file:\\", ""),
-                //ResourceManager = new ResourceManager(config.ResourceManager, Assembly.GetExecutingAssembly())
-            };
+        //private  void LoadCustomCommands()
+        //{
+        //    if (_config != null || Host.Plugins.Any(m => m.Id == Id))
+        //        return;
+        //    _config = new CommandConfig
+        //    {
+        //        Menus =
+        //        {
+        //           new AssemblyInfoMenu(),
+        //           new AddDirectoryBuildPropsMenu()
+        //        }
+        //    };
+        //    var plugin = new Plugin
+        //    {
+        //        Id = Id,
+        //        CommandConfig = _config,
+        //        Assembly = Assembly.GetExecutingAssembly(),
+        //        Location =
+        //            Path.GetDirectoryName(Assembly.GetExecutingAssembly().GetName().CodeBase).Replace("file:\\", ""),
+        //        //ResourceManager = new ResourceManager(config.ResourceManager, Assembly.GetExecutingAssembly())
+        //    };
 
 
-            var manager = new CommandManager(plugin);
-            manager.Load();
-        }
-
+        //    var manager = new CommandManager(plugin);
+        //    manager.Load();
+        //}
+#endregion
         #endregion
     }
 }

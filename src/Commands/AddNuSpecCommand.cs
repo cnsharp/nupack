@@ -59,8 +59,7 @@ namespace CnSharp.VisualStudio.NuPack.Commands
             var prj = Host.Instance.DTE.GetActiveProejct();
             if (prj == null) return;
             var cmd = (OleMenuCommand) sender;
-            cmd.Visible = !File.Exists(prj.GetNuSpecFilePath());
-            //cmd.Visible = prj.IsNetFrameworkProject() && !File.Exists(prj.GetNuSpecFilePath());
+            cmd.Visible = prj.IsNetFrameworkProject() && !File.Exists(prj.GetNuSpecFilePath());
         }
 
         public AddNuSpecCommand()

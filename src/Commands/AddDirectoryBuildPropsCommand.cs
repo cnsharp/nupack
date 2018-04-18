@@ -139,7 +139,7 @@ namespace CnSharp.VisualStudio.NuPack.Commands
             {
                 var temp = Resource.DirectoryBuildPropsTemplate;
                 temp = temp.Replace("$company$", Common.GetOrganization() ?? Environment.UserName);
-                temp = temp.Replace("$product$", sln.FileName);
+                temp = temp.Replace("$product$", Path.GetFileNameWithoutExtension(sln.FileName));
                 sw.Write(temp);
                 sw.Flush();
                 sw.Close();
