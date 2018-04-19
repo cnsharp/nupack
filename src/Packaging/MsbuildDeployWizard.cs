@@ -3,24 +3,23 @@
  * https://docs.microsoft.com/en-us/nuget/reference/msbuild-targets
  * https://docs.microsoft.com/en-us/nuget/consume-packages/package-references-in-project-files
  */
+
 using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading;
 using System.Windows.Forms;
 using AeroWizard;
 using CnSharp.VisualStudio.Extensions;
 using CnSharp.VisualStudio.Extensions.Projects;
 using CnSharp.VisualStudio.NuPack.Util;
 using EnvDTE;
-using EnvDTE80;
 using NuGet;
 using Process = System.Diagnostics.Process;
 
-namespace CnSharp.VisualStudio.NuPack.NuGets
+namespace CnSharp.VisualStudio.NuPack.Packaging
 {
     public partial class MsbuildDeployWizard : Form
     {
@@ -235,11 +234,11 @@ namespace CnSharp.VisualStudio.NuPack.NuGets
         {
             SaveNuSpec();
             SaveProjectProperties();
-            if (!Build())
+            if (!Pack())
                 return;
             EnsureOutputDir();
             MovePackages();
-            Pack();
+            Push();
             SyncVersionToDependency();
             SaveNuGetConfig();
             SaveProjectConfig();
@@ -265,22 +264,12 @@ namespace CnSharp.VisualStudio.NuPack.NuGets
 
         private void SaveNuSpec()
         {
+            if (SemanticVersion.TryParse(_metadata.Version, out var ver))
+                _metadata.Version = ver.ToFullString();
+
             _project.UpdateNuspec(_metadata);
         }
 
-        //private bool Build()
-        //{
-        //    var solution = (Solution2) Host.Instance.DTE.Solution;
-        //    var solutionBuild = (SolutionBuild2) solution.SolutionBuild;
-        //    solutionBuild.SolutionConfigurations.Item("Release").Activate();
-
-        //    solutionBuild.Build(true);
-        //    if (solutionBuild.LastBuildInfo != 0)
-        //    {
-        //        return false;
-        //    }
-        //    return true;
-        //}
 
         string GetMsbuildPath()
         {
@@ -291,18 +280,12 @@ namespace CnSharp.VisualStudio.NuPack.NuGets
             return files.FirstOrDefault()?.FullName;//todo:amd64
         }
 
-        private bool Build()
+        private bool Pack()
         {
             var script = new StringBuilder();
             script.AppendFormat(" \"{0}\" \"{1}\" /t:pack /p:Configuration=Release ", GetMsbuildPath(), _project.FileName);
-            // /p:OutputPath=\"{1}\" 
-            //if (chkForceEnglishOutput.Checked)
-            //    script.Append(" -ForceEnglishOutput ");
-            //if(chkIncludeReferencedProjects.Checked)
-            //    script.Append(" -IncludeReferencedProjects ");
             if (chkSymbol.Checked)
                 script.Append(" /p:IncludeSymbols=true ");
-
             if (File.Exists(_nuspecFile))
                 script.AppendFormat(" /p:NuspecFile=\"{0}\" ", _nuspecFile);
             CmdUtil.RunCmd(script.ToString());
@@ -310,14 +293,13 @@ namespace CnSharp.VisualStudio.NuPack.NuGets
             return File.Exists(file);
         }
 
-        private void Pack()
+        private void Push()
         {
+            var nugetExe = txtNugetPath.Text;
             var script = new StringBuilder();
-           
             var deployVM = _deployControl.ViewModel;
             if (deployVM.NuGetServer.Length > 0)
             {
-                var nugetExe = txtNugetPath.Text;
                 script.AppendLine();
                 if (!string.IsNullOrWhiteSpace(deployVM.V2Login))
                 {
@@ -325,29 +307,25 @@ namespace CnSharp.VisualStudio.NuPack.NuGets
                     script.AppendFormat(@" || ""{0}"" sources Update -Name ""{1}"" -Source ""{2}"" -Username ""{3}"" -Password ""{4}""", nugetExe, deployVM.NuGetServer, deployVM.NuGetServer, deployVM.V2Login, deployVM.ApiKey);
                     script.AppendLine();
                 }
-                script.AppendFormat(@"""{0}"" push ""{1}"" -source {2} {3}", nugetExe, GetLastPackage(), deployVM.NuGetServer, deployVM.ApiKey);
+
+                script.AppendFormat("\"{0}\" push \"{1}{4}.{5}.nupkg\" -source {2} {3}", nugetExe, _outputDir, deployVM.NuGetServer, deployVM.ApiKey,
+                    _metadata.Id, _metadata.Version);
+            }
+
+            if (chkSymbol.Checked && !string.IsNullOrWhiteSpace(deployVM.SymbolServer))
+            {
+                script.AppendLine();
+                script.AppendFormat("nuget SetApiKey {0}", deployVM.ApiKey);
+                script.AppendLine();
+                script.AppendFormat("nuget push \"{0}{1}.{2}.symbols.nupkg\" -source {3}", _outputDir, _metadata.Id, _metadata.Version, deployVM.SymbolServer);
             }
 
             CmdUtil.RunCmd(script.ToString());
 
             ShowPackages();
-
-            if (chkSymbol.Checked && !string.IsNullOrWhiteSpace(deployVM.SymbolServer))
-                PublishSymbolPackage();
         }
 
 
-        string GetLastPackage()
-        {
-            var files = Directory.GetFiles(_outputDir, "*.nupkg");
-            return files.Where(f => !f.EndsWith(".symbols.nupkg")).Select(m => new FileInfo(m)).OrderByDescending(f => f.CreationTime).FirstOrDefault().FullName;
-        }
-
-        string GetLastSymbolPackage()
-        {
-            var files = Directory.GetFiles(_outputDir, "*.symbols.nupkg");
-            return files.Select(m => new FileInfo(m)).OrderByDescending(f => f.CreationTime).FirstOrDefault().FullName;
-        }
 
 
         private void ShowPackages()
@@ -358,17 +336,6 @@ namespace CnSharp.VisualStudio.NuPack.NuGets
             var files = outputDir.GetFiles("*.nupkg");
             if (chkOpenDir.Checked && files.Length > 0)
                 Process.Start(_outputDir);
-        }
-
-        void PublishSymbolPackage()
-        {
-            var deployVM = _deployControl.ViewModel;
-            var script = new StringBuilder();
-            script.AppendLine();
-            script.AppendFormat("nuget SetApiKey {0}", deployVM.ApiKey);
-            script.AppendLine();
-            script.AppendFormat("nuget push {0} -source {1}",GetLastSymbolPackage(), deployVM.SymbolServer);
-            CmdUtil.RunCmd(script.ToString());
         }
 
         private void MovePackages()

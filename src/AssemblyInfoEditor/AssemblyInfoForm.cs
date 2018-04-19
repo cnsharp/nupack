@@ -168,7 +168,7 @@ namespace CnSharp.VisualStudio.NuPack.AssemblyInfoEditor
             if (commonInfoFields.Contains(field))
             {
                 var textbox = groupBoxCommonInfo.Controls.Find("txt" + field,false).FirstOrDefault() as TextBox;
-                var selected = (bool)projectGrid.CurrentRow.Cells[0].Value;
+                var selected = (bool?) projectGrid.CurrentRow.Cells[0].Value ?? false;
                 if (!string.IsNullOrWhiteSpace(textbox?.Text) && selected)
                     e.Cancel = true;
             }

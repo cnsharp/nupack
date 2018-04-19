@@ -96,29 +96,29 @@
     <Compile Include="Commands\AssemblyInfoEditCommand.cs" />
     <Compile Include="Commands\NuGetDeployCommand.cs" />
     <Compile Include="Util\DirectoryBuildUtil.cs" />
-    <Compile Include="NuGets\ConfigHelper.cs" />
-    <Compile Include="NuGets\MsbuildDeployWizard.cs">
+    <Compile Include="Packaging\ConfigHelper.cs" />
+    <Compile Include="Packaging\MsbuildDeployWizard.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="NuGets\MsbuildDeployWizard.Designer.cs">
+    <Compile Include="Packaging\MsbuildDeployWizard.Designer.cs">
       <DependentUpon>MsbuildDeployWizard.cs</DependentUpon>
     </Compile>
-    <Compile Include="NuGets\DeployWizard.cs">
+    <Compile Include="Packaging\DeployWizard.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="NuGets\DeployWizard.Designer.cs">
+    <Compile Include="Packaging\DeployWizard.Designer.cs">
       <DependentUpon>DeployWizard.cs</DependentUpon>
     </Compile>
-    <Compile Include="NuGets\NuGetDeployControl.cs">
+    <Compile Include="Packaging\NuGetDeployControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="NuGets\NuGetDeployControl.Designer.cs">
+    <Compile Include="Packaging\NuGetDeployControl.Designer.cs">
       <DependentUpon>NuGetDeployControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="NuGets\PackageMetadataControl.cs">
+    <Compile Include="Packaging\PackageMetadataControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="NuGets\PackageMetadataControl.Designer.cs">
+    <Compile Include="Packaging\PackageMetadataControl.Designer.cs">
       <DependentUpon>PackageMetadataControl.cs</DependentUpon>
     </Compile>
     <Compile Include="NuPackPackage.cs" />
@@ -317,16 +317,16 @@
     <EmbeddedResource Include="AssemblyInfoEditor\EachAssemblyInfoForm.resx">
       <DependentUpon>EachAssemblyInfoForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="NuGets\MsbuildDeployWizard.resx">
+    <EmbeddedResource Include="Packaging\MsbuildDeployWizard.resx">
       <DependentUpon>MsbuildDeployWizard.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="NuGets\DeployWizard.resx">
+    <EmbeddedResource Include="Packaging\DeployWizard.resx">
       <DependentUpon>DeployWizard.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="NuGets\NuGetDeployControl.resx">
+    <EmbeddedResource Include="Packaging\NuGetDeployControl.resx">
       <DependentUpon>NuGetDeployControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="NuGets\PackageMetadataControl.resx">
+    <EmbeddedResource Include="Packaging\PackageMetadataControl.resx">
       <DependentUpon>PackageMetadataControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Resource.resx">

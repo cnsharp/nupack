@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Windows.Forms;
 
-namespace CnSharp.VisualStudio.NuPack.NuGets
+namespace CnSharp.VisualStudio.NuPack.Packaging
 {
     public partial class NuGetDeployControl : UserControl
     {

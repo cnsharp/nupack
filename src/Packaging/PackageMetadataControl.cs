@@ -4,7 +4,7 @@ using System.Windows.Forms;
 using CnSharp.VisualStudio.Extensions.Projects;
 using NuGet;
 
-namespace CnSharp.VisualStudio.NuPack.NuGets
+namespace CnSharp.VisualStudio.NuPack.Packaging
 {
     public partial class PackageMetadataControl : UserControl
     {
@@ -110,16 +110,23 @@ namespace CnSharp.VisualStudio.NuPack.NuGets
             {
                 if (textBoxDescription.Focused)
                 {
-                    textBoxDescription.AppendText(Environment.NewLine);
+                    InsertNewLine(textBoxDescription);
                     return true;
                 }
                 if (textBoxReleaseNotes.Focused)
                 {
-                    textBoxReleaseNotes.AppendText(Environment.NewLine);
+                    InsertNewLine(textBoxReleaseNotes);
                     return true;
                 }
             }
             return base.ProcessCmdKey(ref msg, keyData);
+        }
+
+        void InsertNewLine(TextBox box)
+        {
+            var i = box.SelectionStart;
+            box.Text = box.Text.Insert(i, Environment.NewLine);
+            box.Select(i+1,0);
         }
 
         private void PackageMetadataControl_Enter(object sender, EventArgs e)

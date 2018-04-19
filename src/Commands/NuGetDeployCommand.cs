@@ -4,7 +4,7 @@ using System.IO;
 using System.Windows.Forms;
 using CnSharp.VisualStudio.Extensions;
 using CnSharp.VisualStudio.Extensions.Projects;
-using CnSharp.VisualStudio.NuPack.NuGets;
+using CnSharp.VisualStudio.NuPack.Packaging;
 using CnSharp.VisualStudio.NuPack.Util;
 using EnvDTE;
 using Microsoft.VisualStudio.Shell;

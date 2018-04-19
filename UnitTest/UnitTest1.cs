@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using CnSharp.VisualStudio.NuPack.NuGets;
 using CnSharp.VisualStudio.NuPack.Util;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

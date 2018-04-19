@@ -4,7 +4,6 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading;
 using System.Windows.Forms;
 using AeroWizard;
 using CnSharp.VisualStudio.Extensions;
@@ -15,7 +14,7 @@ using EnvDTE80;
 using NuGet;
 using Process = System.Diagnostics.Process;
 
-namespace CnSharp.VisualStudio.NuPack.NuGets
+namespace CnSharp.VisualStudio.NuPack.Packaging
 {
     public partial class DeployWizard : Form
     {
@@ -239,7 +238,7 @@ namespace CnSharp.VisualStudio.NuPack.NuGets
                 return;
             EnsureOutputDir();
             Pack();
-
+            ShowPackages();
             SyncVersionToDependency();
             SaveNuGetConfig();
             SaveProjectConfig();
@@ -248,9 +247,6 @@ namespace CnSharp.VisualStudio.NuPack.NuGets
 
         private void SaveAssemblyInfo()
         {
-            //_assemblyInfo.Version = _assemblyInfo.FileVersion = txtAssemblyVersion.Text.Trim();
-            //_assemblyInfo.Title = textBoxTitle.Text.Trim();
-            //_assemblyInfo.Description = textBoxDescription.Text.Trim();
             _assemblyInfo.Company = _metadata.Owners;
             _assemblyInfo.Save(true);
         }
@@ -270,19 +266,8 @@ namespace CnSharp.VisualStudio.NuPack.NuGets
 
         private void SaveNuSpec()
         {
-            //if (_metadata.Version != txtPackageVersion.Text.Trim())
-            //{
-            //    _packageOldVersion = _metadata.Version;
-            //    _metadata.Version = txtPackageVersion.Text.Trim();
-            //}
-
-            //_metadata.Id = textBoxId.Text.Trim();
-            //_metadata.Title = textBoxTitle.Text.Trim();
-            //_metadata.Authors = textBoxAuthors.Text.Trim();
-            //_metadata.Owners = textBoxOwners.Text.Trim();
-            //_metadata.Description = XmlTextFormatter.Encode(textBoxDescription.Text.Trim());
-            //_metadata.ReleaseNotes = XmlTextFormatter.Encode(txtNote.Text);
-
+            if(SemanticVersion.TryParse(_metadata.Version,out var ver))
+                _metadata.Version = ver.ToFullString();
           
           _project.UpdateNuspec(_metadata);
         }
@@ -304,9 +289,10 @@ namespace CnSharp.VisualStudio.NuPack.NuGets
         private void Pack()
         {
             var nugetExe = txtNugetPath.Text;
+            _outputDir = _outputDir.Replace("\\\\", "\\");
             var script = new StringBuilder();
             script.AppendFormat(
-                @"""{0}"" pack ""{1}"" -Build -Version ""{2}"" -Properties  Configuration=Release -OutputDirectory ""{3}"" ", nugetExe,
+                @"""{0}"" pack ""{1}"" -Build -Version ""{2}"" -Properties  Configuration=Release -OutputDirectory ""{3} "" ", nugetExe,
                 _project.FileName,_metadata.Version, _outputDir);
 
             if (chkForceEnglishOutput.Checked)
@@ -327,30 +313,20 @@ namespace CnSharp.VisualStudio.NuPack.NuGets
                     script.AppendLine();
                 }
 
-                script.AppendFormat(@"""{0}"" push ""{1}"" -source {2} {3}", nugetExe, GetLastPackage(), deployVM.NuGetServer, deployVM.ApiKey);
+                script.AppendFormat("\"{0}\" push \"{1}{4}.{5}.nupkg\" -source {2} {3}", nugetExe,_outputDir, deployVM.NuGetServer, deployVM.ApiKey,
+                    _metadata.Id,_metadata.Version);
+            }
+
+            if (chkSymbol.Checked && !string.IsNullOrWhiteSpace(deployVM.SymbolServer))
+            {
+                script.AppendLine();
+                script.AppendFormat("nuget SetApiKey {0}", deployVM.ApiKey);
+                script.AppendLine();
+                script.AppendFormat("nuget push \"{0}{1}.{2}.symbols.nupkg\" -source {3}", _outputDir, _metadata.Id, _metadata.Version, deployVM.SymbolServer);
             }
 
             CmdUtil.RunCmd(script.ToString());
-
-            ShowPackages();
-
-            if (chkSymbol.Checked && !string.IsNullOrWhiteSpace(deployVM.SymbolServer))
-                PublishSymbolPackage();
         }
-
-
-        string GetLastPackage()
-        {
-            var files = Directory.GetFiles(_outputDir, "*.nupkg");
-            return files.Where(f => !f.EndsWith(".symbols.nupkg")).Select(m => new FileInfo(m)).OrderByDescending(f => f.CreationTime).FirstOrDefault().FullName;
-        }
-
-        string GetLastSymbolPackage()
-        {
-            var files = Directory.GetFiles(_outputDir, "*.symbols.nupkg");
-            return files.Select(m => new FileInfo(m)).OrderByDescending(f => f.CreationTime).FirstOrDefault().FullName;
-        }
-
 
         private void ShowPackages()
         {
@@ -362,38 +338,6 @@ namespace CnSharp.VisualStudio.NuPack.NuGets
                 Process.Start(_outputDir);
         }
 
-        void PublishSymbolPackage()
-        {
-            var deployVM = _deployControl.ViewModel;
-            var script = new StringBuilder();
-            script.AppendLine();
-            script.AppendFormat("nuget SetApiKey {0}", deployVM.ApiKey);
-            script.AppendLine();
-            script.AppendFormat("nuget push {0} -source {1}",GetLastSymbolPackage(), deployVM.SymbolServer);
-            CmdUtil.RunCmd(script.ToString());
-        }
-
-        private void MovePackage()
-        {
-            var releaseDir = new DirectoryInfo(_releaseDir);
-            if (!releaseDir.Exists)
-                return;
-            var files = releaseDir.GetFiles("*.nupkg");
-            var fileCount = 0;
-            foreach (var file in files)
-            {
-                var dest = Path.Combine(_outputDir, file.Name);
-                if (File.Exists(dest))
-                {
-                    File.Delete(dest);
-                }
-                file.MoveTo(dest);
-                fileCount++;
-            }
-
-            if (chkOpenDir.Checked && fileCount > 0)
-                Process.Start(_outputDir);
-        }
 
         private void EnsureOutputDir()
         {

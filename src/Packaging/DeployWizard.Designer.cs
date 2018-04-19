@@ -1,6 +1,6 @@
-﻿namespace CnSharp.VisualStudio.NuPack.NuGets
+﻿namespace CnSharp.VisualStudio.NuPack.Packaging
 {
-    partial class MsbuildDeployWizard
+    partial class DeployWizard
     {
         /// <summary>
         /// Required designer variable.
@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MsbuildDeployWizard));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DeployWizard));
             this.chkOpenDir = new System.Windows.Forms.CheckBox();
             this.btnOpenOutputDir = new System.Windows.Forms.Button();
             this.label10 = new System.Windows.Forms.Label();
@@ -182,7 +182,7 @@
             // chkSymbol
             // 
             this.chkSymbol.AutoSize = true;
-            this.chkSymbol.Location = new System.Drawing.Point(123, 209);
+            this.chkSymbol.Location = new System.Drawing.Point(123, 265);
             this.chkSymbol.Name = "chkSymbol";
             this.chkSymbol.Size = new System.Drawing.Size(169, 19);
             this.chkSymbol.TabIndex = 4;
@@ -192,24 +192,24 @@
             // chkForceEnglishOutput
             // 
             this.chkForceEnglishOutput.AutoSize = true;
+            this.chkForceEnglishOutput.Checked = true;
+            this.chkForceEnglishOutput.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkForceEnglishOutput.Location = new System.Drawing.Point(123, 319);
             this.chkForceEnglishOutput.Name = "chkForceEnglishOutput";
             this.chkForceEnglishOutput.Size = new System.Drawing.Size(131, 19);
             this.chkForceEnglishOutput.TabIndex = 5;
             this.chkForceEnglishOutput.Text = "ForceEnglishOutput";
             this.chkForceEnglishOutput.UseVisualStyleBackColor = true;
-            this.chkForceEnglishOutput.Visible = false;
             // 
             // chkIncludeReferencedProjects
             // 
             this.chkIncludeReferencedProjects.AutoSize = true;
-            this.chkIncludeReferencedProjects.Location = new System.Drawing.Point(123, 265);
+            this.chkIncludeReferencedProjects.Location = new System.Drawing.Point(123, 211);
             this.chkIncludeReferencedProjects.Name = "chkIncludeReferencedProjects";
             this.chkIncludeReferencedProjects.Size = new System.Drawing.Size(166, 19);
             this.chkIncludeReferencedProjects.TabIndex = 3;
             this.chkIncludeReferencedProjects.Text = "IncludeReferencedProjects";
             this.chkIncludeReferencedProjects.UseVisualStyleBackColor = true;
-            this.chkIncludeReferencedProjects.Visible = false;
             // 
             // wizardPageDeploy
             // 
@@ -234,7 +234,7 @@
             this.openAssemblyInfoFileDialog.DefaultExt = "*.cs|*.vb";
             this.openAssemblyInfoFileDialog.Title = "Open Common Assembly Info File";
             // 
-            // MsbuildDeployWizard
+            // DeployWizard
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -244,7 +244,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "MsbuildDeployWizard";
+            this.Name = "DeployWizard";
             this.Text = "Deploy Wizard";
             this.Load += new System.EventHandler(this.DeployWizard_Load);
             ((System.ComponentModel.ISupportInitialize)(this.stepWizardControl)).EndInit();

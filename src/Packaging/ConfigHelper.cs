@@ -5,7 +5,7 @@ using System.Xml.Serialization;
 using CnSharp.VisualStudio.NuPack.Util;
 using EnvDTE;
 
-namespace CnSharp.VisualStudio.NuPack.NuGets
+namespace CnSharp.VisualStudio.NuPack.Packaging
 {
     public static class ConfigHelper
     {

@@ -1,4 +1,4 @@
-﻿namespace CnSharp.VisualStudio.NuPack.NuGets
+﻿namespace CnSharp.VisualStudio.NuPack.Packaging
 {
     partial class PackageMetadataControl
     {
