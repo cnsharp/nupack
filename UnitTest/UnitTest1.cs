@@ -28,30 +28,6 @@ namespace UnitTest
             //Console.Write(xml);
         }
 
-        [TestMethod]
-        public void TestRead()
-        {
-            var xml = @"<?xml version=""1.0""?>
-<package>
-  <metadata>
-    <id>CnSharp.VisualStudio.TFS</id>
-    <version>1.1</version>
-    <title>$title$</title>
-    <authors>$author$</authors>
-    <owners>$author$</owners>
-    <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>$description$</description>
-    <releaseNotes>initial version</releaseNotes>
-    <copyright>$copyright$</copyright>
-    <iconUrl>https://secure.gravatar.com/avatar/dff08c1ffd5fe20a93c2a606aa88e0d5?s=32&amp;r=g&amp;d=retro</iconUrl>
-    <projectUrl>http://vssharp.codeplex.com/</projectUrl>
-    <dependencies>
-   <dependency id=""VsSharp"" version=""1.1"" />
-</dependencies>
-  </metadata>
-</package>";
-            var p = XmlSerializerHelper.LoadObjectFromXmlString<Package>(xml);
-            Assert.IsNotNull(p.Metadata.Dependencies);
-        }
+      
     }
 }

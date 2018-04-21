@@ -167,7 +167,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="release_note.txt">
+    <Content Include="release_notes.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
@@ -192,8 +192,8 @@
     <Reference Include="AeroWizard, Version=2.1.11.0, Culture=neutral, PublicKeyToken=915e74f5d64b8f37, processorArchitecture=MSIL">
       <HintPath>packages\AeroWizard.2.1.11\lib\net40\AeroWizard.dll</HintPath>
     </Reference>
-    <Reference Include="CnSharp.VisualStudio.SourceControl.Tfs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=33a6564c1a397e8f, processorArchitecture=MSIL">
-      <HintPath>packages\CnSharp.VisualStudio.TFS.1.1.2\lib\net35\CnSharp.VisualStudio.SourceControl.Tfs.dll</HintPath>
+    <Reference Include="CnSharp.VisualStudio.SourceControl.Tfs, Version=1.3.1.0, Culture=neutral, PublicKeyToken=33a6564c1a397e8f, processorArchitecture=MSIL">
+      <HintPath>packages\CnSharp.VisualStudio.TFS.1.3.1\lib\net45\CnSharp.VisualStudio.SourceControl.Tfs.dll</HintPath>
     </Reference>
     <Reference Include="EnvDTE, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>False</EmbedInteropTypes>
@@ -209,15 +209,6 @@
     </Reference>
     <Reference Include="Microsoft.Build.Framework" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.TeamFoundation.Client, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>packages\CnSharp.VisualStudio.TFS.1.1.2\lib\net35\Microsoft.TeamFoundation.Client.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.TeamFoundation.Common, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>packages\CnSharp.VisualStudio.TFS.1.1.2\lib\net35\Microsoft.TeamFoundation.Common.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.TeamFoundation.VersionControl.Client, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>packages\CnSharp.VisualStudio.TFS.1.1.2\lib\net35\Microsoft.TeamFoundation.VersionControl.Client.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.VisualStudio.CommandBars, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
@@ -317,6 +308,9 @@
     <Reference Include="VSLangProj80, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
+    <Reference Include="VsSharp, Version=1.3.1.0, Culture=neutral, PublicKeyToken=31e1bdd79b8e5ae1, processorArchitecture=MSIL">
+      <HintPath>packages\VsSharp.1.3.1\lib\net45\VsSharp.dll</HintPath>
+    </Reference>
     <Reference Include="VsWebSite.Interop, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
@@ -360,12 +354,6 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\VS-Sharp\CnSharp.VS.Extensions.Common\CnSharp.VisualStudio.Extensions.csproj">
-      <Project>{1822955c-be64-4d5a-b7e0-e8b0dff69842}</Project>
-      <Name>CnSharp.VisualStudio.Extensions</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

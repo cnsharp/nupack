@@ -1,4 +1,9 @@
-﻿### V1.6.3 1/11/2017
+﻿### V2.0 4/21/2017
+* Add SDK-based project support by msbuild command.
+* Support CommonAssemblyInfo on classic projects.
+* Add Directory.Build.props to support common package info of  SDK-based projects,like company/authors/etc.
+
+### V1.6.3 1/11/2017
 * + add -ForceEnglishOutput option
 
 ### V1.6.2 8/10/2017

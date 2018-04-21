@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using CnSharp.VisualStudio.Extensions.Projects;
 using NuGet;
@@ -126,12 +127,13 @@ namespace CnSharp.VisualStudio.NuPack.Packaging
         {
             var i = box.SelectionStart;
             box.Text = box.Text.Insert(i, Environment.NewLine);
-            box.Select(i+1,0);
+            box.Select(i + 2, 0);
         }
 
         private void PackageMetadataControl_Enter(object sender, EventArgs e)
         {
             textBoxVersion.Focus();
         }
+
     }
 }
