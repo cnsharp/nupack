@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -117,69 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="logo" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\logo.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="nuget" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\nuget.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="NuSpecTemplate" xml:space="preserve">
-    <value>&lt;?xml version="1.0"?&gt;
-&lt;package&gt;
-  &lt;metadata&gt;
-    &lt;!--*--&gt;
-    &lt;id&gt;$id$&lt;/id&gt;
-    &lt;!--*--&gt;
-    &lt;version&gt;$version$&lt;/version&gt;
-    &lt;title&gt;&lt;/title&gt;
-    &lt;!--*--&gt;
-    &lt;authors&gt;$author$&lt;/authors&gt;
-    &lt;owners&gt;$author$&lt;/owners&gt;
-&lt;!--
-    &lt;licenseUrl&gt;&lt;/licenseUrl&gt;
-    &lt;projectUrl&gt;&lt;/projectUrl&gt;
-    &lt;iconUrl&gt;&lt;/iconUrl&gt;
---&gt;
-    &lt;requireLicenseAcceptance&gt;false&lt;/requireLicenseAcceptance&gt;
-    &lt;!--*--&gt;
-    &lt;description&gt;$description$&lt;/description&gt;
-    &lt;!--*--&gt;
-    &lt;releaseNotes&gt; &lt;/releaseNotes&gt;
-    &lt;copyright&gt;$copyright$&lt;/copyright&gt;
-    &lt;tags&gt; &lt;/tags&gt;
-    &lt;dependencies&gt;
-      &lt;!--
-      &lt;dependency id="SampleDependency" version="1.0" /&gt;
---&gt;
-    &lt;/dependencies&gt;
-  &lt;/metadata&gt;
-&lt;/package&gt;</value>
-  </data>
-  <data name="zip" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\zip.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="folder" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\folder.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="DirectoryBuildPropsTemplate" xml:space="preserve">
-    <value>&lt;Project&gt;
-  &lt;PropertyGroup&gt;
-   &lt;Copyright&gt;copyright © $company$&lt;/Copyright&gt;
-   &lt;Product&gt;$product$&lt;/Product&gt;
-   &lt;Company&gt;$company$&lt;/Company&gt;
-   &lt;Authors&gt;$company$&lt;/Authors&gt;
-   &lt;Owners&gt;$company$&lt;/Owners&gt;
-&lt;/PropertyGroup&gt;
-&lt;/Project&gt;</value>
-  </data>
-  <data name="close32" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\close32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="loading32" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\loading32.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="reload32" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\reload32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
 </root>

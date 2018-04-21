@@ -27,6 +27,7 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
@@ -95,6 +96,13 @@
     <Compile Include="Commands\AddDirectoryBuildPropsCommand.cs" />
     <Compile Include="Commands\AssemblyInfoEditCommand.cs" />
     <Compile Include="Commands\NuGetDeployCommand.cs" />
+    <Compile Include="Extensions\SolutionDataCache.cs" />
+    <Compile Include="UI\LoadingForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\LoadingForm.designer.cs">
+      <DependentUpon>LoadingForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Util\DirectoryBuildUtil.cs" />
     <Compile Include="Packaging\ConfigHelper.cs" />
     <Compile Include="Packaging\MsbuildDeployWizard.cs">
@@ -166,6 +174,8 @@
     <Content Include="Resources\AddNuSpecCommand.png" />
     <Content Include="Resources\AddNuSpecCommandPackage.ico" />
     <None Include="Resources\folder.png" />
+    <None Include="Resources\close32.png" />
+    <None Include="Resources\loading32.gif" />
     <Content Include="Resources\logo.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
@@ -174,6 +184,7 @@
     <Content Include="Resources\AssemblyInfoEditCommand.png" />
     <Content Include="Resources\NuGetDeployCommand.png" />
     <None Include="Resources\zip.ico" />
+    <None Include="Resources\reload32.png" />
     <Content Include="Resources\UnifiedAssemblyInfoEditCommand.png" />
     <Content Include="stylesheet.css" />
   </ItemGroup>
@@ -332,6 +343,9 @@
     <EmbeddedResource Include="Resource.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\LoadingForm.resx">
+      <DependentUpon>LoadingForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="VSPackage.resx">
       <MergeWithCTO>true</MergeWithCTO>

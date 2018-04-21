@@ -32,11 +32,21 @@
             this.button2 = new System.Windows.Forms.Button();
             this.groupBoxProjects = new System.Windows.Forms.GroupBox();
             this.projectGrid = new System.Windows.Forms.DataGridView();
+            this.colChecked = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.ColProjectName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColFileVersion = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColVersion = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColProduct = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColCompany = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColCopyright = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColTrademark = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.btnOK = new System.Windows.Forms.Button();
             this.projectBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.groupBoxCommonInfo = new System.Windows.Forms.GroupBox();
+            this.txtTrademark = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
             this.txtVersion = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.btnLink = new System.Windows.Forms.Button();
@@ -51,16 +61,6 @@
             this.panel2 = new System.Windows.Forms.Panel();
             this.openAssemblyInfoFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.saveAssemblyInfoFileDialog = new System.Windows.Forms.SaveFileDialog();
-            this.txtTrademark = new System.Windows.Forms.TextBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.colChecked = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.ColProjectName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ColFileVersion = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ColVersion = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ColProduct = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ColCompany = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ColCopyright = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ColTrademark = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.groupBoxProjects.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.projectGrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.projectBindingSource)).BeginInit();
@@ -117,7 +117,61 @@
             this.projectGrid.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.projectGrid_CellEndEdit);
             this.projectGrid.CellValidated += new System.Windows.Forms.DataGridViewCellEventHandler(this.projectGrid_CellValidated);
             this.projectGrid.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.projectGrid_CellValidating);
+            this.projectGrid.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.projectGrid_CellValueChanged);
+            this.projectGrid.CurrentCellDirtyStateChanged += new System.EventHandler(this.projectGrid_CurrentCellDirtyStateChanged);
             this.projectGrid.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.projectGrid_DataBindingComplete);
+            // 
+            // colChecked
+            // 
+            this.colChecked.FillWeight = 40F;
+            this.colChecked.HeaderText = "";
+            this.colChecked.Name = "colChecked";
+            // 
+            // ColProjectName
+            // 
+            this.ColProjectName.DataPropertyName = "ProjectName";
+            this.ColProjectName.HeaderText = "Project Name";
+            this.ColProjectName.Name = "ColProjectName";
+            this.ColProjectName.ReadOnly = true;
+            // 
+            // ColFileVersion
+            // 
+            this.ColFileVersion.DataPropertyName = "FileVersion";
+            this.ColFileVersion.FillWeight = 80F;
+            this.ColFileVersion.HeaderText = "File Version";
+            this.ColFileVersion.Name = "ColFileVersion";
+            // 
+            // ColVersion
+            // 
+            this.ColVersion.DataPropertyName = "Version";
+            this.ColVersion.FillWeight = 80F;
+            this.ColVersion.HeaderText = "Version";
+            this.ColVersion.Name = "ColVersion";
+            // 
+            // ColProduct
+            // 
+            this.ColProduct.DataPropertyName = "Product";
+            this.ColProduct.HeaderText = "Product Name";
+            this.ColProduct.Name = "ColProduct";
+            // 
+            // ColCompany
+            // 
+            this.ColCompany.DataPropertyName = "Company";
+            this.ColCompany.HeaderText = "Company";
+            this.ColCompany.Name = "ColCompany";
+            // 
+            // ColCopyright
+            // 
+            this.ColCopyright.DataPropertyName = "Copyright";
+            this.ColCopyright.FillWeight = 150F;
+            this.ColCopyright.HeaderText = "Copyright";
+            this.ColCopyright.Name = "ColCopyright";
+            // 
+            // ColTrademark
+            // 
+            this.ColTrademark.DataPropertyName = "Trademark";
+            this.ColTrademark.HeaderText = "Trademark";
+            this.ColTrademark.Name = "ColTrademark";
             // 
             // btnOK
             // 
@@ -167,6 +221,22 @@
             this.groupBoxCommonInfo.TabIndex = 16;
             this.groupBoxCommonInfo.TabStop = false;
             this.groupBoxCommonInfo.Text = "Common Info";
+            // 
+            // txtTrademark
+            // 
+            this.txtTrademark.Location = new System.Drawing.Point(512, 66);
+            this.txtTrademark.Name = "txtTrademark";
+            this.txtTrademark.Size = new System.Drawing.Size(270, 20);
+            this.txtTrademark.TabIndex = 3;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(433, 68);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(58, 13);
+            this.label5.TabIndex = 14;
+            this.label5.Text = "Trademark";
             // 
             // txtVersion
             // 
@@ -275,74 +345,6 @@
             // 
             this.openAssemblyInfoFileDialog.DefaultExt = "*.cs|*.vb";
             this.openAssemblyInfoFileDialog.Title = "Open Common Assembly Info File";
-            // 
-            // txtTrademark
-            // 
-            this.txtTrademark.Location = new System.Drawing.Point(512, 66);
-            this.txtTrademark.Name = "txtTrademark";
-            this.txtTrademark.Size = new System.Drawing.Size(270, 20);
-            this.txtTrademark.TabIndex = 3;
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(433, 68);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(58, 13);
-            this.label5.TabIndex = 14;
-            this.label5.Text = "Trademark";
-            // 
-            // colChecked
-            // 
-            this.colChecked.FillWeight = 40F;
-            this.colChecked.HeaderText = "";
-            this.colChecked.Name = "colChecked";
-            // 
-            // ColProjectName
-            // 
-            this.ColProjectName.DataPropertyName = "ProjectName";
-            this.ColProjectName.HeaderText = "Project Name";
-            this.ColProjectName.Name = "ColProjectName";
-            this.ColProjectName.ReadOnly = true;
-            // 
-            // ColFileVersion
-            // 
-            this.ColFileVersion.DataPropertyName = "FileVersion";
-            this.ColFileVersion.FillWeight = 80F;
-            this.ColFileVersion.HeaderText = "File Version";
-            this.ColFileVersion.Name = "ColFileVersion";
-            // 
-            // ColVersion
-            // 
-            this.ColVersion.DataPropertyName = "Version";
-            this.ColVersion.FillWeight = 80F;
-            this.ColVersion.HeaderText = "Version";
-            this.ColVersion.Name = "ColVersion";
-            // 
-            // ColProduct
-            // 
-            this.ColProduct.DataPropertyName = "Product";
-            this.ColProduct.HeaderText = "Product Name";
-            this.ColProduct.Name = "ColProduct";
-            // 
-            // ColCompany
-            // 
-            this.ColCompany.DataPropertyName = "Company";
-            this.ColCompany.HeaderText = "Company";
-            this.ColCompany.Name = "ColCompany";
-            // 
-            // ColCopyright
-            // 
-            this.ColCopyright.DataPropertyName = "Copyright";
-            this.ColCopyright.FillWeight = 150F;
-            this.ColCopyright.HeaderText = "Copyright";
-            this.ColCopyright.Name = "ColCopyright";
-            // 
-            // ColTrademark
-            // 
-            this.ColTrademark.DataPropertyName = "Trademark";
-            this.ColTrademark.HeaderText = "Trademark";
-            this.ColTrademark.Name = "ColTrademark";
             // 
             // AssemblyInfoForm
             // 

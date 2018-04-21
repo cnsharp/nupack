@@ -65,7 +65,8 @@ namespace CnSharp.VisualStudio.NuPack.Commands
             var dte = Host.Instance.Dte2;
             if (dte == null) return;
             var cmd = (OleMenuCommand) sender;
-            cmd.Visible = dte.GetSolutionProjects().Any(p => p.IsNetFrameworkProject());
+            //cmd.Visible = dte.GetSolutionProjects().Any(p => p.IsNetFrameworkProject());
+            cmd.Visible = SolutionDataCache.Instance.GetSolutionProperties(dte.Solution.FileName).HasClassicProjects;
         }
 
 
@@ -117,22 +118,19 @@ namespace CnSharp.VisualStudio.NuPack.Commands
             var dte = Host.Instance.Dte2;
             try
             {
-                var allProjects = dte.GetSolutionProjects().ToList();
+                var sp = SolutionDataCache.Instance.GetSolutionProperties(dte.Solution.FileName);
+                var allProjects = sp.Projects;
                 if (!allProjects.Any())
                 {
                     ServiceProvider.ShowError("No project is opened.",Common.ProductName);
                     return;
                 }
-                var projects = allProjects.Where(p => p.IsNetFrameworkProject()).ToList();
-                if (!projects.Any())
+                if (!sp.HasClassicProjects)
                 {
                     ServiceProvider.ShowError("No project is based on .net framework.", Common.ProductName);
                     return;
                 }
-                // var prj = dte.GetActiveProejct();
-                //prj.LinkCommonAssemblyInfoFile(Path.Combine(Path.GetDirectoryName(dte.Solution.FileName),"CommonAssemblyInfo.cs"));
-                // prj.RemoveCommonAssemblyInfoAnnotations();
-                new AssemblyInfoForm(projects).ShowDialog();
+                new AssemblyInfoForm(sp.ClassicProjects).ShowDialog();
             }
             catch (Exception exception)
             {

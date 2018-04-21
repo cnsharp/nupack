@@ -11,6 +11,7 @@ using System.Runtime.InteropServices;
 using CnSharp.VisualStudio.Extensions;
 using CnSharp.VisualStudio.Extensions.Commands;
 using CnSharp.VisualStudio.NuPack.Commands;
+using CnSharp.VisualStudio.NuPack.Extensions;
 using EnvDTE;
 using EnvDTE80;
 using Microsoft.VisualStudio.Shell;
@@ -69,12 +70,25 @@ namespace CnSharp.VisualStudio.NuPack
         protected override void Initialize()
         {
             base.Initialize();
-
-          
-
-
+            
             var dte = GetGlobalService(typeof(DTE)) as DTE2;
             Host.Instance.DTE = dte;
+            Host.Instance.SolutionOpendAction = () =>
+            {
+                var sln = Host.Instance.Solution2;
+                var projects = dte.GetSolutionProjects().ToList();
+                var sp = new SolutionProperties
+                {
+                    Projects = projects,
+                    ClassicProjects = projects.Where(p => !string.IsNullOrWhiteSpace(p.FileName) && p.IsNetFrameworkProject()).ToList(),
+                    SdkBasedProjects = projects.Where(p => !string.IsNullOrWhiteSpace(p.FileName) && p.IsSdkBased()).ToList()
+                };
+                SolutionDataCache.Instance.AddOrUpdate(sln.FileName, sp, (k, v) =>
+                {
+                    v = sp;
+                    return v;
+                });
+            };
 
             AddNuSpecCommand.Initialize(this);
             NuGetDeployCommand.Initialize(this);

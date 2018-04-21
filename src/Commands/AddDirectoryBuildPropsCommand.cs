@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using CnSharp.VisualStudio.Extensions;
 using CnSharp.VisualStudio.Extensions.Commands;
+using CnSharp.VisualStudio.NuPack.Extensions;
 using CnSharp.VisualStudio.NuPack.Util;
 using EnvDTE;
 using EnvDTE80;
@@ -69,7 +70,8 @@ namespace CnSharp.VisualStudio.NuPack.Commands
             var sln = Host.Instance.DTE.Solution;
             if (sln == null) return;
             var cmd = (OleMenuCommand)sender;
-            cmd.Visible = sln.Projects.Cast<Project>().Any(p => !string.IsNullOrWhiteSpace(p.FileName) && p.IsSdkBased()) && !File.Exists(sln.GetDirectoryBuildPropsPath());
+            //cmd.Visible = sln.Projects.Cast<Project>().Any(p => !string.IsNullOrWhiteSpace(p.FileName) && p.IsSdkBased()) && !File.Exists(sln.GetDirectoryBuildPropsPath());
+            cmd.Visible = SolutionDataCache.Instance.GetSolutionProperties(sln.FileName).HasSdkBasedProjects && !File.Exists(sln.GetDirectoryBuildPropsPath());
         }
 
 

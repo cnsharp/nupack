@@ -61,6 +61,16 @@ namespace CnSharp.VisualStudio.NuPack {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap close32 {
+            get {
+                object obj = ResourceManager.GetObject("close32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &lt;Project&gt;
         ///  &lt;PropertyGroup&gt;
         ///   &lt;Copyright&gt;copyright © $company$&lt;/Copyright&gt;
@@ -83,6 +93,16 @@ namespace CnSharp.VisualStudio.NuPack {
         internal static System.Drawing.Bitmap folder {
             get {
                 object obj = ResourceManager.GetObject("folder", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap loading32 {
+            get {
+                object obj = ResourceManager.GetObject("loading32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -134,6 +154,16 @@ namespace CnSharp.VisualStudio.NuPack {
         internal static string NuSpecTemplate {
             get {
                 return ResourceManager.GetString("NuSpecTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap reload32 {
+            get {
+                object obj = ResourceManager.GetObject("reload32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         

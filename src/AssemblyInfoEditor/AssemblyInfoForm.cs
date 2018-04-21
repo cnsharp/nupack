@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -7,6 +8,7 @@ using System.Windows.Forms;
 using CnSharp.VisualStudio.Extensions;
 using CnSharp.VisualStudio.Extensions.Projects;
 using CnSharp.VisualStudio.NuPack.Extensions;
+using CnSharp.VisualStudio.NuPack.UI;
 using EnvDTE;
 
 namespace CnSharp.VisualStudio.NuPack.AssemblyInfoEditor
@@ -20,12 +22,15 @@ namespace CnSharp.VisualStudio.NuPack.AssemblyInfoEditor
 
         //private readonly Project _startProject;
         private readonly List<Project> _projects;
-        private readonly List<ProjectAssemblyInfo> _projectInfos;
-        private readonly ProjectAssemblyInfo[] _projectOriginalInfos;
+        private  List<ProjectAssemblyInfo> _projectInfos;
+        private  ProjectAssemblyInfo[] _projectOriginalInfos;
         private CommonAssemblyInfo _commonInfo;
         private string _fileToLink;
         private static readonly string[] commonInfoFields =
             typeof(CommonAssemblyInfo).GetProperties().Select(p => p.Name).ToArray();
+
+        private BackgroundWorker _loadingWorker;
+        private BackgroundWorker _savingWorker;
 
         #endregion
 
@@ -40,10 +45,22 @@ namespace CnSharp.VisualStudio.NuPack.AssemblyInfoEditor
             RegisterEvents();
 
              _projects = refProjects.ToList();
-             _projectInfos = _projects.Select(p => p.GetProjectAssemblyInfo()).ToList();
-            projectBindingSource.DataSource = _projectInfos;
-            projectGrid.DataSource = projectBindingSource;
-            _projectOriginalInfos = _projectInfos.Select(p => p.Copy()).ToArray();
+
+            _loadingWorker = new BackgroundWorker();
+            _loadingWorker.DoWork += (sender, e) =>
+            {
+                var projects = (e.Argument as IEnumerable<Project>).ToList();
+                e.Result = projects.Select(p => p.GetProjectAssemblyInfo()).ToList();
+            };
+            _loadingWorker.RunWorkerCompleted += (sender, e) =>
+            {
+                _projectInfos = e.Result as List<ProjectAssemblyInfo>;
+                projectBindingSource.DataSource = _projectInfos;
+                projectGrid.DataSource = projectBindingSource;
+                _projectOriginalInfos = _projectInfos.Select(p => p.Copy()).ToArray();
+            };
+            _loadingWorker.RunWorkerAsync(_projects);
+            new LoadingForm {BackgroundWorker = _loadingWorker,ReloadEnabled = false}.ShowDialog(this);
         }
 
         void ScanCommonInfoFiles()
@@ -122,6 +139,8 @@ namespace CnSharp.VisualStudio.NuPack.AssemblyInfoEditor
 
         private void projectGrid_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
         {
+            if(projectGrid.Columns[e.ColumnIndex] == ColTrademark)
+                return;
             projectGrid.Rows[e.RowIndex].Cells[e.ColumnIndex].ErrorText = null;
             if (e.FormattedValue == null || string.IsNullOrEmpty(e.FormattedValue.ToString()) ||
                 e.FormattedValue.ToString().Trim().Length == 0)
@@ -176,12 +195,26 @@ namespace CnSharp.VisualStudio.NuPack.AssemblyInfoEditor
 
         private void projectGrid_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.ColumnIndex == 0)
+           
+        }
+
+
+        private void projectGrid_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.ColumnIndex == 0 && e.RowIndex >= 0 && _projectOriginalInfos != null)
             {
-                var selected = (bool?) projectGrid.CurrentCell.Value ?? false;
-                if(selected) CopyCellValues(e.RowIndex);
+                var selected = (bool?)projectGrid.CurrentCell.Value ?? false;
+                if (selected) CopyCellValues(e.RowIndex);
                 else RevertCellValue(e.RowIndex);
             }
+        }
+
+
+        private void projectGrid_CurrentCellDirtyStateChanged(object sender, EventArgs e)
+        {
+            var grid = sender as DataGridView;
+            if (grid.IsCurrentCellDirty && grid.CurrentCell.ColumnIndex == 0)
+                grid.CommitEdit(DataGridViewDataErrorContexts.Commit);
         }
 
         private string DefaultExt => _projects[0].GetCodeFileExtension();
@@ -190,7 +223,7 @@ namespace CnSharp.VisualStudio.NuPack.AssemblyInfoEditor
         {
             saveAssemblyInfoFileDialog.DefaultExt = DefaultExt;
             saveAssemblyInfoFileDialog.InitialDirectory = Path.GetDirectoryName(Host.Instance.DTE.Solution.FileName);
-            saveAssemblyInfoFileDialog.FileName = _fileToLink ?? typeof(CommonAssemblyInfo).Name + saveAssemblyInfoFileDialog.DefaultExt;
+            saveAssemblyInfoFileDialog.FileName = _fileToLink ?? typeof(CommonAssemblyInfo).Name;
             if(saveAssemblyInfoFileDialog.ShowDialog() != DialogResult.OK) return;
             var info = _projectOriginalInfos[0];
             _commonInfo = new CommonAssemblyInfo
@@ -266,39 +299,71 @@ namespace CnSharp.VisualStudio.NuPack.AssemblyInfoEditor
             }
            
 
-            projectBindingSource.ResetBindings(false);
+            //projectBindingSource.ResetBindings(false);
 
             toolStripStatusLabel.Text = "Saving...";
+            if (_fileToLink != null) Host.Instance.Solution2.AddSolutionItem(_fileToLink);
             var i = 0;
             var ignoreFields = GetIgnoreFields();
+            var savingProjects = new List<AssemblyInfoGridViewRow>();
             foreach (DataGridViewRow row in projectGrid.Rows)
             {
                 var assemblyInfo = _projectInfos[i];
-                var changed = false;
                 if (_commonInfo != null && row.Cells[0].Value != null && (bool) row.Cells[0].Value)
                 {
-                    assemblyInfo.Project.LinkCommonAssemblyInfoFile(_fileToLink);
-                    assemblyInfo.Project.RemoveCommonAssemblyInfoAnnotations(ignoreFields);
-                    changed = true;
+                    savingProjects.Add(new AssemblyInfoGridViewRow{AssemblyInfo = assemblyInfo,LinkToCommonInfo = true,Row = i});
                 }
                 else if (assemblyInfo.CompareTo(_projectOriginalInfos[i]) != 0)
                 {
-                    changed = true;
-                }
-                if (changed)
-                {
-                    assemblyInfo.Save();
-                    row.Cells[0].Style.ForeColor = SystemColors.HighlightText;
+                    savingProjects.Add(new AssemblyInfoGridViewRow { AssemblyInfo = assemblyInfo, LinkToCommonInfo = false, Row = i });
                 }
                 i++;
             }
-
-            if (_fileToLink != null) Host.Instance.Solution2.AddSolutionItem(_fileToLink);
-
-            toolStripStatusLabel.Text = "Saved successfully.";
-            DialogResult = DialogResult.OK;
+            if (savingProjects.Count == 0)
+            {
+                DialogResult = DialogResult.OK;
+                return;
+            }
+         
+            _savingWorker= new BackgroundWorker{WorkerReportsProgress = true};
+            _savingWorker.DoWork += (o, args) =>
+            {
+                var projects = args.Argument as List<AssemblyInfoGridViewRow>;
+                var j = 1;
+                var n = projects.Count;
+                foreach (var pair in projects)
+                {
+                    if (pair.LinkToCommonInfo)
+                    {
+                        pair.AssemblyInfo.Project.LinkCommonAssemblyInfoFile(_fileToLink);
+                        pair.AssemblyInfo.Project.RemoveCommonAssemblyInfoAnnotations(ignoreFields);
+                    }
+                    pair.AssemblyInfo.Save();
+                    _savingWorker.ReportProgress(j == n  ? 100 : (int)Math.Ceiling(Math.Round((decimal)j / n,2,MidpointRounding.AwayFromZero)) * 100,pair);
+                    j++;
+                }
+            };
+            _savingWorker.RunWorkerCompleted += (o, args) =>
+            {
+                DialogResult = DialogResult.OK;
+            };
+            _savingWorker.ProgressChanged += (o, args) =>
+            {
+                var row = args.UserState as AssemblyInfoGridViewRow;
+                toolStripStatusLabel.Text = $"{row.AssemblyInfo.ProjectName} saved.";
+                projectGrid.Rows[row.Row].DefaultCellStyle.ForeColor = Color.DarkCyan;
+            };
+            panel1.Enabled = false;
+            projectGrid.Enabled = false;
+            _savingWorker.RunWorkerAsync(savingProjects);
         }
 
-     
+        class AssemblyInfoGridViewRow
+        {
+            public ProjectAssemblyInfo AssemblyInfo { get; set; }
+            public bool LinkToCommonInfo { get; set; }
+            public int Row { get; set; }
+        }
+
     }
 }
