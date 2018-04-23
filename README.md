@@ -8,14 +8,17 @@ Visual Studio extension for building and publishing NuGet packages.
 ![Package metadata](https://raw.githubusercontent.com/cnsharp/nupack/master/screenshots/2.x/PackageMetadataDialog.png)
 ![Package metadata](https://raw.githubusercontent.com/cnsharp/nupack/master/screenshots/2.x/DeployDialog.png)
 
-* Common Assembly Info Editor
+* Classic projects support
+
+	* Add packages.nuspec
+
+![Add packages.nuspec](https://raw.githubusercontent.com/cnsharp/nupack/master/screenshots/2.x/NuspecCommandMenu.png)
+
+	* Common Assembly Info Editor
 
 ![Assembly info command menu](https://raw.githubusercontent.com/cnsharp/nupack/master/screenshots/2.x/AssemblyInfoCommandMenu.png)
 ![Assembly info editor](https://raw.githubusercontent.com/cnsharp/nupack/master/screenshots/2.x/AssemblyInfoDialog.png)
 
-* Classic projects support
-
-![Add packages.nuspec](https://raw.githubusercontent.com/cnsharp/nupack/master/screenshots/2.x/NuspecCommandMenu.png)
 
 * SDK-based Projects Support
 

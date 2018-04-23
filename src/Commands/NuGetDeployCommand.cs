@@ -120,6 +120,8 @@ namespace CnSharp.VisualStudio.NuPack.Commands
                     new AddNuSpecCommand().Execute();
                 }
                 _assemblyInfo = _project.GetProjectAssemblyInfo();
+                if (string.IsNullOrWhiteSpace(_assemblyInfo.FileVersion))
+                    _assemblyInfo.FileVersion = _assemblyInfo.Version;
                 _metadata = _project.GetManifestMetadata();
 
                 var form = new DeployWizard(_metadata, _assemblyInfo, _ppp);

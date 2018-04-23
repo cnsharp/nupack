@@ -3,16 +3,16 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("NuPack")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Visual Studio extension for building and publishing NuGet packages.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("CnSharp Studio")]
 [assembly: AssemblyProduct("NuPack")]
-[assembly: AssemblyCopyright("")]
+[assembly: AssemblyCopyright("Copyright © CnSharp Studio 2013-2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
 
 [assembly: ComVisible(false)]
 
-[assembly: AssemblyVersion("1.6.3")]
-[assembly: AssemblyFileVersion("1.6.3")]
+[assembly: AssemblyVersion("2.0.1")]
+[assembly: AssemblyFileVersion("2.0.1")]
