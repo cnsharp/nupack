@@ -81,7 +81,7 @@
           <ButtonText>Directory.Build.props</ButtonText>
         </Strings>
       </Button>
-      <Button guid="guidNuGetDeployCommandPackageCmdSet" id="cmdidNuGetDeployCommand" priority="6" type="Button">
+      <Button guid="guidNuGetDeployCommandPackageCmdSet" id="cmdidNuGetDeployCommand" priority="0x0100" type="Button">
         <Parent guid="guidNuGetDeployCommandPackageCmdSet" id="MyMenuGroup" />
         <!--<Icon guid="guidImages1" id="bmpPic1" />-->
         <Strings>
@@ -90,6 +90,8 @@
       </Button>
       <Button guid="guidAssemblyInfoEditPackageCmdSet" id="cmdidAssemblyInfoEditCommand" priority="0x0100" type="Button">
         <Parent guid="guidAssemblyInfoEditPackageCmdSet" id="MyMenuGroup" />
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>DynamicVisibility</CommandFlag>
         <!--<Icon guid="guidImages2" id="bmpPic1" />-->
         <Strings>
           <ButtonText>Edit Assembly Info...</ButtonText>
@@ -143,7 +145,7 @@
 
     <GuidSymbol name="guidAddDirectoryBuildPropsPackageCmdSet" value="{0A4174DB-9A22-4CE5-A1CB-B7F63855308F}">
       <IDSymbol name="MyMenuGroup" value="0x1020" />
-      <IDSymbol name="AddDirectoryBuildPropsCommandId" value="0x0100" />
+      <IDSymbol name="AddDirectoryBuildPropsCommandId" value="253" />
     </GuidSymbol>
 
     <GuidSymbol name="guidImages" value="{4c9ff502-074b-4df1-95df-15e28f12db94}">
@@ -169,10 +171,9 @@
       <IDSymbol name="bmpPicStrikethrough" value="6" />
     </GuidSymbol>
   
-    <GuidSymbol value="{5a521c8d-d715-4a6c-a4f7-5f4899d810a5}" name="guidAssemblyInfoEditPackageCmdSet">
+    <GuidSymbol value="{4005AFC6-1B77-4227-A90E-13A792A6EBB5}" name="guidAssemblyInfoEditPackageCmdSet">
       <IDSymbol value="4128" name="MyMenuGroup" />
-      <IDSymbol value="256" name="cmdidAssemblyInfoEditCommand" />
-      <IDSymbol value="4129" name="cmdidUnifiedAssemblyInfoEditCommand" />
+      <IDSymbol value="255" name="cmdidAssemblyInfoEditCommand" />
     </GuidSymbol>
   
     <GuidSymbol value="{d2ec6595-c565-4ffc-aff3-d11fca749194}" name="guidImages2">
