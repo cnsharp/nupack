@@ -15,7 +15,7 @@ namespace CnSharp.VisualStudio.NuPack.Packaging
         {
             InitializeComponent();
 
-            //ActiveControl = textBoxAssemblyVersion;
+            ActiveControl = textBoxAssemblyVersion;
 
             MakeTextBoxRequired(textBoxId);
             MakeTextBoxRequired(textBoxDescription);
