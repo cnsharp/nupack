@@ -1,5 +1,5 @@
 # NuPack
-Visual Studio extension to build and deploy NuGet package
+Visual Studio extension for building and publishing NuGet packages.
 
 ### Features
 * Build and Deploy Packages
@@ -22,6 +22,10 @@ Visual Studio extension to build and deploy NuGet package
 	* Add Directory.Build.props to manage common package info for SDK-based projects.
 
 ![Add Directory.Build.props](https://raw.githubusercontent.com/cnsharp/nupack/master/screenshots/2.x/DirectoryBuildPropsCommandMenu.png)
+
+* Auto Increment Version
+	* For classic projects,use AssemblyInfo with wildcard version number like '1.0.*'.
+	* For SDK-based projects,you can input version number contains wildcard in the dialog and then it will be replaced by this extension during build.
 
 ### Release notes
 

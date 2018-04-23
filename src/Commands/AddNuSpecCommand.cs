@@ -17,7 +17,7 @@ namespace CnSharp.VisualStudio.NuPack.Commands
         /// <summary>
         /// Command ID.
         /// </summary>
-        public const int CommandId = 0x0100;
+        public const int CommandId = 254;
 
         /// <summary>
         /// Command menu group (command set GUID).

@@ -33,8 +33,7 @@ namespace CnSharp.VisualStudio.NuPack.Packaging
             textBoxAssemblyVersion.TextChanged +=
                 (sender, e) =>
                 {
-                    textBoxFileVersion.Text = textBoxAssemblyVersion.Text.Trim();
-                    textBoxVersion.Text = textBoxAssemblyVersion.Text.Trim().Trim('.');
+                    textBoxVersion.Text = textBoxFileVersion.Text = textBoxAssemblyVersion.Text.Trim();
                 };
 
             textBoxLicenseUrl.TextChanged += (sender, e) =>
@@ -52,9 +51,9 @@ namespace CnSharp.VisualStudio.NuPack.Packaging
             {
                 _assemblyInfo = value;
                 textBoxAssemblyVersion.DataBindings.Clear();
-                textBoxAssemblyVersion.DataBindings.Add("Text", _assemblyInfo, "Version", true, DataSourceUpdateMode.OnValidation);
+                textBoxAssemblyVersion.DataBindings.Add("Text", _assemblyInfo, "Version", true, DataSourceUpdateMode.OnPropertyChanged);
                 textBoxFileVersion.DataBindings.Clear();
-                textBoxFileVersion.DataBindings.Add("Text", _assemblyInfo, "FileVersion", true, DataSourceUpdateMode.OnValidation);
+                textBoxFileVersion.DataBindings.Add("Text", _assemblyInfo, "FileVersion", true, DataSourceUpdateMode.OnPropertyChanged);
             }
         }
 
@@ -70,7 +69,7 @@ namespace CnSharp.VisualStudio.NuPack.Packaging
                     if (box?.Tag != null)
                     {
                         box.DataBindings.Clear();
-                        box.DataBindings.Add("Text", _manifestMetadata, box.Tag.ToString(), true, DataSourceUpdateMode.OnValidation);
+                        box.DataBindings.Add("Text", _manifestMetadata, box.Tag.ToString(), true, DataSourceUpdateMode.OnPropertyChanged);
                     }
                 }
                 checkBoxRLA.Checked = _manifestMetadata.RequireLicenseAcceptance;

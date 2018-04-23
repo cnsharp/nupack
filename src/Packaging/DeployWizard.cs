@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -197,7 +198,7 @@ namespace CnSharp.VisualStudio.NuPack.Packaging
         {
             var ver = _assemblyInfo?.Version ?? _ppp.AssemblyVersion;
             if (_metadata.Version.IsEmptyOrPlaceHolder())
-                _metadata.Version = ver.Replace(".*", "");
+                _metadata.Version = ver;
             if (_metadata.Title.IsEmptyOrPlaceHolder())
                 _metadata.Title = _metadata.Id;
             _metadataControl.ManifestMetadata = _metadata;
@@ -228,7 +229,6 @@ namespace CnSharp.VisualStudio.NuPack.Packaging
             if (_assemblyInfo != null)
             {
                 SaveAssemblyInfo();
-                SaveNuSpec();
             }
             else
             {
@@ -236,6 +236,10 @@ namespace CnSharp.VisualStudio.NuPack.Packaging
             }
             if (!Build())
                 return;
+            if (_assemblyInfo != null)
+            {
+                SaveNuSpec();
+            }
             EnsureOutputDir();
             Pack();
             ShowPackages();
@@ -266,7 +270,13 @@ namespace CnSharp.VisualStudio.NuPack.Packaging
 
         private void SaveNuSpec()
         {
-            if(SemanticVersion.TryParse(_metadata.Version,out var ver))
+            if (_metadata.Version.EndsWith(".*"))
+            {
+                var outputFileName = _project.Properties.Item("OutputFileName").Value.ToString();
+                var outputFile = Path.Combine(_releaseDir, outputFileName);
+                _metadata.Version = FileVersionInfo.GetVersionInfo(outputFile).FileVersion;
+            }
+            if (SemanticVersion.TryParse(_metadata.Version,out var ver))
                 _metadata.Version = ver.ToFullString();
           
           _project.UpdateNuspec(_metadata);

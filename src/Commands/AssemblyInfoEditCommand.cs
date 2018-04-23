@@ -24,12 +24,12 @@ namespace CnSharp.VisualStudio.NuPack.Commands
         /// <summary>
         /// Command ID.
         /// </summary>
-        public const int CommandId = 256;
+        public const int CommandId = 255;
 
         /// <summary>
         /// Command menu group (command set GUID).
         /// </summary>
-        public static readonly Guid CommandSet = new Guid("5a521c8d-d715-4a6c-a4f7-5f4899d810a5");
+        public static readonly Guid CommandSet = new Guid("4005AFC6-1B77-4227-A90E-13A792A6EBB5");
 
         /// <summary>
         /// VS Package that provides this command, not null.
@@ -66,7 +66,7 @@ namespace CnSharp.VisualStudio.NuPack.Commands
             if (dte == null) return;
             var cmd = (OleMenuCommand) sender;
             //cmd.Visible = dte.GetSolutionProjects().Any(p => p.IsNetFrameworkProject());
-            cmd.Visible = SolutionDataCache.Instance.GetSolutionProperties(dte.Solution.FileName).HasClassicProjects;
+            cmd.Visible = cmd.Supported = SolutionDataCache.Instance.GetSolutionProperties(dte.Solution.FileName).HasClassicProjects;
         }
 
 

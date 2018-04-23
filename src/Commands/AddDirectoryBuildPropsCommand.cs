@@ -21,7 +21,7 @@ namespace CnSharp.VisualStudio.NuPack.Commands
         /// <summary>
         /// Command ID.
         /// </summary>
-        public const int CommandId = 256;
+        public const int CommandId = 253;
 
         /// <summary>
         /// Command menu group (command set GUID).
@@ -32,9 +32,6 @@ namespace CnSharp.VisualStudio.NuPack.Commands
         /// VS Package that provides this command, not null.
         /// </summary>
         private readonly Package package;
-
-        private OleMenuCommand _cmd;
-
 
         public AddDirectoryBuildPropsCommand()
         {

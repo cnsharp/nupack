@@ -15,12 +15,9 @@ namespace CnSharp.VisualStudio.NuPack.AssemblyInfoEditor
 {
     public partial class AssemblyInfoForm : Form
     {
-        private readonly IEnumerable<Project> _refProjects;
 
         #region Constants and Fields
 
-
-        //private readonly Project _startProject;
         private readonly List<Project> _projects;
         private  List<ProjectAssemblyInfo> _projectInfos;
         private  ProjectAssemblyInfo[] _projectOriginalInfos;

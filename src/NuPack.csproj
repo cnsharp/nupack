@@ -139,6 +139,7 @@
     </Compile>
     <Compile Include="Extensions\ServiceProviderExtensions.cs" />
     <Compile Include="Util\CmdUtil.cs" />
+    <Compile Include="Util\VersionUtil.cs" />
     <Compile Include="Util\XmlSerializationHelper.cs" />
     <Compile Include="Util\XmlTextFormatter.cs" />
     <Compile Include="VSPackage.Designer.cs">

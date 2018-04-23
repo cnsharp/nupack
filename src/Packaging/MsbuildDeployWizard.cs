@@ -6,6 +6,7 @@
 
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -80,6 +81,14 @@ namespace CnSharp.VisualStudio.NuPack.Packaging
             _ppp = ppp;
             _directoryBuildProps = directoryBuildProps;
             _packageOldVersion = _metadata.Version;
+
+            //if (_project.Properties.Item("Deterministic") != null &&
+            //    Convert.ToBoolean(_project.Properties.Item("Deterministic").Value) == false)
+            if(_metadata.Version.IsAutoVersion())
+            {
+                _metadata.Version = Version.Parse(_metadata.Version).GetWildCardVersionString();
+                _ppp.Version = _ppp.AssemblyVersion = _ppp.FileVersion = _metadata.Version;
+            }
         }
 
         private void WizardPageCommit(object sender, WizardPageConfirmEventArgs e)
@@ -204,7 +213,7 @@ namespace CnSharp.VisualStudio.NuPack.Packaging
         {
             var ver = _ppp.AssemblyVersion;
             if (_metadata.Version.IsEmptyOrPlaceHolder())
-                _metadata.Version = ver.Replace(".*", "");
+                _metadata.Version = ver;//.Replace(".*", "");
             if (_metadata.Title.IsEmptyOrPlaceHolder())
                 _metadata.Title = _metadata.Id;
             _metadataControl.ManifestMetadata = _metadata;
@@ -232,6 +241,7 @@ namespace CnSharp.VisualStudio.NuPack.Packaging
 
         public void SaveAndBuild()
         {
+            CheckWildCardVersion();
             SaveNuSpec();
             SaveProjectProperties();
             if (!Pack())
@@ -248,8 +258,9 @@ namespace CnSharp.VisualStudio.NuPack.Packaging
         {
             _directoryBuildProps?.Save();
             var assemblyInfo = _metadataControl.AssemblyInfo;
-            _ppp.AssemblyVersion = assemblyInfo.Version;
-            _ppp.FileVersion = assemblyInfo.FileVersion;
+            _ppp.Version = assemblyInfo.Version.EndsWith(".*") ? _metadata.Version : assemblyInfo.Version;
+            _ppp.AssemblyVersion = assemblyInfo.Version.EndsWith(".*") ? _metadata.Version : assemblyInfo.Version;
+            _ppp.FileVersion = assemblyInfo.FileVersion.EndsWith(".*") ? _metadata.Version : assemblyInfo.FileVersion;
             _metadata.SyncToPackageProjectProperties(_ppp);
             var skipProps = _directoryBuildProps?.GetValuedProperties()?.ToArray();
             _project.SavePackageProjectProperties(_ppp,skipProps);
@@ -262,8 +273,23 @@ namespace CnSharp.VisualStudio.NuPack.Packaging
             NuGetExtensions.UpdateDependencyInSolution(_metadata.Id, _metadata.Version);
         }
 
+        void CheckWildCardVersion()
+        {
+            if (_metadata.Version.EndsWith(".*"))
+            {
+                _metadata.Version = Version.Parse(_metadata.Version.Replace(".*", "")).GetCurrentBuildVersionString();
+                //_project.Properties.Item("Deterministic").Value = false;
+            }
+            else
+            {
+                //_project.Properties.Item("Deterministic").Value = true;
+            }
+
+        }
+
         private void SaveNuSpec()
         {
+            
             if (SemanticVersion.TryParse(_metadata.Version, out var ver))
                 _metadata.Version = ver.ToFullString();
 
@@ -289,6 +315,12 @@ namespace CnSharp.VisualStudio.NuPack.Packaging
             if (File.Exists(_nuspecFile))
                 script.AppendFormat(" /p:NuspecFile=\"{0}\" ", _nuspecFile);
             CmdUtil.RunCmd(script.ToString());
+            if (_metadata.Version.EndsWith(".*"))
+            {
+                var outputFileName = _project.Properties.Item("OutputFileName").Value.ToString();
+                var outputFile = Path.Combine(_releaseDir, outputFileName);
+                _metadata.Version = FileVersionInfo.GetVersionInfo(outputFile).FileVersion;
+            }
             var file = $"{_releaseDir}\\{_metadata.Id}.{_metadata.Version}.nupkg";
             return File.Exists(file);
         }
