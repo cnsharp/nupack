@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using CnSharp.VisualStudio.Extensions.Projects;
 using NuGet;
@@ -15,6 +14,8 @@ namespace CnSharp.VisualStudio.NuPack.Packaging
         public PackageMetadataControl()
         {
             InitializeComponent();
+
+            //ActiveControl = textBoxAssemblyVersion;
 
             MakeTextBoxRequired(textBoxId);
             MakeTextBoxRequired(textBoxDescription);
@@ -33,7 +34,11 @@ namespace CnSharp.VisualStudio.NuPack.Packaging
             textBoxAssemblyVersion.TextChanged +=
                 (sender, e) =>
                 {
-                    textBoxVersion.Text = textBoxFileVersion.Text = textBoxAssemblyVersion.Text.Trim();
+                    //textBoxVersion.Text = textBoxFileVersion.Text = textBoxAssemblyVersion.Text.Trim();
+                    var ver = textBoxAssemblyVersion.Text.Trim();
+                    if(_assemblyInfo != null)
+                        _assemblyInfo.FileVersion = ver;
+                    textBoxVersion.Text = ver;
                 };
 
             textBoxLicenseUrl.TextChanged += (sender, e) =>
@@ -46,7 +51,10 @@ namespace CnSharp.VisualStudio.NuPack.Packaging
 
         public ProjectAssemblyInfo AssemblyInfo
         {
-            get { return _assemblyInfo; }
+            get
+            {
+                return _assemblyInfo;
+            }
             set
             {
                 _assemblyInfo = value;
@@ -59,14 +67,17 @@ namespace CnSharp.VisualStudio.NuPack.Packaging
 
         public ManifestMetadata ManifestMetadata
         {
-            get { return _manifestMetadata; }
+            get
+            {
+                return _manifestMetadata;
+            }
             set
             {
                 _manifestMetadata = value;
                 foreach (Control control in Controls)
                 {
                     var box = control as TextBox;
-                    if (box?.Tag != null)
+                    if (!string.IsNullOrWhiteSpace(box?.Tag?.ToString()))
                     {
                         box.DataBindings.Clear();
                         box.DataBindings.Add("Text", _manifestMetadata, box.Tag.ToString(), true, DataSourceUpdateMode.OnPropertyChanged);
@@ -77,7 +88,7 @@ namespace CnSharp.VisualStudio.NuPack.Packaging
         }
 
         public ErrorProvider ErrorProvider { get; set; }
-
+        
         private void MakeTextBoxRequired(TextBox box)
         {
             box.Validating += TextBoxValidating;
@@ -129,10 +140,6 @@ namespace CnSharp.VisualStudio.NuPack.Packaging
             box.Select(i + 2, 0);
         }
 
-        private void PackageMetadataControl_Enter(object sender, EventArgs e)
-        {
-            textBoxVersion.Focus();
-        }
 
     }
 }

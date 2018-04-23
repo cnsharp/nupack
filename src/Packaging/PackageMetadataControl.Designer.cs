@@ -337,7 +337,6 @@
             this.Controls.Add(this.textBoxReleaseNotes);
             this.Name = "PackageMetadataControl";
             this.Size = new System.Drawing.Size(744, 549);
-            this.Enter += new System.EventHandler(this.PackageMetadataControl_Enter);
             this.ResumeLayout(false);
             this.PerformLayout();
 
