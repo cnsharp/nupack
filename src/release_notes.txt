@@ -1,12 +1,12 @@
 ﻿### V2.0.1 4/23/2018
 * Add auto increment version number feature.
 
-### V2.0 4/21/2017
+### V2.0 4/21/2018
 * Add SDK-based project support by msbuild command.
 * Support CommonAssemblyInfo on classic projects.
 * Add Directory.Build.props to support common package info of  SDK-based projects,like company/authors/etc.
 
-### V1.6.3 1/11/2017
+### V1.6.3 1/11/2018
 * + add -ForceEnglishOutput option
 
 ### V1.6.2 8/10/2017
