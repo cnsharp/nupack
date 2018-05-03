@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.Design;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using CnSharp.VisualStudio.Extensions;
 using CnSharp.VisualStudio.Extensions.Projects;
@@ -58,9 +59,21 @@ namespace CnSharp.VisualStudio.NuPack.Commands
             if (commandService != null)
             {
                 var menuCommandID = new CommandID(CommandSet, CommandId);
-                var menuItem = new MenuCommand(this.MenuItemCallback, menuCommandID);
+                var menuItem = new OleMenuCommand(this.MenuItemCallback, menuCommandID);
+                menuItem.BeforeQueryStatus += MenuItemOnBeforeQueryStatus;
                 commandService.AddCommand(menuItem);
             }
+        }
+
+        private void MenuItemOnBeforeQueryStatus(object sender, EventArgs e)
+        {
+            var dte = Host.Instance.Dte2;
+            if (dte == null) return;
+            var prj = dte.GetActiveProejct();
+            var cmd = (OleMenuCommand)sender;
+            cmd.Visible = !string.IsNullOrWhiteSpace(prj.FileName) &&
+                          Common.SupportedProjectTypes.Any(
+                              t => prj.FileName.EndsWith(t, StringComparison.OrdinalIgnoreCase));
         }
 
         /// <summary>

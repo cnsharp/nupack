@@ -14,6 +14,8 @@ namespace CnSharp.VisualStudio.NuPack
     {
         public const string ProductName = "NuPack";
 
+        public static readonly string[] SupportedProjectTypes = { ".csproj", ".vbproj",".fsproj" };
+
         public static void CheckTfs(Project project)
         {
             var file = project.FileName + ".vspscc";

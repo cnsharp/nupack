@@ -83,6 +83,8 @@
       </Button>
       <Button guid="guidNuGetDeployCommandPackageCmdSet" id="cmdidNuGetDeployCommand" priority="0x0100" type="Button">
         <Parent guid="guidNuGetDeployCommandPackageCmdSet" id="MyMenuGroup" />
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>DynamicVisibility</CommandFlag>
         <!--<Icon guid="guidImages1" id="bmpPic1" />-->
         <Strings>
           <ButtonText>Deploy Package...</ButtonText>

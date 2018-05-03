@@ -1,5 +1,5 @@
 ﻿### V2.0.2 5/3/2018
-* Restrict project types to .csproj/.vbproj,in case of some other types may make extension crash. 
+* Restrict project types to .csproj/.vbproj/.fsproj,in case of some other types may make extension crash. 
 [#17](https://github.com/cnsharp/nupack/issues/17)
 * Fix the bug when Package Output directory is a network path.
 [#20](https://github.com/cnsharp/nupack/issues/20)

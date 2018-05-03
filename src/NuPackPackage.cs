@@ -48,7 +48,7 @@ namespace CnSharp.VisualStudio.NuPack
         /// </summary>
         public const string PackageGuidString = "cfa941e7-1101-459a-9777-496681f602d0";
 
-        private static readonly string[] supportedProjectTypes = {".csproj", ".vbproj"};
+     
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NuPackPackage"/> class.
@@ -78,7 +78,7 @@ namespace CnSharp.VisualStudio.NuPack
             Host.Instance.SolutionOpendAction = () =>
             {
                 var sln = Host.Instance.Solution2;
-                var projects = dte.GetSolutionProjects().Where(p => !string.IsNullOrWhiteSpace(p.FileName) && supportedProjectTypes.Any(t => p.FileName.EndsWith(t,StringComparison.OrdinalIgnoreCase))).ToList();
+                var projects = dte.GetSolutionProjects().Where(p => !string.IsNullOrWhiteSpace(p.FileName) && Common.SupportedProjectTypes.Any(t => p.FileName.EndsWith(t,StringComparison.OrdinalIgnoreCase))).ToList();
                 var sp = new SolutionProperties
                 {
                     Projects = projects,

@@ -65,8 +65,7 @@ namespace CnSharp.VisualStudio.NuPack.Commands
             var dte = Host.Instance.Dte2;
             if (dte == null) return;
             var cmd = (OleMenuCommand) sender;
-            //cmd.Visible = dte.GetSolutionProjects().Any(p => p.IsNetFrameworkProject());
-            cmd.Visible = cmd.Supported = SolutionDataCache.Instance.GetSolutionProperties(dte.Solution.FileName).HasClassicProjects;
+            cmd.Visible =  SolutionDataCache.Instance.GetSolutionProperties(dte.Solution.FileName).HasClassicProjects;
         }
 
 
