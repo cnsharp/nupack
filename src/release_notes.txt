@@ -1,4 +1,10 @@
-﻿### V2.0.1 4/23/2018
+﻿### V2.0.2 5/3/2018
+* Restrict project types to .csproj/.vbproj,in case of some other types may make extension crash. 
+[#17](https://github.com/cnsharp/nupack/issues/17)
+* Fix the bug when Package Output directory is a network path.
+[#20](https://github.com/cnsharp/nupack/issues/20)
+
+### V2.0.1 4/23/2018
 * Add auto increment version number feature.
 
 ### V2.0 4/21/2018
@@ -10,17 +16,19 @@
 * + add -ForceEnglishOutput option
 
 ### V1.6.2 8/10/2017
-* Fix the bug of DevelopmentDependency property of Package. https://github.com/cnsharp/nupack/issues/7
+* Fix the bug of DevelopmentDependency property of Package. 
+[#7](https://github.com/cnsharp/nupack/issues/7)
 
 ### V1.6.1 8/2/2017
-* NuGet V2 login support. https://github.com/cnsharp/nupack/issues/5
+* NuGet V2 login support. 
+[#5](https://github.com/cnsharp/nupack/issues/5)
 
 ### V1.6 7/22/2017
-[#1]https://github.com/cnsharp/nupack/issues/1
+[#1](https://github.com/cnsharp/nupack/issues/1)
 update CnSharp.VisualStudio.TFS package to 1.1.2 to include 'Microsoft.TeamFoundation.Common' dll.
-[#2]https://github.com/cnsharp/nupack/issues/2 
+[#2](https://github.com/cnsharp/nupack/issues/2)
 support spaces in Nuget.exe path
-[#3]https://github.com/cnsharp/nupack/issues/3 
+[#3](https://github.com/cnsharp/nupack/issues/3)
 support developmentDependency
 
 ### V1.5.1 6/22/2017

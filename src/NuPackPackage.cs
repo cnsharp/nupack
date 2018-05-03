@@ -48,6 +48,8 @@ namespace CnSharp.VisualStudio.NuPack
         /// </summary>
         public const string PackageGuidString = "cfa941e7-1101-459a-9777-496681f602d0";
 
+        private static readonly string[] supportedProjectTypes = {".csproj", ".vbproj"};
+
         /// <summary>
         /// Initializes a new instance of the <see cref="NuPackPackage"/> class.
         /// </summary>
@@ -76,12 +78,12 @@ namespace CnSharp.VisualStudio.NuPack
             Host.Instance.SolutionOpendAction = () =>
             {
                 var sln = Host.Instance.Solution2;
-                var projects = dte.GetSolutionProjects().ToList();
+                var projects = dte.GetSolutionProjects().Where(p => !string.IsNullOrWhiteSpace(p.FileName) && supportedProjectTypes.Any(t => p.FileName.EndsWith(t,StringComparison.OrdinalIgnoreCase))).ToList();
                 var sp = new SolutionProperties
                 {
                     Projects = projects,
-                    ClassicProjects = projects.Where(p => !string.IsNullOrWhiteSpace(p.FileName) && p.IsNetFrameworkProject()).ToList(),
-                    SdkBasedProjects = projects.Where(p => !string.IsNullOrWhiteSpace(p.FileName) && p.IsSdkBased()).ToList()
+                    ClassicProjects = projects.Where(p => p.IsNetFrameworkProject()).ToList(),
+                    SdkBasedProjects = projects.Where(p =>  p.IsSdkBased()).ToList()
                 };
                 SolutionDataCache.Instance.AddOrUpdate(sln.FileName, sp, (k, v) =>
                 {
