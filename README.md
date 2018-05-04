@@ -11,9 +11,9 @@ Visual Studio extension for building and publishing NuGet packages.
 * Classic projects support
 
 	* Add packages.nuspec
-
 ![Add packages.nuspec](https://raw.githubusercontent.com/cnsharp/nupack/master/screenshots/2.x/NuspecCommandMenu.png)
-	* Common Assembly Info Editor
+
+	 * Common Assembly Info Editor
 
 ![Assembly info command menu](https://raw.githubusercontent.com/cnsharp/nupack/master/screenshots/2.x/AssemblyInfoCommandMenu.png)
 ![Assembly info editor](https://raw.githubusercontent.com/cnsharp/nupack/master/screenshots/2.x/AssemblyInfoDialog.png)
