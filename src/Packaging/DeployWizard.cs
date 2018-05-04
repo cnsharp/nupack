@@ -299,10 +299,10 @@ namespace CnSharp.VisualStudio.NuPack.Packaging
         private void Pack()
         {
             var nugetExe = txtNugetPath.Text;
-            _outputDir = _outputDir.Replace("\\\\", "\\");
+            //_outputDir = _outputDir.Replace("\\\\", "\\"); //this statement cause a bug of network path,see https://github.com/cnsharp/nupack/issues/20
             var script = new StringBuilder();
             script.AppendFormat(
-                @"""{0}"" pack ""{1}"" -Build -Version ""{2}"" -Properties  Configuration=Release -OutputDirectory ""{3} "" ", nugetExe,
+                @"""{0}"" pack ""{1}"" -Build -Version ""{2}"" -Properties  Configuration=Release -OutputDirectory ""{3}"" ", nugetExe,
                 _project.FileName,_metadata.Version, _outputDir);
 
             if (chkForceEnglishOutput.Checked)
@@ -330,9 +330,9 @@ namespace CnSharp.VisualStudio.NuPack.Packaging
             if (chkSymbol.Checked && !string.IsNullOrWhiteSpace(deployVM.SymbolServer))
             {
                 script.AppendLine();
-                script.AppendFormat("nuget SetApiKey {0}", deployVM.ApiKey);
+                script.AppendFormat("\"{0}\" SetApiKey {1}", nugetExe, deployVM.ApiKey);
                 script.AppendLine();
-                script.AppendFormat("nuget push \"{0}{1}.{2}.symbols.nupkg\" -source {3}", _outputDir, _metadata.Id, _metadata.Version, deployVM.SymbolServer);
+                script.AppendFormat("\"{0}\" push \"{1}{2}.{3}.symbols.nupkg\" -source {4}", nugetExe, _outputDir, _metadata.Id, _metadata.Version, deployVM.SymbolServer);
             }
 
             CmdUtil.RunCmd(script.ToString());
@@ -380,6 +380,8 @@ namespace CnSharp.VisualStudio.NuPack.Packaging
                 if (!Directory.Exists(_outputDir))
                     Directory.CreateDirectory(_outputDir);
             }
+            if (!_outputDir.EndsWith("\\"))
+                _outputDir += "\\";
         }
 
     

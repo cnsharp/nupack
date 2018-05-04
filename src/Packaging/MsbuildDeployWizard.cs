@@ -24,19 +24,17 @@ namespace CnSharp.VisualStudio.NuPack.Packaging
 {
     public partial class MsbuildDeployWizard : Form
     {
-        //private readonly ProjectAssemblyInfo _assemblyInfo;
         private readonly PackageProjectProperties _ppp;
         private readonly DirectoryBuildProps _directoryBuildProps;
         private readonly string _dir;
         private readonly NuGetConfig _nuGetConfig;
-        //private readonly Package _package;
         private readonly ManifestMetadata _metadata;
         private readonly string _packageOldVersion;
         private readonly Project _project;
         private readonly ProjectNuPackConfig _projectConfig;
         private readonly string _releaseDir;
         private string _outputDir;
-        private string _nuspecFile;
+        private readonly string _nuspecFile;
         private PackageMetadataControl _metadataControl;
         private NuGetDeployControl _deployControl;
 
@@ -82,8 +80,6 @@ namespace CnSharp.VisualStudio.NuPack.Packaging
             _directoryBuildProps = directoryBuildProps;
             _packageOldVersion = _metadata.Version;
 
-            //if (_project.Properties.Item("Deterministic") != null &&
-            //    Convert.ToBoolean(_project.Properties.Item("Deterministic").Value) == false)
             if(_metadata.Version.IsAutoVersion())
             {
                 _metadata.Version = Version.Parse(_metadata.Version).GetWildCardVersionString();
@@ -278,13 +274,7 @@ namespace CnSharp.VisualStudio.NuPack.Packaging
             if (_metadata.Version.EndsWith(".*"))
             {
                 _metadata.Version = Version.Parse(_metadata.Version.Replace(".*", "")).GetCurrentBuildVersionString();
-                //_project.Properties.Item("Deterministic").Value = false;
             }
-            else
-            {
-                //_project.Properties.Item("Deterministic").Value = true;
-            }
-
         }
 
         private void SaveNuSpec()
@@ -347,9 +337,9 @@ namespace CnSharp.VisualStudio.NuPack.Packaging
             if (chkSymbol.Checked && !string.IsNullOrWhiteSpace(deployVM.SymbolServer))
             {
                 script.AppendLine();
-                script.AppendFormat("nuget SetApiKey {0}", deployVM.ApiKey);
+                script.AppendFormat("\"{0}\" SetApiKey {1}", nugetExe, deployVM.ApiKey);
                 script.AppendLine();
-                script.AppendFormat("nuget push \"{0}{1}.{2}.symbols.nupkg\" -source {3}", _outputDir, _metadata.Id, _metadata.Version, deployVM.SymbolServer);
+                script.AppendFormat("\"{0}\" push \"{1}{2}.{3}.symbols.nupkg\" -source {4}", nugetExe, _outputDir, _metadata.Id, _metadata.Version, deployVM.SymbolServer);
             }
 
             CmdUtil.RunCmd(script.ToString());
@@ -423,6 +413,8 @@ namespace CnSharp.VisualStudio.NuPack.Packaging
                 if (!Directory.Exists(_outputDir))
                     Directory.CreateDirectory(_outputDir);
             }
+            if (!_outputDir.EndsWith("\\"))
+                _outputDir += "\\";
         }
 
     
