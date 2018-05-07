@@ -81,15 +81,29 @@ namespace CnSharp.VisualStudio.NuPack
                 var projects = dte.GetSolutionProjects().Where(p => !string.IsNullOrWhiteSpace(p.FileName) && Common.SupportedProjectTypes.Any(t => p.FileName.EndsWith(t,StringComparison.OrdinalIgnoreCase))).ToList();
                 var sp = new SolutionProperties
                 {
-                    Projects = projects,
-                    ClassicProjects = projects.Where(p => p.IsNetFrameworkProject()).ToList(),
-                    SdkBasedProjects = projects.Where(p =>  p.IsSdkBased()).ToList()
+                    Projects = projects
                 };
                 SolutionDataCache.Instance.AddOrUpdate(sln.FileName, sp, (k, v) =>
                 {
                     v = sp;
                     return v;
                 });
+            };
+
+            dte.Events.SolutionEvents.ProjectAdded += p =>
+            {
+                if (string.IsNullOrWhiteSpace(p.FileName) ||
+                    !Common.SupportedProjectTypes.Any(t => p.FileName.EndsWith(t, StringComparison.OrdinalIgnoreCase)))
+                    return;
+                var sln = Host.Instance.Solution2;
+                SolutionDataCache.Instance.TryGetValue(sln.FileName, out var sp);
+                sp?.AddProject(p);
+            };
+            dte.Events.SolutionEvents.ProjectRemoved += p =>
+            {
+                var sln = Host.Instance.Solution2;
+                SolutionDataCache.Instance.TryGetValue(sln.FileName, out var sp);
+                sp?.RemoveProject(p);
             };
 
             AddNuSpecCommand.Initialize(this);

@@ -86,12 +86,6 @@
     <Compile Include="AssemblyInfoEditor\AssemblyInfoForm.designer.cs">
       <DependentUpon>AssemblyInfoForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="AssemblyInfoEditor\EachAssemblyInfoForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="AssemblyInfoEditor\EachAssemblyInfoForm.designer.cs">
-      <DependentUpon>EachAssemblyInfoForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Commands\AddNuSpecCommand.cs" />
     <Compile Include="Commands\AddDirectoryBuildPropsCommand.cs" />
     <Compile Include="Commands\AssemblyInfoEditCommand.cs" />
@@ -319,9 +313,6 @@
   <ItemGroup>
     <EmbeddedResource Include="AssemblyInfoEditor\AssemblyInfoForm.resx">
       <DependentUpon>AssemblyInfoForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="AssemblyInfoEditor\EachAssemblyInfoForm.resx">
-      <DependentUpon>EachAssemblyInfoForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Packaging\MsbuildDeployWizard.resx">
       <DependentUpon>MsbuildDeployWizard.cs</DependentUpon>
