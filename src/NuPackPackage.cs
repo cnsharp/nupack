@@ -8,13 +8,18 @@ using System.Linq;
 using System.Reflection;
 using System.Resources;
 using System.Runtime.InteropServices;
+using System.Threading;
+using System.Threading.Tasks;
 using CnSharp.VisualStudio.Extensions;
 using CnSharp.VisualStudio.Extensions.Commands;
 using CnSharp.VisualStudio.NuPack.Commands;
 using CnSharp.VisualStudio.NuPack.Extensions;
 using EnvDTE;
 using EnvDTE80;
+using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
+using Task = System.Threading.Tasks.Task;
 
 namespace CnSharp.VisualStudio.NuPack
 {
@@ -35,13 +40,13 @@ namespace CnSharp.VisualStudio.NuPack
     /// To get loaded into VS, the package must be referred by &lt;Asset Type="Microsoft.VisualStudio.VsPackage" ...&gt; in .vsixmanifest file.
     /// </para>
     /// </remarks>
-    [PackageRegistration(UseManagedResourcesOnly = true)]
+    [PackageRegistration(UseManagedResourcesOnly = true,AllowsBackgroundLoading = true)]
     [InstalledProductRegistration("#1110", "#1112", "1.0", IconResourceID = 1400)] // Info on this package for Help/About
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [Guid(PackageGuidString)]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
-    [ProvideAutoLoad(Microsoft.VisualStudio.Shell.Interop.UIContextGuids80.SolutionExists)]
-    public sealed class NuPackPackage : Package
+    [ProvideAutoLoad(VSConstants.UICONTEXT.SolutionOpening_string, PackageAutoLoadFlags.BackgroundLoad)]
+    public sealed class NuPackPackage : AsyncPackage
     {
         /// <summary>
         /// NuPackPackage GUID string.
@@ -65,30 +70,24 @@ namespace CnSharp.VisualStudio.NuPack
 
         #region Package Members
 
-        /// <summary>
-        /// Initialization of the package; this method is called right after the package is sited, so this is the place
-        /// where you can put all the initialization code that rely on services provided by VisualStudio.
-        /// </summary>
-        protected override void Initialize()
+        #region Overrides of AsyncPackage
+
+        protected override async Task  InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
         {
-            base.Initialize();
-            
+            await JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
             var dte = GetGlobalService(typeof(DTE)) as DTE2;
             Host.Instance.DTE = dte;
-            Host.Instance.SolutionOpendAction = () =>
+
+            bool isSolutionLoaded = await IsSolutionLoadedAsync();
+
+            if (isSolutionLoaded)
             {
-                var sln = Host.Instance.Solution2;
-                var projects = dte.GetSolutionProjects().Where(p => !string.IsNullOrWhiteSpace(p.FileName) && Common.SupportedProjectTypes.Any(t => p.FileName.EndsWith(t,StringComparison.OrdinalIgnoreCase))).ToList();
-                var sp = new SolutionProperties
-                {
-                    Projects = projects
-                };
-                SolutionDataCache.Instance.AddOrUpdate(sln.FileName, sp, (k, v) =>
-                {
-                    v = sp;
-                    return v;
-                });
-            };
+                HandleOpenSolution();
+            }
+
+            // Listen for subsequent solution events
+            Microsoft.VisualStudio.Shell.Events.SolutionEvents.OnAfterOpenSolution += HandleOpenSolution;
+
 
             dte.Events.SolutionEvents.ProjectAdded += p =>
             {
@@ -106,15 +105,48 @@ namespace CnSharp.VisualStudio.NuPack
                 sp?.RemoveProject(p);
             };
 
+            //var commandService =  await this.GetServiceAsync(typeof(IMenuCommandService)) as OleMenuCommandService;
+
             AddNuSpecCommand.Initialize(this);
             NuGetDeployCommand.Initialize(this);
             AssemblyInfoEditCommand.Initialize(this);
             AddDirectoryBuildPropsCommand.Initialize(this);
-
-            //LoadCustomCommands();
         }
 
-     
+        #endregion
+
+        private async Task<bool> IsSolutionLoadedAsync()
+        {
+            await JoinableTaskFactory.SwitchToMainThreadAsync();
+            var solService = await GetServiceAsync(typeof(SVsSolution)) as IVsSolution;
+
+            ErrorHandler.ThrowOnFailure(solService.GetProperty((int)__VSPROPID.VSPROPID_IsSolutionOpen, out object value));
+
+            return value is bool isSolOpen && isSolOpen;
+        }
+
+        private void HandleOpenSolution(object sender = null, EventArgs e = null)
+        {
+            var sln = Host.Instance.Solution2;
+            var projects =  Host.Instance.DTE.GetSolutionProjects()
+                    .Where(
+                        p =>
+                            !string.IsNullOrWhiteSpace(p.FileName) &&
+                            Common.SupportedProjectTypes.Any(
+                                t => p.FileName.EndsWith(t, StringComparison.OrdinalIgnoreCase)))
+                    .ToList();
+            var sp = new SolutionProperties
+            {
+                Projects = projects
+            };
+            SolutionDataCache.Instance.AddOrUpdate(sln.FileName, sp, (k, v) =>
+            {
+                v = sp;
+                return v;
+            });
+        }
+
+
         public static void RedirectAssembly(string shortName, Version targetVersion, string publicKeyToken)
         {
             ResolveEventHandler handler = null;

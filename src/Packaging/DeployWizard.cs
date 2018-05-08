@@ -303,7 +303,7 @@ namespace CnSharp.VisualStudio.NuPack.Packaging
             var script = new StringBuilder();
             script.AppendFormat(
                 @"""{0}"" pack ""{1}"" -Build -Version ""{2}"" -Properties  Configuration=Release -OutputDirectory ""{3}"" ", nugetExe,
-                _project.FileName,_metadata.Version, _outputDir);
+                _project.FileName,_metadata.Version, _outputDir.TrimEnd('\\'));//nuget pack path shouldn't end with slash
 
             if (chkForceEnglishOutput.Checked)
                 script.Append(" -ForceEnglishOutput ");
@@ -376,7 +376,7 @@ namespace CnSharp.VisualStudio.NuPack.Packaging
             }
             if (relativePath)
             {
-                _outputDir = _dir + "\\" + _outputDir + "\\";
+                _outputDir = Path.Combine(_dir,_outputDir.TrimStart('\\'));
                 if (!Directory.Exists(_outputDir))
                     Directory.CreateDirectory(_outputDir);
             }
