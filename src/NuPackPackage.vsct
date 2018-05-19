@@ -140,9 +140,9 @@
     <GuidSymbol name="guidNuPackCommandPackage" value="{cfa941e7-1101-459a-9777-496681f602d0}" />
 
     <!-- This is the guid used to group the menu commands together -->
-    <GuidSymbol name="guidAddNuSpecPackageCmdSet" value="{1eefc81f-e74a-427a-a9e5-671d321226a0}">
+    <GuidSymbol name="guidAddNuSpecPackageCmdSet" value="{1eefc81f-e74a-427a-a9e5-671d321226a1}">
       <IDSymbol name="MyMenuGroup" value="0x1020" />
-      <IDSymbol name="AddNuSpecCommandId" value="0x0100" />
+      <IDSymbol name="AddNuSpecCommandId" value="252" />
     </GuidSymbol>
 
     <GuidSymbol name="guidAddDirectoryBuildPropsPackageCmdSet" value="{0A4174DB-9A22-4CE5-A1CB-B7F63855308F}">

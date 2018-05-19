@@ -17,12 +17,12 @@ namespace CnSharp.VisualStudio.NuPack.Commands
         /// <summary>
         /// Command ID.
         /// </summary>
-        public const int CommandId = 254;
+        public const int CommandId = 252;
 
         /// <summary>
         /// Command menu group (command set GUID).
         /// </summary>
-        public static readonly Guid CommandSet = new Guid("1eefc81f-e74a-427a-a9e5-671d321226a0");
+        public static readonly Guid CommandSet = new Guid("1eefc81f-e74a-427a-a9e5-671d321226a1");
 
         /// <summary>
         /// VS Package that provides this command, not null.
@@ -105,19 +105,7 @@ namespace CnSharp.VisualStudio.NuPack.Commands
         /// <param name="e">Event args.</param>
         private void MenuItemCallback(object sender, EventArgs e)
         {
-            //string message = string.Format(CultureInfo.CurrentCulture, "Inside {0}.MenuItemCallback()", this.GetType().FullName);
-            //string title = "AddNuSpecCommand";
-
-            //// Show a message box to prove we were here
-            //VsShellUtilities.ShowMessageBox(
-            //    this.ServiceProvider,
-            //    message,
-            //    title,
-            //    OLEMSGICON.OLEMSGICON_INFO,
-            //    OLEMSGBUTTON.OLEMSGBUTTON_OK,
-            //    OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
-
-          Execute();
+            Execute();
         }
 
 
@@ -134,30 +122,6 @@ namespace CnSharp.VisualStudio.NuPack.Commands
             using (var sw = new StreamWriter(file, false, Encoding.UTF8))
             {
                 var temp = Resource.NuSpecTemplate;
-                //var configFile = Path.Combine(Path.GetDirectoryName(project.FileName), "packages.config");
-                //if (File.Exists(configFile))
-                //{
-                //    try
-                //    {
-                //        var reader = new PackagesConfigReader(configFile);
-                //        var ds = reader.GetDependencySet();
-                //        if (ds.Any())
-                //        {
-                //            var package = new NuGets.Package();
-                //            package.Metadata.Dependencies = ds;
-                //            var packageXml = XmlSerializerHelper.GetXmlStringFromObject(package);
-                //            var start = packageXml.IndexOf("<dependencies>");
-                //            var end = packageXml.IndexOf("</dependencies>") + "</dependencies>".Length;
-                //            packageXml = packageXml.Substring(start, end-start);
-                //            temp = Regex.Replace(temp, "<dependencies>.*?</dependencies>",
-                //                $"{packageXml}",RegexOptions.Singleline|RegexOptions.Compiled);
-                //        }
-                //    }
-                //    catch (Exception ex)
-                //    {
-                        
-                //    }
-                //}
                 sw.Write(temp);
                 sw.Flush();
                 sw.Close();

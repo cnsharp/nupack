@@ -409,7 +409,7 @@ namespace CnSharp.VisualStudio.NuPack.Packaging
             }
             if (relativePath)
             {
-                _outputDir = _dir + "\\" + _outputDir + "\\";
+                _outputDir = Path.Combine(_dir, _outputDir.TrimStart('\\'));
                 if (!Directory.Exists(_outputDir))
                     Directory.CreateDirectory(_outputDir);
             }

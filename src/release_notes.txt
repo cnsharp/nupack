@@ -1,4 +1,8 @@
-﻿### V2.0.4 5/9/2018
+﻿### V2.0.5 5/9/2018
+* Fix double slash bug in nuget push statement about .NET Standard/Core projects.
+[#19](https://github.com/cnsharp/nupack/issues/19)
+
+### V2.0.4 5/9/2018
 * Fix double slash bug in nuget push statement.
 [#19](https://github.com/cnsharp/nupack/issues/19)
 * Derived from AsyncPackage instead of Package to improve performance 
