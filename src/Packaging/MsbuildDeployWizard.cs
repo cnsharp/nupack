@@ -330,16 +330,16 @@ namespace CnSharp.VisualStudio.NuPack.Packaging
                     script.AppendLine();
                 }
 
-                script.AppendFormat("\"{0}\" push \"{1}{4}.{5}.nupkg\" -source {2} {3}", nugetExe, _outputDir, deployVM.NuGetServer, deployVM.ApiKey,
+                script.AppendFormat("\"{0}\" push \"{1}{4}.{5}.nupkg\" -source \"{2}\" \"{3}\"", nugetExe, _outputDir, deployVM.NuGetServer, deployVM.ApiKey,
                     _metadata.Id, _metadata.Version);
             }
 
             if (chkSymbol.Checked && !string.IsNullOrWhiteSpace(deployVM.SymbolServer))
             {
                 script.AppendLine();
-                script.AppendFormat("\"{0}\" SetApiKey {1}", nugetExe, deployVM.ApiKey);
+                script.AppendFormat("\"{0}\" SetApiKey \"{1}\"", nugetExe, deployVM.ApiKey);
                 script.AppendLine();
-                script.AppendFormat("\"{0}\" push \"{1}{2}.{3}.symbols.nupkg\" -source {4}", nugetExe, _outputDir, _metadata.Id, _metadata.Version, deployVM.SymbolServer);
+                script.AppendFormat("\"{0}\" push \"{1}{2}.{3}.symbols.nupkg\" -source \"{4}\"", nugetExe, _outputDir, _metadata.Id, _metadata.Version, deployVM.SymbolServer);
             }
 
             CmdUtil.RunCmd(script.ToString());
@@ -366,7 +366,6 @@ namespace CnSharp.VisualStudio.NuPack.Packaging
             if (!releaseDir.Exists)
                 return;
             var files = releaseDir.GetFiles("*.nupkg");
-            var fileCount = 0;
             foreach (var file in files)
             {
                 var dest = Path.Combine(_outputDir, file.Name);
@@ -375,11 +374,7 @@ namespace CnSharp.VisualStudio.NuPack.Packaging
                     File.Delete(dest);
                 }
                 file.MoveTo(dest);
-                fileCount++;
             }
-
-            if (chkOpenDir.Checked && fileCount > 0)
-                Process.Start(_outputDir);
         }
 
         private void EnsureOutputDir()

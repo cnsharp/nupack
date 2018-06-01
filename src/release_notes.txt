@@ -1,11 +1,15 @@
-﻿### V2.0.5 5/9/2018
+﻿### V2.0.6 6/1/2018
+* Support nuget source path with spaces.
+[#21](https://github.com/cnsharp/nupack/issues/21)
+
+### V2.0.5 5/9/2018
 * Fix double slash bug in nuget push statement about .NET Standard/Core projects.
 [#19](https://github.com/cnsharp/nupack/issues/19)
 
 ### V2.0.4 5/9/2018
 * Fix double slash bug in nuget push statement.
 [#19](https://github.com/cnsharp/nupack/issues/19)
-* Derived from AsyncPackage instead of Package to improve performance 
+* Derived from AsyncPackage instead of Package to improve performance.
 
 ### V2.0.3 5/7/2018
 * Refersh cache when adding/removing project
