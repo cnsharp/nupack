@@ -120,34 +120,36 @@ namespace CnSharp.VisualStudio.NuPack.Commands
             //Common.CheckTfs(_project);
             _assemblyInfo = null;
             _ppp = null;
-            if (_project.IsNetFrameworkProject())
+            if (_project.IsSdkBased())
             {
-                _nuspecFile = _project.GetNuSpecFilePath();
-                if (!File.Exists(_nuspecFile))
-                {
-                    var dr = VsShellUtilities.ShowMessageBox(this.ServiceProvider,
-                        $"Miss {NuGetDomain.NuSpecFileName} file,would you add it now?", "Warning",
-                        OLEMSGICON.OLEMSGICON_WARNING, OLEMSGBUTTON.OLEMSGBUTTON_YESNO, OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
-                    if (dr != 6)
-                        return;
-                    new AddNuSpecCommand().Execute();
-                }
-                _assemblyInfo = _project.GetProjectAssemblyInfo();
-                if (string.IsNullOrWhiteSpace(_assemblyInfo.FileVersion))
-                    _assemblyInfo.FileVersion = _assemblyInfo.Version;
-                _metadata = _project.GetManifestMetadata();
-
-                var form = new DeployWizard(_metadata, _assemblyInfo, _ppp);
+                _ppp = _project.GetPackageProjectProperties();
+                _metadata = _ppp.ToManifestMetadata();
+                _directoryBuildProps = Host.Instance.DTE.Solution.GetDirectoryBuildProps();
+                var form = new MsbuildDeployWizard(_metadata, _ppp, _directoryBuildProps);
                 form.StartPosition = FormStartPosition.CenterScreen;
                 if (form.ShowDialog() == DialogResult.OK)
                     form.SaveAndBuild();
             }
             else
             {
-                _ppp = _project.GetPackageProjectProperties();
-                _metadata = _ppp.ToManifestMetadata();
-                _directoryBuildProps = Host.Instance.DTE.Solution.GetDirectoryBuildProps();
-                var form = new MsbuildDeployWizard(_metadata, _ppp,_directoryBuildProps);
+                _nuspecFile = _project.GetNuSpecFilePath();
+                if (!File.Exists(_nuspecFile))
+                {
+                    var dr = VsShellUtilities.ShowMessageBox(this.ServiceProvider,
+                        $"Miss {NuGetDomain.NuSpecFileName} file,would you add it now?", "Warning",
+                        OLEMSGICON.OLEMSGICON_WARNING, OLEMSGBUTTON.OLEMSGBUTTON_YESNO,
+                        OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
+                    if (dr != 6)
+                        return;
+                    new AddNuSpecCommand().Execute();
+                }
+
+                _assemblyInfo = _project.GetProjectAssemblyInfo();
+                if (string.IsNullOrWhiteSpace(_assemblyInfo.FileVersion))
+                    _assemblyInfo.FileVersion = _assemblyInfo.Version;
+                _metadata = _project.GetManifestMetadata();
+
+                var form = new DeployWizard(_metadata, _assemblyInfo, _ppp);
                 form.StartPosition = FormStartPosition.CenterScreen;
                 if (form.ShowDialog() == DialogResult.OK)
                     form.SaveAndBuild();

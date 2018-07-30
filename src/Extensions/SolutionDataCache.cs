@@ -39,7 +39,7 @@ namespace CnSharp.VisualStudio.NuPack.Extensions
                 _projects = value;
                 if (_projects != null)
                 {
-                    ClassicProjects.AddRange(_projects?.Where(p => p.IsNetFrameworkProject()));
+                    ClassicProjects.AddRange(_projects?.Where(p => p.IsUAP() || p.IsNetFrameworkProject()));
                     SdkBasedProjects.AddRange(_projects?.Where(p => p.IsSdkBased()));
                 }
                 else
@@ -59,7 +59,7 @@ namespace CnSharp.VisualStudio.NuPack.Extensions
         {
             if(_projects == null) _projects = new List<Project>();
             _projects.Add(project);
-            if (project.IsNetFrameworkProject())
+            if (project.IsUAP() || project.IsNetFrameworkProject())
             {
                ClassicProjects.Add(project);
             }
@@ -72,7 +72,7 @@ namespace CnSharp.VisualStudio.NuPack.Extensions
         public void RemoveProject(Project project)
         {
             _projects.Remove(project);
-            if (project.IsNetFrameworkProject())
+            if (project.IsUAP() || project.IsNetFrameworkProject())
             {
                 ClassicProjects.Remove(project);
             }
