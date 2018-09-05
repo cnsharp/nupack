@@ -1,4 +1,7 @@
-﻿### V2.1.0 7/30/2018
+﻿### V2.1.1 9/5/2018
+* A dependency bug fix.
+
+### V2.1.0 7/30/2018
 * Add  universal app platform (UAP) projects support.
 
 ### V2.0.6 6/1/2018

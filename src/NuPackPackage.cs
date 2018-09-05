@@ -64,7 +64,7 @@ namespace CnSharp.VisualStudio.NuPack
             // any Visual Studio service because at this point the package object is created but
             // not sited yet inside Visual Studio environment. The place to do all the other
             // initialization is the Initialize method.
-
+            RedirectAssembly("VsSharp", new Version("1.3.2.0"), "31e1bdd79b8e5ae1");
             RedirectAssembly("Microsoft.VisualStudio.Threading", new Version("15.6.0.0"), "b03f5f7f11d50a3a");
         }
 
